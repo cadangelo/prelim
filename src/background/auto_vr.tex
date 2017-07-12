@@ -1,0 +1,93 @@
+\subsection{Automated VR Techniques}
+
+%Historically, variance reduction methods require a vast amount of user expertise
+%and time.
+VR techniques reqire the user to have a priori knowledge of the problem physics
+in order to assign importance parameters.
+Many techniques have been developed over the years to automate the selection and
+assignment of these parameters to reduce the time and expertise required by
+the user.
+
+One class of VR techniques, known as hybrid deterministic/MC methods,
+is based upon
+the solution to the adjoint Boltzmann transport equation having physical
+significance as the measure of importance of a particle to some specified
+objective function.  
+Because determisitic solutions to the transport equation are less precise but
+require much less computation time, they are useful as an estimate of
+particle flux throughout the domain which can then be used to determine
+importance of specific regions.
+To demonstrate the use of the adjoint solution as an importance function,
+we will first start with the linear, time-independent Boltzmann transport
+equation shown below
+\begin{equation} \label{eq:1a}
+  H\Psi = q
+\end{equation}
+where $\Psi$ is the angular flux, q is the source of particles, and the operator H
+is given by
+\begin{equation} \label{eq:1b}
+		H = \widehat{\Omega} \cdot \nabla +
+		    \sigma_{t}(\overrightarrow{r},E) - 
+			\int_{0}^{\infty} dE'
+			\int_{4\pi} d\Omega'
+			\sigma_{s}( \overrightarrow{r}, E' 
+			\rightarrow E, \widehat{\Omega}' 
+			\rightarrow \widehat{\Omega} )
+\end{equation}
+where $\sigma_{t}$ is the total cross-section and $\sigma_{s}$ is the
+differential scattering cross-section.
+The adjoint identity states that
+\begin{equation} \label{eq:2}
+		\langle \Psi^{+} , H\Psi \rangle =
+		\langle \Psi, H^{+}\Psi^{+} \rangle
+\end{equation}
+where $ \langle \cdot \rangle$ refers to the integration over space,
+energy, and angle and the adjoint operator $H^{+}$ is given by
+\begin{equation} \label{eq:2b}
+		H^{+} = -\widehat{\Omega} \cdot \nabla +
+		    \sigma_{t}(\overrightarrow{r},E) - 
+			\int_{0}^{\infty} dE'
+			\int_{4\pi} d\Omega'
+			\sigma_{s}( \overrightarrow{r}, E 
+			\rightarrow E', \widehat{\Omega}' 
+			\rightarrow \widehat{\Omega}' )
+\end{equation}
+The identity can also be written as
+\begin{equation} \label{eq:2b}
+		\langle \Psi^{+} , q \rangle =
+		\langle \Psi, q^{+} \rangle
+\end{equation}
+As mentioned, the adjoint solution to the transport
+equation will be used as an importance function therefore we need to solve
+\begin{equation} \label{eq:3}
+		H^{+}\Psi{+} = q^{+}
+\end{equation}
+which requires the thoughtful selection of an adjoint source $q^{+}$.
+To demonstrate the physical significance of the adjoint, we will consider the
+detector response, R
+\begin{equation} \label{eq:4}
+		R = \langle \Psi, \sigma_{d}
+\end{equation}
+where $\sigma_{d}$ is a detector response function.
+If we choose the adjoint source to be equivalent to the detector response
+function,
+\begin{equation} \label{eq:5}
+		q^{+} = \sigma_{d}
+\end{equation}
+and substitute this into \ref{eq:4} and \ref{eq:2b} 
+\begin{equation}
+		R = \langle \Psi, q^{+} \rangle = \langle \Psi^{+}, q \rangle
+\end{equation}
+the adjoint flux $\Psi^{+}$ represents the importance of a region to
+$\sigma_{d}$.
+This final relation allows us to know the response R for any source q once the
+adjoint flux $\Psi^{+}$ for a detector of interest is known.
+
+The Consistent Adjoint Driven Importance Sampling (CADIS) method is one of the
+hybrid deterministic  VR
+techniques that uses the adjoint solution to 
+formulate source and transport biasing parameters for MC transport.
+More specifically, CADIS determines the parameters for the weight window
+technique.
+
+

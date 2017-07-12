@@ -1,0 +1,42 @@
+\subsection{VR Methods}
+
+Certain MC calculations require the use of variance reduction methods in order
+to complete or improve the efficiency of the calculation. 
+This is accomplished
+by preferentially sampling trajectories that are likely to contribute to the tallies of
+interest.
+In order to compensate for this biased sampling, the particle statistical weight
+is adjusted accordingly.
+The relationship between the particle statistical weight, w, and the PDF that
+governs particle behavior is as follows
+\begin{equation} \label{eq:1}
+		w_{biased} pdf_{biased} = w_{unbiased} pdf_{unbiased}
+\end{equation}
+
+One of the earliest and still commonly used methods of VR is particle splitting
+and rouletting.  This is particularly useful in deep penetration simulations,
+like FES.  Generally speaking, to increase the number of particle
+histories that can contribute to tallies of interest, it is desirable to split
+particles as the enter more important regions and roulette particles as the
+enter less important regions. 
+This requires assigning an importance, I, to every
+region in the geometry and adjusting the weight, w, of the new particles. 
+When a particle moves from a region A to a region B,
+the ratio of importances is calculated.  If region B is more important than
+region A such that 
+$I_{B}/I_{A} \geqslant 1$, 
+the particle with original weight $w_{0}$ is split into 
+$n = I_{B}/I_{A}$
+particles, each with weight $w_{0}/n$.  If instead region B is less important
+than
+region A such that
+$I_{B}/I_{A} < 1$, 
+the particle will undergo roulette. 
+The particle will survive with a probability n and weight $w_{0}/n$
+\cite{Carter_Cashwell_1975}.
+The weight window method in MCNP utilizes both splitting and
+rouletting.  A weight window is a region of phase-space that is assigned an upper and
+lower bound.  The windows can be assigned to cells in the geometry, on a
+superimposed mesh, and to energy bins.  When a particle enters a weight window, its weight is assessed; if
+its weight is above the upper bound or below the lower bound, it is either split
+or rouletted, respectively.

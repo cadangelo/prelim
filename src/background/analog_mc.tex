@@ -1,0 +1,67 @@
+% Section about analog MC and the challenges faced when trying to calculate SDR in
+% FES with no VR.
+
+\subsection{Analog Monte Carlo Calculations}
+
+To quantify the dose rate, we need to know th flux of photons
+produced by the decaying radionuclides in the activated components. The
+activation is causedd by neutron irradiation.
+We need to know what the neutron flux looks like in every region of phase
+space.
+
+We need a detailed distribution of the neutron flux throughout all regions of phase
+space.
+The neutron distribution along with and irradiation and decay scheme of interest 
+can then be input for a nuclear inventory code to generate the photon
+emission density.  This photon emission density is used as a source for the
+photon transport step which ultimately produces the photon flux in every region.
+The photon flux coupled with a flux-to-dose-rate conversion factor will give us
+the dose rate.
+
+
+There are two ways to solve the Boltzmann transport equation: deterministically
+and stochastically.
+The most optimal way to perform accurate, full-scale analysis of FES is
+through Monte Carlo radiation transport *need source*.
+In general, Monte Carlo (MC) calculations rely on repeated, random sampling to solve
+mathematical problems.  The MC method can be applied to radiation transport by
+solving the Boltzmann transport equation through the simulation of random particle
+walks through phase space.  In analog operation mode (i.e. no variance reduction), 
+the source particle's position, energy, direction
+and subsequent collisions are sampled from probability
+distribution functions (PDFs).  Quantities of interest such as flux can be
+scored, or tallied, by averaging particle behavior
+in discrete regions of phase space.
+
+Radiation transport simulations in geometries that have thick shielding, such as
+FES, become challenging for MC codes.  The particles have lots of interactions
+(absorption and scattering) in the shielding regions.  This results in low
+particle fluxes in these discrete regions of phase space.  
+
+The statistical error is a function of the relative error, R, which is defined as
+\begin{equation} \label{eq:2}
+		R = \frac{S_{\overline{x}}}{{\overline{x}}}
+\end{equation}
+where $\overline{x}$ is the average of the tally scores, and $S_{\overline{x}}$ is the standard
+deviation of the tally scores.  For a well behaved tally, R is proportional
+to $1/\sqrt{N}$ where N is the number of tally scores \cite{mcnp_manual}.
+
+To reliably predict results in these regions, many particle
+histories need to be simulated which may require large amounts of computer time
+\cite{haghighat_wagner_2003}.
+
+MC calculation efficiency is measured by a quantity known as the figure of merit
+(FOM).  The FOM is a function of relative error, R, and computer processing
+time, T, 
+as given by
+\begin{equation} \label{eq:3}
+		FOM = \frac{1}{{{R^2}T}}
+\end{equation}
+It is desirable to have a high FOM because it means that less computation time is needed to achieve
+a reasonably low error, less than 0.1 according to the MCNP manual
+\cite{mcnp_manual}. 
+The relative error is inversely proportional to N.
+VR methods
+aim to increase the FOM by increasing N and decreasing $S_{\overline{x}}$ by sampling from biased PDFs; this effectively
+forces more collisions in regions of phase space that are
+important to the tally of interest. 
