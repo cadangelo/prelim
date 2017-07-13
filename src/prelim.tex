@@ -36,7 +36,7 @@
 
 %%% Uncomment the following if your .bib contains references that you will not 
 %%% explicitly cite, but that should be in the final bibliography:
-% \nocite{*}
+\nocite{*}
 
 \ifpdf
 \DeclareGraphicsExtensions{.pdf, .jpg, .tif}
@@ -53,6 +53,7 @@
 
 %% Now include the tex files for each chapter, like so (I put these in separate dirs): 
 % \include{intro/intro}
+\include{background/background}
 % \include{motivation/motivation}
 % \include{related/related}
 
@@ -69,8 +70,9 @@
 % \end{colophon}
 
 %% McBride is a very nice style (some version is included in this distribution)
-\bibliographystyle{mcbride}
-\bibliography{your-bib-file}
+%\bibliographystyle{mcbride}
+\bibliographystyle{ieeetr}
+\bibliography{thebibliography}
 
 %% Want an index?  Neither did I.
 %\printindex
