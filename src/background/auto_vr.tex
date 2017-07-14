@@ -49,7 +49,7 @@ energy, and angle and the adjoint operator $H^{+}$ is given by
 			\int_{0}^{\infty} dE'
 			\int_{4\pi} d\Omega'
 			\sigma_{s}( \overrightarrow{r}, E 
-			\rightarrow E', \widehat{\Omega}' 
+			\rightarrow E', \widehat{\Omega} 
 			\rightarrow \widehat{\Omega}' )
 \end{equation}
 The identity can also be written as
@@ -74,7 +74,7 @@ function,
 \begin{equation} \label{eq:5}
 		q^{+} = \sigma_{d}
 \end{equation}
-and substitute this into \ref{eq:4} and \ref{eq:2b} 
+and substitute this into Eq. \ref{eq:4} and Eq. \ref{eq:2b} 
 \begin{equation}
 		R = \langle \Psi, q^{+} \rangle = \langle \Psi^{+}, q \rangle
 \end{equation}
@@ -87,7 +87,74 @@ The Consistent Adjoint Driven Importance Sampling (CADIS) method is one of the
 hybrid deterministic  VR
 techniques that uses the adjoint solution to 
 formulate source and transport biasing parameters for MC transport.
-More specifically, CADIS determines the parameters for the weight window
-technique.
+More specifically, CADIS determines the parameters for source biasing and the
+weight window lower bounds in a consistent manner.
+The response, or tally, of interest in a transport calculation can be represented by
+the following equation
+\begin{equation} \label{eq:6}
+	R = \int_{V}d\overrightarrow{r} \int_{E} dE
+	\int_{4\pi} d\widehat{\Omega}
+	\sigma_{d}(\overrightarrow{r}, E, \widehat{\Omega})
+	\Psi(\overrightarrow{r}, E, \widehat{\Omega})
+\end{equation}
+and in terms of the adjoint flux, 
+\begin{equation} \label{eq:7}
+	R = \int_{V}d\overrightarrow{r} \int_{E} dE
+	\int_{4\pi} d\widehat{\Omega}
+	q(\overrightarrow{r}, E, \widehat{\Omega})
+	\Psi^{+}(\overrightarrow{r}, E, \widehat{\Omega})
+\end{equation}
+The MC solution of the response relies upon the sampling of the particle source
+distribution, $q(\overrightarrow{r}, E, \widehat{\Omega})$, represented by a PDF.
+In an effort to decrease the variance, it is possible to sample from a biased
+PDF which is given by
+\begin{equation} \label{eq:8}
+	\widehat{q}(\overrightarrow{r}, E, \widehat{\Omega}) =
+	\frac{\Psi^{+}(\overrightarrow{r}, E,\widehat{\Omega})
+	q(\overrightarrow{r}, E, \widehat{\Omega})}{R}
+\end{equation}
+This biased PDF represents the contribution of particles from phase-space
+$(\overrightarrow{r}, E, \widehat{\Omega})$ to the total detector response, R.
+As previously mentioned, when sampling from a biased PDF, the particle weight
+needs to be adjusted to eliminate systematic bias.  
+\begin{equation} \label{eq:9}
+	w(\overrightarrow{r}, E,
+	\widehat{\Omega})\widehat{q}(\overrightarrow{r}, E, \widehat{\Omega})=
+	w_{0}q(\overrightarrow{r}, E, \widehat{\Omega})
+\end{equation}
+Substituting in Eq. \ref{eq:8}, the corrected paticle weight is shown to have
+an inverse relation to the adjoint flux, or importance function.
+\begin{equation} \label{eq:10}
+	w(\overrightarrow{r}, E, \widehat{\Omega})=
+	\frac{R}{\Psi^{+}(\overrightarrow{r}, E, \widehat{\Omega})}
+\end{equation}
+%The biased transport operator is derived consistently from the biased source
+%parameter.
+In the weight window technique, particles are either split or
+rouletted as they move from region to region based on the ratio of their
+importances and their weight is updated accordingly.  
+%This can be extended to
+%the transport biasing parameter which uses the adjoint flux as an importance
+%function as follows
+The weights are used for both the source and transport biasing parameters and
+are derived from importance sampling in a consistent manner.  
+The transport is biased according to the following relationship
+\begin{equation} \label{eq:11}
+	w(\overrightarrow{r}, E, \widehat{\Omega})=
+	w(\overrightarrow{r}', E', \widehat{\Omega}')
+	\left [ \frac{\Psi^{+}(\overrightarrow{r}', E', \widehat{\Omega}')}
+	{\Psi^{+}(\overrightarrow{r}, E, \widehat{\Omega})} \right ]
+\end{equation}
+The width of the weight windows is determined by a parameter defined to be the
+ratio between upper and lower bounds $\alpha =
+w_{u}/w_{l}$.  MCNP uses a default value for $\alpha$ and the weight window lower
+bounds are given by 
+\begin{equation} \label{eq:12}
+	w_{l}(\overrightarrow{r}, E, \widehat{\Omega}) = 
+	\frac{R}{\Psi^{+}(\overrightarrow{r}, E, \widehat{\Omega})
+	(\frac{\alpha + 1}{2})}
+\end{equation}
+
+
 
 

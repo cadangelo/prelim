@@ -1,7 +1,7 @@
 all: pdf
 
 pdf: 
-		pdflatex prelim bibtex prelim.aux pdflatex prelim pdflatex prelim
+		pdflatex prelim.tex bibtex prelim.aux pdflatex prelim.tex
 
 preview: pdf
 		evince prelim.pdf
