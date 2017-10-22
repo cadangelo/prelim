@@ -1,0 +1,106 @@
+\chapter{Proposal}\label{ch:proposal}
+
+%% This section will discuss how to adapt the MS-CADIS method to dynamic
+%% systems
+\section{Adapt MS-CADIS for Moving Geometries}\label{sec:adapt}
+As seen in section *need number*, it was demonstrated that the variance
+reduction parameters generated with the GT-CADIS method are insufficient for
+optimizing the neutron transport step in cases that involve the movement 
+of irradiated components after shutdown.  
+The following section *need number* will discuss a proposed adaptation to the
+MS-CADIS method that will show the derivation of a time-integrated coupling
+term.
+
+\begin{figure}\label{gen_q_n_+}
+\centering
+
+        \tikzstyle{script} = [ellipse, fill=blue!20, draw, text centered, node distance=3cm]
+        \tikzstyle{code} = [ellipse, fill=green!20, draw, text centered, node distance=3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{line} = [draw, -latex']
+        
+        \begin{tikzpicture}[node distance = 2 cm, auto]
+        	%Generate adj gamma Partisn input
+                \node [script] (partgen) {part.py};
+                \node [file, left =1.2 of partgen] (pgeom) {$\gamma$ DAGMC geometry};
+                \node [file, right=1.2 of partgen] (f2d) {Flux-to-dose
+		converstion factors};
+                \node [file, below=1.2 of partgen] (ppartinp) {Partisn input file};
+                \path [line] (pgeom) -- (partgen);
+                \path [line] (f2d) -- (partgen);
+        	\path [line] (partgen) -- (ppartinp);
+        	% Partisn adj gamma transport
+                \node [code, below =1.2 of ppartinp] (partadjp) {Partisn adjoint $\gamma$ transport};
+        	\node [file, below =7.0 of pgeom] (padjf) {Partisn $\phi_{\gamma}^{+}$ file};
+        	\node [script, right =1.2 of padjf] (pf2mesh) {atflux\_to\_mesh.py};
+        	\node [file, right =1.2 of pf2mesh] (padjfmesh) {$\phi_{\gamma}^{+}$ mesh file};
+        	\path [line] (ppartinp) -- (partadjp);
+        	\path [line] (partadjp) -- (padjf);
+        	\path [line] (padjf) -- (pf2mesh);
+        	\path [line] (pf2mesh) -- (padjfmesh);
+        	% Generate adj n source
+        	\node [file, below of=padjf] (ngeom) {Neutron DAGMC geometry};
+        	\node [script, right =1.2 of ngeom] (gtcadis) {gtcadis.py}; 
+        	\node [file, right =1.2 of gtcadis] (matlib) {ALARA material library};
+        	\node [file, below of =gtcadis] (nadjs) {$q_{n}^{+}$ mesh file};
+        	\path [line] (ngeom) -- (gtcadis);
+        	\path [line] (padjfmesh) -- (gtcadis);
+        	\path [line] (matlib) -- (gtcadis);
+        	\path [line] (gtcadis) -- (nadjs);
+        
+        \end{tikzpicture}
+
+	\caption{Workflow for generating the optimal
+	adjoint neutron source via the GT-CADIS method.  Scripts are shown in
+	blue ovals, physics codes in green ovals, and files in white
+	rectangles.}
+\end{figure}
+
+
+\begin{figure}\label{gen_q_n_+}
+\centering
+
+        \tikzstyle{script} = [ellipse, fill=blue!20, draw, text centered, node distance=3cm]
+        \tikzstyle{code} = [ellipse, fill=green!20, draw, text centered, node distance=3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{line} = [draw, -latex]
+        
+        \begin{tikzpicture}[node distance = 2 cm, auto]
+        	%Generate adj neutron Partisn input
+                \node [script] (partgen) {part.py};
+		\node [file, left =1.2 of partgen] (ngeom) {Neutron DAGMC geometry};
+                \node [file, right=1.2 of partgen] (nadjs) {$q_{n}^{+}$ mesh file};
+                \node [file, below=1.2 of partgen] (npartinp) {Partisn input file};
+                \path [line] (ngeom) -- (partgen);
+                \path [line] (nadjs) -- (partgen);
+        	\path [line] (partgen) -- (npartinp);
+        	% Partisn adj neutron transport
+                \node [code, below =1.2 of npartinp] (partadjn) {Partisn adjoint neutron transport};
+        	\node [file, below =7.0 of pgeom] (nadjf) {Partisn $\phi_{n}^{+}$ file};
+        	\node [script, right =1.2 of nadjf] (pf2mesh) {atflux\_to\_mesh.py};
+        	\node [file, right =1.2 of pf2mesh] (nadjfmesh) {$\phi_{n}^{+}$ mesh file};
+        	\path [line] (npartinp) -- (partadjn);
+        	\path [line] (partadjn) -- (nadjf);
+        	\path [line] (nadjf) -- (pf2mesh);
+        	\path [line] (pf2mesh) -- (nadjfmesh);
+		%Generate biased source and WW
+		\node [file, below = 1.5 of nadjf] (unbiased) {Unbiased
+		neutron source};
+		\node [script, right = 1.2 of unbiased] (cadis) {cadis.py};
+		\node [file, below = 1.2 of cadis] (biased) {Biased neutron
+		source};
+		\node [file, right = 1.2 of biased] (wwinp) {Weight window
+		mesh};
+		\path [line] (unbiased) -- (cadis);
+		\path [line] (nadjfmesh) -- (cadis);
+		\path [line] (cadis) -- (biased);
+		\path [line] (cadis) -- (wwinp);
+
+
+        \end{tikzpicture}
+
+	\caption{Workflow for generating a biased source and weight windows to
+	optimize the neutron transport step.  Scripts are shown in
+	blue ovals, physics codes in green ovals, and files in white
+	rectangles.}
+\end{figure}

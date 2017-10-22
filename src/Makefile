@@ -7,4 +7,4 @@ preview: pdf
 		evince prelim.pdf
 
 clean:
-		rm  *.out *.idx *.lof *.lot *.log *.toc 
+		rm  *.out *.idx *.lof *.log *.toc *.aux *.bbl *.blg 
