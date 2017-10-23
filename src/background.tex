@@ -414,7 +414,33 @@ an approximation of a linear relationship between $q_p$ and $\phi_n$ will suffic
 \section{Moving Systems} \label{sec:moving_sys}
 This section will discuss how systems that involve moving components are
 currently modeled.
-Should reference MCNP moving CSG, delayed gamma capability.
+Historically, Monte Carlo analysis of dynamic systems is performed using a series of separate
+calculations with different input files that contain step-wise changes of the
+geometric position.  The moving objects capability in MCNP6 allows for the
+motion of objects during a single simulation.
+
+\subsection{MCNP6 Moving Objects Capability} \label{sec:mcnp_move}
+This new capability available in MCNP6 allows for rigid body transformations of
+objects
+including rectilinear translations and curvilinear translations and rotations.
+The objects can move with constant velocity, constant acceleration, or be
+relocated.
+Object kinetics are not treated so the user must use caution and supply
+transformations that will not cause objects to overlap.
+This capability is currently applicable to MCNP's native geometry format,
+constructive solid geometry (CSG) and is not available for mesh-based
+geometries *make sure this is true*.
+
+Sources can also be assigned to moving objects, therefore can move with the
+same dynamics as other objects in the problem.
+
+This capability also allows for the treatment of secondary particles emitted by
+objects in motion. The delayed particle's location, direction, energy, and
+time are stored at the time of fission or activation and then at the time of
+emission, the object's updated location and orientation are calculated to
+provide the correct location and orientation of the delayed particle emission
+at the time of emission. 
+
 Should reference presentation on FLUKA simulation w/ moving geom.
 
 
