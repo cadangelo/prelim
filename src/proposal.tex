@@ -36,8 +36,8 @@ term.
         \begin{tikzpicture}[node distance = 2 cm, auto]
         	%Generate adj gamma Partisn input
                 \node [script] (partgen) {part.py};
-                \node [file, left =1.2 of partgen] (pgeom) {$\gamma$ DAGMC geometry};
-                \node [file, right=1.2 of partgen] (f2d) {Flux-to-dose
+                \node [file, left =0.9 of partgen] (pgeom) {$\gamma$ DAGMC geometry};
+                \node [file, right=0.9 of partgen] (f2d) {Flux-to-dose
 		converstion factors};
                 \node [file, below=0.9 of partgen] (ppartinp) {Partisn input file};
                 \path [line] (pgeom) -- (partgen);
@@ -45,18 +45,18 @@ term.
         	\path [line] (partgen) -- (ppartinp);
         	% Partisn adj gamma transport
                 \node [code, below=0.9 of ppartinp] (partadjp) {Partisn adjoint $\gamma$ transport};
-        	\node [file, below =7.0 of pgeom] (padjf) {Partisn $\phi_{\gamma}^{+}$ file};
-        	\node [script, right =1.2 of padjf] (pf2mesh) {atflux\_to\_mesh.py};
-        	\node [file, right =1.2 of pf2mesh] (padjfmesh) {$\phi_{\gamma}^{+}$ mesh file};
+        	\node [file, below =0.9 of partadjp] (padjf) {Partisn $\phi_{\gamma}^{+}$ file};
+        	\node [script, below =0.9 of padjf] (pf2mesh) {atflux\_to\_mesh.py};
+        	\node [file, below =0.9 of pf2mesh] (padjfmesh) {$\phi_{\gamma}^{+}$ mesh file};
         	\path [line] (ppartinp) -- (partadjp);
         	\path [line] (partadjp) -- (padjf);
         	\path [line] (padjf) -- (pf2mesh);
         	\path [line] (pf2mesh) -- (padjfmesh);
         	% Generate adj n source
-        	\node [file, below of=padjf] (ngeom) {Neutron DAGMC geometry};
-        	\node [script, right =1.2 of ngeom] (gtcadis) {gtcadis.py}; 
-        	\node [file, right =1.2 of gtcadis] (matlib) {ALARA material library};
-        	\node [file, below of =gtcadis] (nadjs) {$q_{n}^{+}$ mesh file};
+        	\node [script, below =0.9 of padjfmesh] (gtcadis) {gtcadis.py}; 
+        	\node [file, left =0.9 of gtcadis] (ngeom) {Neutron DAGMC geometry};
+        	\node [file, right =0.9 of gtcadis] (matlib) {ALARA material library};
+        	\node [file, below =0.9 of gtcadis] (nadjs) {$q_{n}^{+}$ mesh file};
         	\path [line] (ngeom) -- (gtcadis);
         	\path [line] (padjfmesh) -- (gtcadis);
         	\path [line] (matlib) -- (gtcadis);
@@ -82,28 +82,28 @@ term.
         \begin{tikzpicture}[node distance = 2 cm, auto]
         	%Generate adj neutron Partisn input
                 \node [script] (partgen) {part.py};
-		\node [file, left =1.2 of partgen] (ngeom) {Neutron DAGMC geometry};
-                \node [file, right=1.2 of partgen] (nadjs) {$q_{n}^{+}$ mesh file};
+		\node [file, left =0.9 of partgen] (ngeom) {Neutron DAGMC geometry};
+                \node [file, right=0.9 of partgen] (nadjs) {$q_{n}^{+}$ mesh file};
                 \node [file, below=0.9 of partgen] (npartinp) {Partisn input file};
                 \path [line] (ngeom) -- (partgen);
                 \path [line] (nadjs) -- (partgen);
         	\path [line] (partgen) -- (npartinp);
         	% Partisn adj neutron transport
                 \node [code, below=0.9 of npartinp] (partadjn) {Partisn adjoint neutron transport};
-        	\node [file, below =7.0 of pgeom] (nadjf) {Partisn $\phi_{n}^{+}$ file};
-        	\node [script, right =1.2 of nadjf] (pf2mesh) {atflux\_to\_mesh.py};
-        	\node [file, right =1.2 of pf2mesh] (nadjfmesh) {$\phi_{n}^{+}$ mesh file};
+        	\node [file, below =0.9 of partadjn] (nadjf) {Partisn $\phi_{n}^{+}$ file};
+        	\node [script, below =0.9 of nadjf] (pf2mesh) {atflux\_to\_mesh.py};
+        	\node [file, below =0.9 of pf2mesh] (nadjfmesh) {$\phi_{n}^{+}$ mesh file};
         	\path [line] (npartinp) -- (partadjn);
         	\path [line] (partadjn) -- (nadjf);
         	\path [line] (nadjf) -- (pf2mesh);
         	\path [line] (pf2mesh) -- (nadjfmesh);
 		%Generate biased source and WW
-		\node [file, below = 1.5 of nadjf] (unbiased) {Unbiased
+		\node [script, below = 0.9 of nadjfmesh] (cadis) {cadis.py};
+		\node [file, left =0.9 of cadis ] (unbiased) {Unbiased
 		neutron source};
-		\node [script, right = 1.2 of unbiased] (cadis) {cadis.py};
-		\node [file, below=0.9 of cadis] (biased) {Biased neutron
+		\node [file, below =0.9 of cadis] (biased) {Biased neutron
 		source};
-		\node [file, right = 1.2 of biased] (wwinp) {Weight window
+		\node [file, right = 0.9 of biased] (wwinp) {Weight window
 		mesh};
 		\path [line] (unbiased) -- (cadis);
 		\path [line] (nadjfmesh) -- (cadis);
@@ -151,9 +151,9 @@ term.
 		step1};
 		\node [file, below=0.9 of step1] (alaraflux) {ALARA flux
 		file};
-		\node [file, left = 1.2 of alaraflux] (alarainp) {ALARA input
+		\node [file, left = 0.9 of alaraflux] (alarainp) {ALARA input
 		file};
-		\node [file, right =1.2 of alaraflux] (alaramat) {ALARA
+		\node [file, right =0.9 of alaraflux] (alaramat) {ALARA
 		material library};
 		\node [code, below=0.9 of alaraflux] (alara) {ALARA};
 		\node [file, below=0.9 of alara] (psrc) {ALARA photon
@@ -174,7 +174,7 @@ term.
 		% Update source mesh position
 		\node [script, below = 0.9 of psrcmesh] (trtool) {DAGMC
 		transform tool};
-		\node [file, left = 1.2 of psrcmesh] (tr) {Transformation
+		\node [file, left = 0.9 of psrcmesh] (tr) {Transformation
 		file};
 		\node [file, below =0.9 of trtool] (psrcmoved) {Updated
 		$q_{p,t_{d}}$};
