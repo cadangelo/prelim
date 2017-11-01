@@ -1,53 +1,80 @@
 \chapter{Literature Review} \label{ch:litrev}
+The goal of this thesis work is to optimize the neutron transport step of a
+coupled, multi-physics process occuring in a system that has moving components.  One
+important application of this work is the quatification of the SDR during
+maintenace operations in FES.
+This chapter intends to provide background information on SDR analysis
+in FES and how radiation transport calculations are currently handled in systems with
+moving geometries and sources.
 
 % Section introducing SDR calculations, particularly for FES
-\section{SDR calculations}\label{sec:sdr_calcs}
-Shutdown dose rate (SDR) calculations are necessary to quantify the potential
-dose to personnel working in facilities exposed to intense radiation fields
-like fusion energy systems (FES).  The dose rate is caused by decay photons
-that are emitted by materials irradiated by neutrons.  Therefore, these calculations involve a neutron
-transport step, then an activation analysis to determine the decay photon
-spectrum for a specific irradiation and decay scenario,
-and finally a photon transport step to determine the dose rate.
-One methodology for calculating the SDR is known as the Rigorous Two Step (R2S)
-method.  This method relies on a MC code for both neutron and photon transport
+\section{Shutdown Dose Rate Calculations}\label{sec:sdr_calcs}
+During device operation, the structural componets in FES are subject to intense neutron irradiation
+causing the formation of radionuclides.  After shutdown, there is no longer a
+neutron source, but these radionuclides
+decay through the emission of high energy photons.
+It is necessary to quantify the dose rate from these decay photons, otherwise
+known at the 
+shutdown dose rate (SDR), to ensure the occupational safety
+of personnel working in these facilities.
+%The biological dose rate is caused by decay photons that
+%are emitted by materials that were irradiated by neutrons during device operation.
+%Therefore, these calculations involve a neutron
+%transport step to determine the neutron flux as a function of space and energy,
+%then an activation analysis to determine the decay photon
+%spectrum for a specific irradiation and decay scenario,
+%and finally a photon transport step to determine the dose rate.
+SDR calculations require neutron and photon transport steps coupled
+by activation analysis.
+One methodology for quantifying the SDR is known as the Rigorous Two Step (R2S)
+method.  This method relies on MC simulations of both neutron and photon
+transport steps
 and a nuclear inventory code for activation analysis.
 The goal of the neutron transport step is to determine the neutron flux
-discretized by space and energy.  This neutron flux along with an irradiation
-and decay scenario of interest are used as input into a nuclear inventory
-code.  This code will give the photon flux as a function of decay time which
+as a function of space and energy.  This neutron flux along with a specific irradiation
+and decay scenario are used as input into a nuclear inventory
+code to determine the photon spectrum as a function of decay time.
+The calculated photon spectrum for each decay time
 is then used as the source for the photon transport step.  A photon flux tally
 fitted with flux-to-dose-rate conversion factors is used during this step to
 determine the final SDR \cite{Chen_2002}.
 
+%\section{Computational Radiation Transport}
+
+%The neutron distribution along with and irradiation and decay scheme of interest 
+%can then be input for a nuclear inventory code to generate the photon
+%emission density.  This photon emission density is used as a source for the
+%photon transport step which ultimately produces the photon flux in every region.
+%The photon flux coupled with a flux-to-dose-rate conversion factor will give us
+%the dose rate.
+
+
+%There are two ways to solve the Boltzmann transport equation: deterministically
+%and stochastically.
+%\cite{haghighat_wagner_2003}.
+
+%\subsection{Deterministic Codes}
 
 % Section about analog MC and the challenges faced when trying to calculate SDR in
 % FES with no VR.
-\section{Analog Monte Carlo Calculations} \label{sec:analog_mc}
 
-To quantify the dose rate, we need to know the flux of photons
-produced by the decaying radionuclides in the activated components. The
-activation is caused by neutron irradiation.
-We need to know what the neutron flux looks like in every region of phase
-space.
+\subsection{Analog Monte Carlo Calculations} \label{sec:analog_mc}
 
-We need a detailed distribution of the neutron flux throughout all regions of phase
-space.
-The neutron distribution along with and irradiation and decay scheme of interest 
-can then be input for a nuclear inventory code to generate the photon
-emission density.  This photon emission density is used as a source for the
-photon transport step which ultimately produces the photon flux in every region.
-The photon flux coupled with a flux-to-dose-rate conversion factor will give us
-the dose rate.
+The quantification of the SDR requires a detailed distribution of first the
+neutron and then the photon flux throughout all regions of phase space.  
+Due to the size and complexity of FES, the most optimal way to 
+obtain accurate particle distributions is through MC radiation transport 
+rather than deterministic methods *need source*.
 
+%To quantify the dose rate, we need to know the flux of photons
+%produced by the decaying radionuclides in the activated components. The
+%activation is caused by neutron irradiation.
+%We need to know what the neutron flux looks like in every region of phase
+%space.
 
-There are two ways to solve the Boltzmann transport equation: deterministically
-and stochastically.
-The most optimal way to perform accurate, full-scale analysis of FES is
-through Monte Carlo radiation transport *need source*.
-In general, Monte Carlo (MC) calculations rely on repeated, random sampling to solve
-mathematical problems.  The MC method can be applied to radiation transport by
-solving the Boltzmann transport equation through the simulation of random particle
+In general, MC calculations rely on repeated, random sampling to solve
+mathematical problems.  In radiation transport applications, the MC method is 
+used to solve the Boltzmann transport equation through the simulation of random particle
 walks through phase space.  In analog operation mode (i.e. no variance reduction), 
 the source particle's position, energy, direction
 and subsequent collisions are sampled from probability
@@ -55,10 +82,11 @@ distribution functions (PDFs).  Quantities of interest such as flux can be
 scored, or tallied, by averaging particle behavior
 in discrete regions of phase space.
 
-Radiation transport simulations in geometries that have thick shielding, such as
-FES, become challenging for MC codes.  The particles have lots of interactions
-(absorption and scattering) in the shielding regions.  This results in low
-particle fluxes in these discrete regions of phase space.  
+One challenge incurred by MC simulations of FES is the presence of heavily
+shielded regions.  The particles undergo a high degree of
+collisions (absorption and scattering) in the shielding which results in low
+particle fluxes in these discrete regions of phase space.  Regions that have low
+particle fluxes have higher statistical uncertainty.
 
 The statistical error is a function of the relative error, R, which is defined as
 \begin{equation} \label{eq:1.2}
@@ -68,9 +96,10 @@ where $\overline{x}$ is the average of the tally scores, and $S_{\overline{x}}$ 
 deviation of the tally scores.  For a well behaved tally, R is proportional
 to $1/\sqrt{N}$ where N is the number of tally scores \cite{mcnp_manual}.
 
-To reliably predict results in these regions, many particle
-histories need to be simulated which may require large amounts of computer time
-\cite{haghighat_wagner_2003}.
+The relative error is inversely proportional to N.
+Therefore, to reliably predict results in these regions, many particle
+histories need to be simulated which may require large amounts of computer time.
+
 
 MC calculation efficiency is measured by a quantity known as the figure of merit
 (FOM).  The FOM is a function of relative error, R, and computer processing
@@ -79,23 +108,24 @@ as given by
 \begin{equation} \label{eq:1.3}
 		FOM = \frac{1}{{{R^2}T}}
 \end{equation}
-It is desirable to have a high FOM because it means that less computation time is needed to achieve
-a reasonably low error, less than 0.1 according to the MCNP manual
-\cite{mcnp_manual}. 
-The relative error is inversely proportional to N.
-VR methods
-aim to increase the FOM by increasing N and decreasing $S_{\overline{x}}$ by sampling from biased PDFs; this effectively
-forces more collisions in regions of phase space that are
+A high FOM is desirable because it means that less computation time is needed to achieve
+a reasonably low error, less than 0.1 according to the MCNP manual \cite{mcnp_manual}. 
+
+
+
+\section{Monte Carlo Variance Reduction Methods}\label{sec:vr_methods}
+
+Certain MC calculations require the use of VR methods in order
+to complete or improve the efficiency of the calculation. As previously
+discussed, the highly-attenuating configuration of FES requires the use of
+VR to optimize the transport.
+Looking to Eq. \ref{eq:1.3}, VR methods aim to increase the FOM by increasing N and decreasing 
+$S_{\overline{x}}$ by by preferentially sampling trajectories that are likely to
+contribute to the tallies of interest.
+This effectively forces more collisions in regions of phase space that are
 important to the tally of interest. 
+This is accomplished by sampling from biased PDFs that govern particle behavior. 
 
-
-\section{VR Methods}\label{sec:vr_methods}
-
-Certain MC calculations require the use of variance reduction methods in order
-to complete or improve the efficiency of the calculation. 
-This is accomplished
-by preferentially sampling trajectories that are likely to contribute to the tallies of
-interest.
 In order to compensate for this biased sampling, the particle statistical weight
 is adjusted accordingly.
 The relationship between the particle statistical weight, w, and the PDF that
@@ -106,12 +136,13 @@ governs particle behavior is as follows
 
 One of the earliest and still commonly used methods of VR is particle splitting
 and rouletting.  This is particularly useful in deep penetration simulations,
-like FES.  Generally speaking, to increase the number of particle
+like FES where neutrons penetrate deeply into shielded regions.  
+Generally speaking, to increase the number of particle
 histories that can contribute to tallies of interest, it is desirable to split
-particles as the enter more important regions and roulette particles as the
+particles as they enter more important regions and roulette particles as the
 enter less important regions. 
-This requires assigning an importance, I, to every
-region in the geometry and adjusting the weight, w, of the new particles. 
+This requires assigning an importance, $I$, to every
+region in the geometry and adjusting the weight, $w$, of the new particles. 
 When a particle moves from a region A to a region B,
 the ratio of importances is calculated.  If region B is more important than
 region A such that 
@@ -119,13 +150,12 @@ $I_{B}/I_{A} \geqslant 1$,
 the particle with original weight $w_{0}$ is split into 
 $n = I_{B}/I_{A}$
 particles, each with weight $w_{0}/n$.  If instead region B is less important
-than
-region A such that
+than region A such that
 $I_{B}/I_{A} < 1$, 
 the particle will undergo roulette. 
-The particle will survive with a probability n and weight $w_{0}/n$
+The particle will survive with a probability $n$ and weight $w_{0}/n$
 \cite{Carter_Cashwell_1975}.
-The weight window method in MCNP utilizes both splitting and
+The weight window method in the Monte Carlo N-Particle (MCNP) code utilizes both splitting and
 rouletting.  A weight window is a region of phase-space that is assigned an upper and
 lower bound.  The windows can be assigned to cells in the geometry, on a
 superimposed mesh, and to energy bins.  When a particle enters a weight window, its weight is assessed; if
@@ -133,27 +163,25 @@ its weight is above the upper bound or below the lower bound, it is either split
 or rouletted, respectively.
 
 
-\section{Automated VR Techniques}\label{sec:auto_vr}
+\section{Automated Variance Reduction Techniques}\label{sec:auto_vr}
 
-%Historically, variance reduction methods require a vast amount of user expertise
-%and time.
-VR techniques require the user to have a priori knowledge of the problem physics
-in order to assign importance parameters.
+Historically, VR techniques have required a priori knowledge of the problem physics
+in order to assign importance parameters, therefore requiring a vast amount of
+user expertise and time.
 Many techniques have been developed over the years to automate the selection and
-assignment of these parameters to reduce the time and expertise required by
-the user.
+assignment of these parameters to reduce computational and human effort.
 
 One class of VR techniques, known as hybrid deterministic/MC methods,
-is based upon
-the solution to the adjoint Boltzmann transport equation having physical
+is based upon the solution to the adjoint Boltzmann transport equation having
 significance as the measure of importance of a particle to some specified
 objective function.  
 Because deterministic solutions to the transport equation %are less precise but
-require much less computation time, they are useful as an estimate of
+require much less computation time, they are useful as an estimate of the
+adjoint
 particle flux throughout phase space which can then be used to determine
 importance of specific regions.
 To demonstrate the use of the adjoint solution as an importance function,
-we will first start with the linear, time-independent Boltzmann transport
+first start with the linear, time-independent Boltzmann transport
 equation shown below
 \begin{equation} \label{eq:3.1a}
   H\Psi = q
@@ -187,39 +215,42 @@ energy, and angle and the adjoint operator $H^{+}$ is given by
 			\rightarrow E', \widehat{\Omega} 
 			\rightarrow \widehat{\Omega}' )
 \end{equation}
-The identity can also be written as
+This identity can also be written as
 \begin{equation} \label{eq:3.2b}
 		\langle \Psi^{+} , q \rangle =
 		\langle \Psi, q^{+} \rangle
 \end{equation}
 As mentioned, the adjoint solution to the transport
-equation will be used as an importance function therefore we need to solve
+equation will be used as an importance function therefore a solution to the
+following equation is needed
 \begin{equation} \label{eq:3.3}
 		H^{+}\Psi{+} = q^{+}
 \end{equation}
 which requires the thoughtful selection of an adjoint source $q^{+}$.
-To demonstrate the physical significance of the adjoint, we will consider the
+To demonstrate the physical significance of the adjoint, consider the
 detector response, R
 \begin{equation} \label{eq:3.4}
 		R = \langle \Psi, \sigma_{d}\rangle 
 \end{equation}
 where $\sigma_{d}$ is a detector response function.
-If we choose the adjoint source to be equivalent to the detector response
+If the adjoint source is chosen to be equivalent to the detector response
 function,
 \begin{equation} \label{eq:3.5}
 		q^{+} = \sigma_{d}
 \end{equation}
-and substitute this into Eq. \ref{eq:3.4} and Eq. \ref{eq:3.2b} 
+and substituted into Eq. \ref{eq:3.4} and Eq. \ref{eq:3.2b} 
 \begin{equation}
 		R = \langle \Psi, q^{+} \rangle = \langle \Psi^{+}, q \rangle
 \end{equation}
 the adjoint flux $\Psi^{+}$ represents the importance of a region to
-$\sigma_{d}$.
-This final relation allows us to know the response R for any source q once the
+%$\sigma_{d}$. /// I think this is wrong and should be R
+$R$.
+This final relation allows us to know the response $R$ for any source $q$ once the
 adjoint flux $\Psi^{+}$ for a detector of interest is known.
 
+\subsection{CADIS}
 The Consistent Adjoint Driven Importance Sampling (CADIS) method is one of the
-hybrid deterministic/MC  VR
+hybrid deterministic/MC VR
 techniques that uses the adjoint solution to 
 formulate source and transport biasing parameters for MC transport.
 More specifically, CADIS determines the parameters for source biasing and the
@@ -248,8 +279,9 @@ PDF which is given by
 	\frac{\Psi^{+}(\overrightarrow{r}, E,\widehat{\Omega})
 	q(\overrightarrow{r}, E, \widehat{\Omega})}{R}
 \end{equation}
-This biased PDF represents the contribution of particles from phase-space
-$(\overrightarrow{r}, E, \widehat{\Omega})$ to the total detector response, R.
+This biased PDF represents the contribution of particles from phase space
+%$(\overrightarrow{r}, E, \widehat{\Omega})$ 
+to the total detector response, R.
 As previously mentioned, when sampling from a biased PDF, the particle weight
 needs to be adjusted to eliminate systematic bias.  
 \begin{equation} \label{eq:3.9}
@@ -292,25 +324,28 @@ bounds are given by
 \end{equation}
 
 
+\section{Automated Variance Reduction for Shutdown Dose Rate Calculations}\label{sec:auto_vr_sdr}
 
-
-\section{Automated VR for SDR Calculations}\label{sec:auto_vr_sdr}
-There are two transport steps involved in SDR calculations; the initial
-neutron transport to simulate the irradiation and the subsequent photon
-transport simulating the decaying gammas.  The full-scale simulations in
-large, complex FES models are very computationally expensive.
-
-The R2S method applied to a full-scale, 3D FES becomes impractical due to the
+The R2S method requires two transport steps; 
+the initial neutron transport to simulate the irradiation and the subsequent photon
+transport simulating the decay photons.  
+Applying this method to a full-scale, 3D FES becomes impractical due to the
 need for accurate space- and energy-dependent fluxes generated by MC codes 
-throughout the geometry.  Optimizing the photon transport step can be done
-through a
-straightforward application of the CADIS or FW-CADIS method *need source*.  An
-adjoint transport calculation can be performed where the detector
-response function  is set equal to the photon flux tally fitted with
-flux-to-dose-rate conversion factors and the resulting adjoint flux can be used as an
-importance function to determine source and transport biasing parameters *need
-source*.  
-Optimizing the neutron transport step, however, is not as
+throughout the geometry.  
+
+Optimizing the photon transport step can be done through a
+straightforward application of the CADIS %or FW-CADIS
+method *need source*. 
+An adjoint transport calculation can be performed where the detector
+response function is set equal to the photon flux tally fitted with
+flux-to-dose-rate conversion factors
+The resulting adjoint photon flux scored in a region of phase space is equivalent
+to the importance of that region to the detector response.
+%and the resulting adjoint flux can be used as an importance function
+Therefore, the adjoint flux can be used to determine source and transport
+biasing parameters.
+
+Optimizing the neutron transport step of R2S, however, is not as
 straightforward
 %Because the response function depends on the subsequent
 %computational steps of activation and decay photon transport \cite{Ibrahim_2015}.
@@ -321,9 +356,10 @@ aims to increase the efficiency of the neutron transport step using an importanc
 that captures the potential of regions to become activated and the importance of
 the resulting decay photons to the final SDR\cite{Ibrahim_2015}.
 
-As shown before in Eq. *need eqn number*, the detector response can be
-expressed as the integral of the importance function, I, times the source
-distribution, q
+%As shown before in Eq. *need eqn number*, //don't think this was mentioned
+The detector response can be
+expressed as the integral of the importance function, $I$, multiplied by the source
+distribution, $q$
 \begin{equation} \label{eq:4.1}
 R = \int_{V}\int_{E} 
     I(\overrightarrow{r}, E)
