@@ -8,27 +8,16 @@ in FES and how radiation transport calculations are currently handled in systems
 moving geometries and sources.
 
 % Section introducing SDR calculations, particularly for FES
-\section{Shutdown Dose Rate Calculations}\label{sec:sdr_calcs}
-During device operation, the structural componets in FES are subject to intense neutron irradiation
-causing the formation of radionuclides.  After shutdown, there is no longer a
-neutron source, but these radionuclides
-decay through the emission of high energy photons.
-It is necessary to quantify the dose rate from these decay photons, otherwise
-known at the 
-shutdown dose rate (SDR), to ensure the occupational safety
-of personnel working in these facilities.
-%The biological dose rate is caused by decay photons that
-%are emitted by materials that were irradiated by neutrons during device operation.
-%Therefore, these calculations involve a neutron
-%transport step to determine the neutron flux as a function of space and energy,
-%then an activation analysis to determine the decay photon
-%spectrum for a specific irradiation and decay scenario,
-%and finally a photon transport step to determine the dose rate.
-SDR calculations require neutron and photon transport steps coupled
-by activation analysis.
-One methodology for quantifying the SDR is known as the Rigorous Two Step (R2S)
-method.  This method relies on MC simulations of both neutron and photon
-transport steps
+\section{Shutdown Dose Rate Analysis}\label{sec:sdr_calcs}
+Shutdown dose rate (SDR) calculations are necessary to quantify the potential
+dose to personnel working in facilities exposed to intense radiation fields
+like fusion energy systems (FES).  The dose rate is caused by decay photons
+that are emitted by materials irradiated by neutrons.  Therefore, these calculations involve a neutron
+transport step, then an activation analysis to determine the decay photon
+spectrum for a specific irradiation and decay scenario,
+and finally a photon transport step to determine the dose rate.
+One methodology for calculating the SDR is known as the Rigorous Two Step (R2S)
+method.  This method relies on a MC code for both neutron and photon transport
 and a nuclear inventory code for activation analysis.
 The goal of the neutron transport step is to determine the neutron flux
 as a function of space and energy.  This neutron flux along with a specific irradiation
