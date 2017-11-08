@@ -18,12 +18,131 @@ MS-CADIS method that will show the derivation of a time-integrated coupling
 term.
 
 \subsection{Generalized MS-CADIS Method}
+In the current literature, MS-CADIS is primarily discussed as it applies to SDR
+analysis.  In actuality, MS-CADIS can be applied to any multi-step process in
+which the primary radiation transport is coupled to a secondary physical process.
+The addition of time integration to this methodology can therefore also be applied to
+any coupled multiphysics process. For this reason, it is prudent to discuss
+MS-CADIS in a more generalized manner.
+
+Begin with the adjoint identity for the neutral particle transport
+equation, 
+ \begin{equation}\label{eq:adj_identity}
+%		\langle \phi(\overrightarrow{r},E), q^{+}(\overrightarrow{r},E) \rangle =
+%		\langle \phi^{+}(\overrightarrow{r},E) , q(\overrightarrow{r},E) \rangle
+		\langle \phi, q^{+} \rangle =
+		\langle \phi^{+}, q \rangle
+ \end{equation}
+where $\phi$ is the forward and 
+$\phi^{+}$ is the adjoint particle flux, and
+$q$ is the forward and 
+$q^{+}$ is the adjoint source distribution.
+The left-hand side of Eq. \ref{eq:adj_identity} has the same form as the
+equation for detector response
+if a detector response function is chosen as the adjoint source.
+For a coupled, multi-step process, MS-CADIS says that the adjoint identity for
+both primary and secondary processes is equal to the final response of the
+system as shown below
+ \begin{equation}\label{eq:adj_1}
+%	 R_{final} = \langle \phi_{1}(\overrightarrow{r},E), q_{1}^{+}(\overrightarrow{r},E) \rangle =
+%		\langle \phi_{1}^{+}(\overrightarrow{r},E) , q_{1}(\overrightarrow{r},E) \rangle
+	 R_{final} = \langle \phi_{1}, q_{1}^{+} \rangle =
+		\langle \phi_{1}^{+} , q_{1} \rangle
+ \end{equation}
+
+	 
+ \begin{equation}\label{eq:adj_2}
+%	 R_{final} = \langle \phi_{2}(\overrightarrow{r},E), q_{2}^{+}(\overrightarrow{r},E) \rangle =
+%		\langle \phi_{2}^{+}(\overrightarrow{r},E) , q_{2}(\overrightarrow{r},E) \rangle
+	 R_{final} = \langle \phi_{2}, q_{2}^{+} \rangle =
+		\langle \phi_{2}^{+} , q_{2} \rangle
+ \end{equation}
+
+Subscripts 1 and 2 denote primary and secondary physical processes,
+respectively.  Ultimately, the goal is to find a solution for the adjoint
+transport equation of the primary physical process to use as an importance
+function to generate source and transport biasing parameters. Therefore, a
+source for the primary adjoint transport is needed.  Using the set of adjoint
+identities in Eq. \ref{eq:adj_1} and \ref{eq:adj_2}, find the following expression
+
+ \begin{equation}\label{eq:adj_src}
+%	 \langle \phi_{1}(\overrightarrow{r},E), q_{1}^{+}(\overrightarrow{r},E) \rangle =
+%	 \langle \phi_{2}^{+}(\overrightarrow{r},E) , q_{2}(\overrightarrow{r},E) \rangle
+	 \langle \phi_{1}, q_{1}^{+} \rangle =
+	 \langle \phi_{2}^{+}, q_{2} \rangle
+ \end{equation}
+
+Given that the sources of the forward primary and the adjoint secondary physics
+are known, both solutions, $ \phi_{1}(\overrightarrow{r},E) $ and
+$\phi_{2}^{+}(\overrightarrow{r},E) $ can be found through transport operations.
+The source of the forward secondary and adjoint primary physics are both
+unknown, therefore a second equation is needed.  This is a coupled, multi-step
+system where the source of the secondary physics depends on - is a response of-
+the solution of the primary physics.  This relationship can be described by the following equation
+
+ \begin{equation}\label{eq:fwd_src}
+%	 q_{2}(\overrightarrow{r},E_{2}) =
+%	 \langle \sigma_{1,2}, \phi_{1}(\overrightarrow{r},E_{1}) \rangle
+	 q_{2} =
+	 \langle \sigma_{1\rightarrow2}, \phi_{1} \rangle
+ \end{equation}
+
+Consider the process of prompt photon production from neutron irradiation.
+The response function, $sigma_{1\rightarrow2}$, is the neutron-gamma production
+cross section $\sigma_{n\rightarrow\gamma}$.  For the process of delayed gamma
+production, $\sigma_{1\rightarrow2}$ is a
+coupling term, $T$, which has been defined by the GT-CADIS method as an approximation of the transmutation
+process *need GT-CADIS source*.  As long as there is a solution for the
+response function that couples the primary and secondary physics together,
+there also exists a solution for the adjoint primary source as shown below.
+
+ \begin{equation}\label{eq:adj_src_1}
+%	 q_{1}^{+}(\overrightarrow{r},E_{1}) = 
+%	 \langle \sigma_{1,2}, \phi_{2}^{+}(\overrightarrow{r},E_{2}) \rangle
+	 q_{1}^{+} = 
+	 \langle \sigma_{1\rightarrow2}, \phi_{2}^{+} \rangle
+ \end{equation}
+
+
 
 \subsection{Time-integrated Coupling Term}
+If the position of the components in the geometry is changing over time during
+the secondary physics, it affects the way the adjoint primary source is
+constructed.  Instead of a single solution to the 
+adjoint secondary physics transport, there is a 
+solution at each position and each time step represented by the following term
 
+	$ \phi_{2}^{+}(\overrightarrow{r}_{v}(t), t)$
+
+where $\overrightarrow{r}_{v}(t)$ refers to the position of volume element, v,
+at time, t.  To solve for the adjoint primary source in each volume element
+$q_{1,v}^{+}$, the solutions of the 
+adjoint secondary transport from each time step are combined by
+integrating over time
+
+ \begin{equation}\label{eq:adj_src_1_avg}
+	 q_{1,v}^{+} =
+	 \int_{t}  \phi_{2}^{+}(\overrightarrow{r}_{v}(t), t)
+	 \sigma_{1\rightarrow 2,v}(t)\, dt
+ \end{equation}
+
+% This assumes that the coupling term $\sigma_{1 \rightarrow 2,v}$ does not change over time.
+ 
 \subsection{Apply Time-integrated Coupling to GT-CADIS}
 
-\section{Implementation}\label{sec:implementation}
+GT-CADIS is an implementation of MS-CADIS that is specific to SDR analysis.  It
+provides a method to calculate a coupling term, T, that relates the neutron
+flux to the photon source.
+Applying time integration to the GT-CADIS methodology results in the following
+solution for the adjoint neutron source
+
+ \begin{equation}\label{eq:adj_src_1_avg}
+	 q_{n,v}^{+}(E_{n}) =
+	 \int_{t}     \phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t)
+	 T_{v}(E_n, E_{\gamma})\, dt
+ \end{equation}
+
+\section{Implementation: Time-integrated GT-CADIS}\label{sec:implementation}
 
 \subsection{Optimized R2S Workflow for Dynamic Systems}
 \begin{figure}\label{gen_q_n_+}
@@ -37,36 +156,50 @@ term.
         \begin{tikzpicture}[node distance = 2 cm, auto]
         	%Generate adj gamma Partisn input
                 \node [script] (partgen) {part.py};
-                \node [file, left =0.9 of partgen] (pgeom) {$\gamma$ DAGMC geometry};
+                \node [file, left =0.9 of partgen] (pgeom) {$\gamma$ DAGMC
+		geometry at t};
                 \node [file, right=0.9 of partgen] (f2d) {Flux-to-dose
 		converstion factors};
-                \node [file, below=0.9 of partgen] (ppartinp) {Partisn input file};
+                \node [file, below =0.4 of partgen] (ppartinp) {Partisn input file};
                 \path [line] (pgeom) -- (partgen);
                 \path [line] (f2d) -- (partgen);
         	\path [line] (partgen) -- (ppartinp);
         	% Partisn adj gamma transport
-                \node [code, below=0.9 of ppartinp] (partadjp) {Partisn adjoint $\gamma$ transport};
-        	\node [file, below =0.9 of partadjp] (padjf) {Partisn $\phi_{\gamma}^{+}$ file};
-        	\node [script, below =0.9 of padjf] (pf2mesh) {atflux\_to\_mesh.py};
-        	\node [file, below =0.9 of pf2mesh] (padjfmesh) {$\phi_{\gamma}^{+}$ mesh file};
+                \node [code, below =0.4 of ppartinp] (partadjp) {Partisn adjoint $\gamma$ transport};
+        	\node [file, below =0.4 of partadjp] (padjf) {Partisn$\phi_{\gamma, t}^{+}$ file};
+        	\node [script, below =0.4 of padjf] (pf2mesh) {atflux\_to\_mesh.py};
+        	\node [file, below =0.4 of pf2mesh] (padjfvmesh)		{$\phi_{\gamma,t}^{+}$ voxel mesh};
+        	\node [script, below =0.4 of padjfvmesh] (conv_v_t){Convert voxel to tet};
+        	\node [file, below =0.4 of conv_v_t](padjftmesh){$\phi_{\gamma,t}^{+}$ tet mesh};
+		\node [script, below =0.4 of padjftmesh](sum){Sum $\phi_{\gamma,t}^{+}$over all time steps};
+		\node [file, below =0.4 of sum](avgadjft){$\overline{\phi_{\gamma}^{+}}$ tet mesh};
+        	\node [script, below =0.4 of avgadjft] (conv_t_v){Convert tet to voxel};
+		\node [file, below =0.4 of conv_t_v](avgadjfv){$\overline{\phi_{\gamma}^{+}}$ voxel mesh};
         	\path [line] (ppartinp) -- (partadjp);
         	\path [line] (partadjp) -- (padjf);
         	\path [line] (padjf) -- (pf2mesh);
-        	\path [line] (pf2mesh) -- (padjfmesh);
+        	\path [line] (pf2mesh) -- (padjfvmesh);
+		\path [line] (padjfvmesh) -- (conv_v_t);
+		\path [line] (conv_v_t) -- (padjftmesh);
+		\path [line] (padjftmesh) -- (sum);
+		\path [line] (sum) -- (avgadjft);
+		\path [line] (avgadjft) -- (conv_t_v);
+		\path [line] (conv_t_v) -- (avgadjfv);
         	% Generate adj n source
-        	\node [script, below =0.9 of padjfmesh] (gtcadis) {gtcadis.py}; 
-        	\node [file, left =0.9 of gtcadis] (ngeom) {Neutron DAGMC geometry};
+        	\node [script, below =0.4 of avgadjfv] (gtcadis) {gtcadis.py}; 
+		\node [file, left =0.9 of gtcadis] (ngeom) {DAGMC geometry at
+		$t_{0}$};
         	\node [file, right =0.9 of gtcadis] (matlib) {ALARA material library};
-        	\node [file, below =0.9 of gtcadis] (nadjs) {$q_{n}^{+}$ mesh file};
+        	\node [file, below =0.4 of gtcadis] (nadjs) {$q_{n}^{+}$ voxel mesh};
         	\path [line] (ngeom) -- (gtcadis);
-        	\path [line] (padjfmesh) -- (gtcadis);
+        	\path [line] (avgadjfv) -- (gtcadis);
         	\path [line] (matlib) -- (gtcadis);
         	\path [line] (gtcadis) -- (nadjs);
         
         \end{tikzpicture}
 
 	\caption{Workflow for generating the optimal
-	adjoint neutron source via the GT-CADIS method.  Scripts are shown in
+	adjoint neutron source via the time-integrated GT-CADIS method.  Scripts are shown in
 	blue ovals, physics codes in green ovals, and files in white
 	rectangles.}
 \end{figure}
@@ -83,27 +216,29 @@ term.
         \begin{tikzpicture}[node distance = 2 cm, auto]
         	%Generate adj neutron Partisn input
                 \node [script] (partgen) {part.py};
-		\node [file, left =0.9 of partgen] (ngeom) {Neutron DAGMC geometry};
-                \node [file, right=0.9 of partgen] (nadjs) {$q_{n}^{+}$ mesh file};
-                \node [file, below=0.9 of partgen] (npartinp) {Partisn input file};
+		\node [file, left =0.9 of partgen] (ngeom) {DAGMC geometry at
+		$t_{0}$};
+                \node [file, right=0.9 of partgen] (nadjs) {$q_{n}^{+}$ voxel mesh};
+                \node [file, below =0.4 of partgen] (npartinp) {Partisn input file};
                 \path [line] (ngeom) -- (partgen);
                 \path [line] (nadjs) -- (partgen);
         	\path [line] (partgen) -- (npartinp);
         	% Partisn adj neutron transport
-                \node [code, below=0.9 of npartinp] (partadjn) {Partisn adjoint neutron transport};
-        	\node [file, below =0.9 of partadjn] (nadjf) {Partisn $\phi_{n}^{+}$ file};
-        	\node [script, below =0.9 of nadjf] (pf2mesh) {atflux\_to\_mesh.py};
-        	\node [file, below =0.9 of pf2mesh] (nadjfmesh) {$\phi_{n}^{+}$ mesh file};
+                \node [code, below =0.4 of npartinp] (partadjn) {Partisn adjoint neutron transport};
+        	\node [file, below =0.4 of partadjn] (nadjf) {Partisn $\phi_{n}^{+}$ file};
+        	\node [script, below =0.4 of nadjf] (pf2mesh) {atflux\_to\_mesh.py};
+        	\node [file, below =0.4 of pf2mesh] (nadjfmesh) {$\phi_{n}^{+}$
+		voxel mesh};
         	\path [line] (npartinp) -- (partadjn);
         	\path [line] (partadjn) -- (nadjf);
         	\path [line] (nadjf) -- (pf2mesh);
         	\path [line] (pf2mesh) -- (nadjfmesh);
 		%Generate biased source and WW
-		\node [script, below = 0.9 of nadjfmesh] (cadis) {cadis.py};
+		\node [script, below =0.4 of nadjfmesh] (cadis) {cadis.py};
 		\node [file, left =0.9 of cadis ] (unbiased) {Unbiased
-		neutron source};
-		\node [file, below =0.9 of cadis] (biased) {Biased neutron
-		source};
+		neutron source mesh};
+		\node [file, below =0.4 of cadis] (biased) {Biased neutron
+		source mesh};
 		\node [file, right = 0.9 of biased] (wwinp) {Weight window
 		mesh};
 		\path [line] (unbiased) -- (cadis);
@@ -135,32 +270,32 @@ term.
 		source};
 		\node [file, right = 0.3 of biased] (wwinp) {Weight window
 		mesh};
-		%\node [code, below=0.9 of biased] (nmc) {DAGMCNP neutron
+		%\node [code, below =0.4 of biased] (nmc) {DAGMCNP neutron
 		%transport};
 		\node [file, left = 0.3 of biased] (mcinp) {DAGMCNP input
 		file};
         	\node [file, right = 0.3 of nmc] (ngeom) {DAGMC geometry at
 		$t_0$};
-		\node [file, below=0.9 of nmc] (nflux) {$\phi_n$ tetmesh file};
+		\node [file, below =0.4 of nmc] (nflux) {$\phi_n$ tetmesh file};
 		\path [line] (biased) -- (nmc);
 		\path [line] (wwinp) -- (nmc);
 		\path [line] (ngeom) -- (nmc);
 		\path [line] (mcinp) -- (nmc);
 		\path [line] (nmc) -- (nflux);
 		% ALARA
-		\node [script, below=0.9 of nflux] (step1) {pyne.r2s
+		\node [script, below =0.4 of nflux] (step1) {pyne.r2s
 		step1};
-		\node [file, below=0.9 of step1] (alaraflux) {ALARA flux
+		\node [file, below =0.4 of step1] (alaraflux) {ALARA flux
 		file};
 		\node [file, left = 0.9 of alaraflux] (alarainp) {ALARA input
 		file};
 		\node [file, right =0.9 of alaraflux] (alaramat) {ALARA
 		material library};
-		\node [code, below=0.9 of alaraflux] (alara) {ALARA};
-		\node [file, below=0.9 of alara] (psrc) {ALARA photon
+		\node [code, below =0.4 of alaraflux] (alara) {ALARA};
+		\node [file, below =0.4 of alara] (psrc) {ALARA photon
 		source};
-		\node [script, below=0.9 of psrc] (step2) {pyne.r2s step2};
-		\node [file, below=0.9 of step2] (psrcmesh) {$q_{p,t_{d}}$
+		\node [script, below =0.4 of psrc] (step2) {pyne.r2s step2};
+		\node [file, below =0.4 of step2] (psrcmesh) {$q_{p,t_{d}}$
 		tetmesh file};
 		\path [line] (nflux) -- (step1);
 		\path [line] (step1) -- (alarainp);
@@ -173,11 +308,11 @@ term.
 		\path [line] (psrc) -- (step2);
 		\path [line] (step2) -- (psrcmesh);
 		% Update source mesh position
-		\node [script, below = 0.9 of psrcmesh] (trtool) {DAGMC
+		\node [script, below =0.4 of psrcmesh] (trtool) {DAGMC
 		transform tool};
 		\node [file, left = 0.9 of psrcmesh] (tr) {Transformation
 		file};
-		\node [file, below =0.9 of trtool] (psrcmoved) {Updated
+		\node [file, below =0.4 of trtool] (psrcmoved) {Updated
 		$q_{p,t_{d}}$};
 		\path [line] (psrcmesh) -- (trtool);
 		\path [line] (tr) -- (trtool);
@@ -204,11 +339,13 @@ term.
 	rectangles.}
 \end{figure}
 
-tet mesh n flux tally
--tag tet mesh w transformations
-source.h5m for each decay time
-update position
-run transport
+\begin{itemize}
+\item tet mesh n flux tally
+\item tag tet mesh w transformations
+\item source.h5m for each decay time
+\item update position
+\item run transport
+\end{itemize}
 
 \subsection{Practical Considerations}
 Discuss need to explore criteria for situations that this new method will
@@ -217,6 +354,13 @@ of geometric movement, change in source strength, photon transport.  source
 strength will depend on at which point during decay the movement is occuring.
 How to prove that for an 8 hr window of time the source strength doesn't change
 enough to effect SDR.
+\begin{itemize}
+        \item efficient obb tree
+	\item htc scripts to run many photon MCNP and compile results
+
+\end{itemize}
+
+
 \section{Demonstration} \label{sec:demo}
 
 
@@ -232,5 +376,5 @@ enough to effect SDR.
 
 \subsection{Full-scale FES Model} \label{sec:full_scale}
 
-\subsection{Summary}\label{sec:summary}
+\section{Summary}\label{sec:summary}
 
