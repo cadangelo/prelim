@@ -73,8 +73,8 @@ identities in Eq. \ref{eq:adj_1} and \ref{eq:adj_2}, find the following expressi
  \end{equation}
 
 Given that the sources of the forward primary and the adjoint secondary physics
-are known, both solutions, $ \phi_{1}(\overrightarrow{r},E) $ and
-$\phi_{2}^{+}(\overrightarrow{r},E) $ can be found through transport operations.
+are known, both solutions, $ \phi_{1} $ and
+$\phi_{2}^{+} $ can be found through transport operations.
 The source of the forward secondary and adjoint primary physics are both
 unknown, therefore a second equation is needed.  This is a coupled, multi-step
 system where the source of the secondary physics depends on - is a response of-
@@ -142,7 +142,7 @@ solution for the adjoint neutron source
 	 T_{v}(E_n, E_{\gamma}, t)\, dt
  \end{equation}
  There is a T value calculated for every volume element for every decay time of
- interest.  For many practical scenarios, the same T value will be used for
+ interest.  For many 
  every time step, t.  This is because the time constants of decay and geometry
  motion are very different.  The motion of components occurs over a very short
  period of time relative to photon decay.  
@@ -157,6 +157,12 @@ Time-integrated Groupwise Transmutation (TGT)-CADIS.
 First, the steps taken to generate an optimal adjoint neutron source are
 described and schematic is given in Fig. \ref{fig:gen_q_n_+}.
 
+Need to make the distinction between different times.  First, there is the
+decay time, $t_{dec}$ which is the amount of time that the components have been
+decaying fter shutdown.  There is $t_{mov}$ which will be used to denote the
+discrete time step during the geometry movement.
+
+\subsubsection{Generation of the Adjoint Neutron Source}
 A CAD model of the geometry in its original position, that during device
 operation time, is created.  This geometry is tagged with transformation
 numbers corresponding to the stepwise motion vectors that are applied to move the
@@ -173,12 +179,42 @@ Because we ultimately need to sum the contribution from each time step in each
 volume element, the adjoint photon flux voxel mesh is mapped onto the
 tetrahedral mesh of the geometry at that same time step.  Each tet
 mesh element has an ID associated with it.  Those IDs are constant across all
-geometry files.  This allows the contribution of the adjoint flux from each time step
-to be summed in each tet mesh element.
+geometry files.  This allows the contribution of the adjoint flux from each
+time step to be summed in each tet mesh element.
 
 %\todo create figure showing mapping of voxel to tet mesh
+The time integration is approximated by the following discrete sum over all
+time steps
 
-\subsubsection{Generation of the Adjoint Neutron Source}
+\begin{equation}\label{eq:sum}
+	\phi_{\gamma,v, h}^{+} = \sum_{t_{mov}}{\phi_{\gamma,v,h,t_{mov}}}
+\end{equation}
+
+The adjoint photon flux tetrahedral mesh is converted back to a voxel mesh
+to use as input for the PyNE gtcadis.py script. This script ultimately generates  a
+discrete adjoint neutron source for deterministic transport.
+If the SNILB criteria are met, the coupling term $T_{g,h}$ is found with Eq.
+\ref{eq:T}
+
+\begin{equation}\label{eq:T}
+	T_{g,h} = \dfrac{q_{\gamma, h}(\phi_{n,g})}{\phi_{n,g}}
+\end{equation}
+To obtain the source of photons in each photon energy group, h, 
+single pulse irradiations are performed with ALARA.
+Each material in the problem is irradiated with a single energy group of
+neutrons, g, and allowed to decay to the time of interest, $t_dec$.  The value
+of $T_{v,g,h}$ is assigned by finding the material in each voxel, v.
+This also assumes that T does not change during the time the geometry is
+moving, $t_{mov}$.  
+
+The TGT-CADIS adjoint neutron source can be found via Eq.
+\ref{eq:tgt_n_src}
+\begin{equation}\label{eq:tgt_n_src}
+	q_{n,v,g}^{+} =
+	\sum_{t_{mov}}\Bigg(\sum_{h} T_{v,g,h} \phi_{\gamma,v,h,t_{mov}}^{+}\Bigg)
+\end{equation}
+
+
 
 \begin{figure}\label{fig:gen_q_n_+}
 \centering
@@ -190,12 +226,13 @@ to be summed in each tet mesh element.
         
         \begin{tikzpicture}[node distance = 2 cm, auto]
         	%Generate adj gamma Partisn input
-                \node [file] (pgeom_0) {DAGMC geometry at $t_{0}$};
+                \node [file] (pgeom_0) {DAGMC geom at $t_{mov}=0$};
 		\node [script, below = 0.4 of pgeom_0] (dagtrans) {DAGMC
 		transform tool};
                 \node [script, below = 0.4 of dagtrans] (partgen) {part.py};
-                \node [file, left = 0.9 of partgen] (pgeom_i) {DAGMC geometry at $t_{i}$};
-                \node [file, right=0.9 of partgen] (f2d) {Flux-to-dose converstion factors};
+                \node [file, left = 0.9 of partgen] (pgeom_i) {DAGMC geom
+		at $t_{mov}$};
+                \node [file, right=0.9 of partgen] (f2d) {Flux-to-dose conversion factors};
                 \node [file, below =0.4 of partgen] (ppartinp) {Partisn input file};
                 \path [line] (pgeom_0) -- (dagtrans);
 		\path [line] (dagtrans) -- (pgeom_i);
@@ -204,15 +241,19 @@ to be summed in each tet mesh element.
         	\path [line] (partgen) -- (ppartinp);
         	% Partisn adj gamma transport
                 \node [code, below =0.4 of ppartinp] (partadjp) {Partisn adjoint $\gamma$ transport};
-        	\node [file, below =0.4 of partadjp] (padjf) {Partisn$\phi_{\gamma, t}^{+}$ file};
+        	\node [file, below =0.4 of partadjp] (padjf)
+		{Partisn$\phi_{\gamma, t_{mov}}^{+}$ file};
         	\node [script, below =0.4 of padjf] (pf2mesh) {atflux\_to\_mesh.py};
-        	\node [file, below =0.4 of pf2mesh] (padjfvmesh)		{$\phi_{\gamma,t}^{+}$ voxel mesh};
+        	\node [file, below =0.4 of pf2mesh] (padjfvmesh)
+		{$\phi_{\gamma,t_{mov}}^{+}$ voxel mesh};
         	\node [script, below =0.4 of padjfvmesh] (conv_v_t){Convert voxel to tet};
-        	\node [file, below =0.4 of conv_v_t](padjftmesh){$\phi_{\gamma,t}^{+}$ tet mesh};
-		\node [script, below =0.4 of padjftmesh](sum){Sum $\phi_{\gamma,t}^{+}$over all time steps};
-		\node [file, below =0.4 of sum](avgadjft){$\overline{\phi_{\gamma}^{+}}$ tet mesh};
+        	\node [file, below =0.4 of
+		conv_v_t](padjftmesh){$\phi_{\gamma,t_{mov}}^{+}$ tet mesh};
+		\node [script, below =0.4 of padjftmesh](sum){Sum
+		$\phi_{\gamma,t_{mov}}^{+}$over all time steps};
+		\node [file, below =0.4 of sum](avgadjft){$\phi_{\gamma}^{+}$ tet mesh};
         	\node [script, below =0.4 of avgadjft] (conv_t_v){Convert tet to voxel};
-		\node [file, below =0.4 of conv_t_v](avgadjfv){$\overline{\phi_{\gamma}^{+}}$ voxel mesh};
+		\node [file, below =0.4 of conv_t_v](avgadjfv){${\phi_{\gamma}^{+}}$ voxel mesh};
         	\path [line] (ppartinp) -- (partadjp);
         	\path [line] (partadjp) -- (padjf);
         	\path [line] (padjf) -- (pf2mesh);
@@ -225,7 +266,7 @@ to be summed in each tet mesh element.
 		\path [line] (conv_t_v) -- (avgadjfv);
         	% Generate adj n source
         	\node [script, below =0.4 of avgadjfv] (gtcadis) {gtcadis.py}; 
-		\node [file, left =0.9 of gtcadis] (ngeom) {DAGMC geometry at
+		\node [file, left =0.9 of gtcadis] (ngeom) {DAGMC geom at
 		$t_{0}$};
         	\node [file, right =0.9 of gtcadis] (matlib) {ALARA material library};
         	\node [file, below =0.4 of gtcadis] (nadjs) {$q_{n}^{+}$ voxel mesh};
@@ -242,8 +283,17 @@ to be summed in each tet mesh element.
 	rectangles.}
 \end{figure}
 
+Once the TGT-CADIS adjoint neutron source has been calculated, deterministic
+adjoint transport is carried out and an adjoint neutron flux Partisn file is
+returned.  This file is then converted to a voxel mesh.
+This functions as an importance map for the forward neutron transport.  Areas
+that have a high adjoint neutron flux will have high importance and those with
+low flux will have low importance.  This map will reflect the movement of
+geometry during the decay period.  This adjoint neutron flux mesh is used to
+generate a biased neutron source and a weight window mesh via the CADIS method.
 
-\begin{figure}\label{gen_q_n_+}
+
+\begin{figure}\label{gen_biased}
 \centering
 
         \tikzstyle{script} = [ellipse, fill=blue!20, draw, text centered, node distance=3cm]
@@ -254,8 +304,8 @@ to be summed in each tet mesh element.
         \begin{tikzpicture}[node distance = 2 cm, auto]
         	%Generate adj neutron Partisn input
                 \node [script] (partgen) {part.py};
-		\node [file, left =0.9 of partgen] (ngeom) {DAGMC geometry at
-		$t_{0}$};
+		\node [file, left =0.9 of partgen] (ngeom) {DAGMC geom at
+		$t_{mov}=0$};
                 \node [file, right=0.9 of partgen] (nadjs) {$q_{n}^{+}$ voxel mesh};
                 \node [file, below =0.4 of partgen] (npartinp) {Partisn input file};
                 \path [line] (ngeom) -- (partgen);
@@ -273,10 +323,8 @@ to be summed in each tet mesh element.
         	\path [line] (pf2mesh) -- (nadjfmesh);
 		%Generate biased source and WW
 		\node [script, below =0.4 of nadjfmesh] (cadis) {cadis.py};
-		\node [file, left =0.9 of cadis ] (unbiased) {Unbiased
-		neutron source mesh};
-		\node [file, below =0.4 of cadis] (biased) {Biased neutron
-		source mesh};
+		\node [file, left =0.9 of cadis ] (unbiased) {Unbiased	$q_n$ mesh};
+		\node [file, below =0.4 of cadis] (biased) {Biased $q_n$ mesh};
 		\node [file, right = 0.9 of biased] (wwinp) {Weight window
 		mesh};
 		\path [line] (unbiased) -- (cadis);
@@ -293,6 +341,34 @@ to be summed in each tet mesh element.
 	rectangles.}
 \end{figure}
 
+\subsection{Optimized, Time-integrated R2S Workflow}
+
+A few adjustments need to be made to the R2S workflow to produce time-integrated
+SDR maps.  First, the TGT-CADIS biased source and weight windows are used to
+optimize the forward neutron transport.  A tetrahedral mesh that conforms to
+the geometry position at $t_{mov}=0$ is used as a tally to score the neutron flux.
+This mesh is tagged with the geometry transformations that will occur after
+shutdown.  The tetrahedral mesh neutron flux tally along with an irradiation and decay
+scenario of interest are given as input to the PyNE R2S
+script to generate ALARA input files.  ALARA is run and produces photon source
+files for each decay time of interest.  These ALARA photon source files are
+converted to tetrahedral mesh based sources by another PyNE R2S script.  All
+source mesh files generated will reflect the original position of the geometry.
+Both the source mesh and DAGMC geometry files are transformed to the 
+correct locations for each $t_{mov}$ with the DAGMC transform tool.
+The source mesh file in its updated position along with the previously
+generated adjoint photon flux mesh are used to generate a biased photon source 
+and weight window mesh are generated via the CADIS method.  At this point,
+there is a biased photon source mesh, a weight window mesh, and a DAGMC
+geometry for every time step $t_{mov}$.  These are all used along with a DAGMC
+input file that has a photon flux tally modified by flux-to-dose conversion
+factors as input for the final DAGMCNP photon transport step.  This results in
+a SDR mesh for each $t_{mov}$.  
+
+%Each of the flux values can be multiplied by
+%the interval of time spent at each position and then summed to 
+ 
+
 \begin{figure}\label{r2s_flow}
 \centering
 
@@ -300,6 +376,7 @@ to be summed in each tet mesh element.
         \tikzstyle{code} = [ellipse, fill=green!20, draw, text centered, node distance=3cm]
         \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
         \tikzstyle{line} = [draw, -latex]
+        \tikzstyle{arrow} = [thick, ->, >=stealth]
         
         \begin{tikzpicture}[node distance = 2 cm, auto]
 		% Optimized neutron transport
@@ -308,17 +385,17 @@ to be summed in each tet mesh element.
 		source};
 		\node [file, right = 0.3 of biased] (wwinp) {Weight window
 		mesh};
-		%\node [code, below =0.4 of biased] (nmc) {DAGMCNP neutron
-		%transport};
 		\node [file, left = 0.3 of biased] (mcinp) {DAGMCNP input
 		file};
-        	\node [file, right = 0.3 of nmc] (ngeom) {DAGMC geometry at
-		$t_0$};
-		\node [file, below =0.4 of nmc] (nflux) {$\phi_n$ tetmesh file};
+        	\node [file, right = 0.3 of nmc] (ngeom) {DAGMC geom at
+		$t_{mov}=0$};
+        	\node [file, left = 0.3 of nmc] (ntally) {Tet mesh tally};
+		\node [file, below =0.4 of nmc] (nflux) {$\phi_n$ tet mesh};
 		\path [line] (biased) -- (nmc);
 		\path [line] (wwinp) -- (nmc);
 		\path [line] (ngeom) -- (nmc);
 		\path [line] (mcinp) -- (nmc);
+		\path [line] (ntally) -- (nmc);
 		\path [line] (nmc) -- (nflux);
 		% ALARA
 		\node [script, below =0.4 of nflux] (step1) {pyne.r2s
@@ -333,8 +410,8 @@ to be summed in each tet mesh element.
 		\node [file, below =0.4 of alara] (psrc) {ALARA photon
 		source};
 		\node [script, below =0.4 of psrc] (step2) {pyne.r2s step2};
-		\node [file, below =0.4 of step2] (psrcmesh) {$q_{p,t_{d}}$
-		tetmesh file};
+		\node [file, below =0.4 of step2] (psrcmesh) {$q_{\gamma,t_{dec}}$
+		tet mesh};
 		\path [line] (nflux) -- (step1);
 		\path [line] (step1) -- (alarainp);
 		\path [line] (step1) -- (alaraflux);
@@ -350,28 +427,48 @@ to be summed in each tet mesh element.
 		transform tool};
 		\node [file, left = 0.9 of psrcmesh] (tr) {Transformation
 		file};
-		\node [file, below =0.4 of trtool] (psrcmoved) {Updated
-		$q_{p,t_{d}}$};
+		\node [file, below =0.4 of trtool] (psrcmoved) {$q_{\gamma,t_{dec},t_{mov}}$ tet mesh};
 		\path [line] (psrcmesh) -- (trtool);
 		\path [line] (tr) -- (trtool);
 		\path [line] (trtool) -- (psrcmoved);
 		% Photon Transport
-		\node [file, right = 0.9 of psrcmoved] (geomtd) {DAGMC Geometry at
-		$t_{d}$};
+		\node [script, below = 0.4 of psrcmoved] (cadis) {cadis.py};
+		\node [file, left = 0.9 of cadis] (adjpfmesh) {$\phi_{\gamma,
+		t_{mov}}^{+}$ tet mesh};
+		\node [file, below = 0.4 of cadis] (biasedp) {Biased
+		$q_{\gamma, t_{mov}}$};
+		\node [file, right = 0.9 of biasedp] (wwinp) {Weight window
+		mesh};
+		\node [file, right = 0.9 of psrcmoved] (geomtd) {DAGMC geom at
+		$t_{mov}$};
+		\node [file, left = 0.3 of biasedp] (mcpinp) {DAGMCNP input
+		file};
+		\node [code, below =0.4 of biasedp] (pmc) {DAGMCNP photon
+		transport};
+                \node [file, left=0.9 of pmc] (f2d) {Flux-to-dose};
+		\node [file, below =0.4 of pmc] (sdr) {$SDR_{t_{mov}}$ tet mesh};
 %		\path [line] (ngeom) -- (trtool);
+		\draw [arrow] (ngeom) |-
+		([xshift=0.5cm,yshift=0.5cm]alaramat.north east) |- (trtool);
 		\path [line] (trtool) -- (geomtd);
+		\draw [arrow] (geomtd) |-
+		([xshift=0.5cm,yshift=0.5cm]wwinp.north east) |- (pmc);
+%		\path [line] (geomtd) -- (pmc);
+		\path [line] (mcpinp) -- (pmc);
+		\path [line] (psrcmoved) -- (cadis);
+		\path [line] (adjpfmesh) -- (cadis);
+		\path [line] (cadis) -- (biasedp);
+		\path [line] (biasedp) -- (pmc);
+		\path [line] (cadis) -- (wwinp);
+		\path [line] (wwinp) -- (pmc);
+		\path [line] (f2d) -- (pmc);
+		\path [line] (pmc) -- (sdr);
 
-
-
-
-
-
-        
 	\end{tikzpicture}
 
-	\caption{R2S workflow for calculating the SDR.  This particular flow
+	\caption{Time-integrated R2S workflow for calculating the SDR.  This particular flow
 	chart shows the use of a biased source and weight windows to
-	optimize the neutron transport step.
+	optimize both neutron and photon transport steps.
 	Scripts are shown in
 	blue ovals, physics codes in green ovals, and files in white
 	rectangles.}
@@ -393,6 +490,10 @@ strength will depend on at which point during decay the movement is occuring.
 How to prove that for an 8 hr window of time the source strength doesn't change
 enough to effect SDR.
 \begin{itemize}
+		\item list of assumptions: all time steps are of equal length;
+			if they weren't, would need a time-weighted average.
+			Assume large difference in time constants of photon
+			transport, geometry movement, and photon source decay
         \item efficient obb tree
 	\item htc scripts to run many photon MCNP and compile results
 
