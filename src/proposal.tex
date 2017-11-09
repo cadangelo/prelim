@@ -139,13 +139,48 @@ solution for the adjoint neutron source
  \begin{equation}\label{eq:adj_src_1_avg}
 	 q_{n,v}^{+}(E_{n}) =
 	 \int_{t}     \phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t)
-	 T_{v}(E_n, E_{\gamma})\, dt
+	 T_{v}(E_n, E_{\gamma}, t)\, dt
  \end{equation}
+ There is a T value calculated for every volume element for every decay time of
+ interest.  For many practical scenarios, the same T value will be used for
+ every time step, t.  This is because the time constants of decay and geometry
+ motion are very different.  The motion of components occurs over a very short
+ period of time relative to photon decay.  
+
 
 \section{Implementation: Time-integrated GT-CADIS}\label{sec:implementation}
 
 \subsection{Optimized R2S Workflow for Dynamic Systems}
-\begin{figure}\label{gen_q_n_+}
+This section will walk through the implementation of a
+time-integrated R2S workflow with optimized neutron transport via
+Time-integrated Groupwise Transmutation (TGT)-CADIS. 
+First, the steps taken to generate an optimal adjoint neutron source are
+described and schematic is given in Fig. \ref{fig:gen_q_n_+}.
+
+A CAD model of the geometry in its original position, that during device
+operation time, is created.  This geometry is tagged with transformation
+numbers corresponding to the stepwise motion vectors that are applied to move the
+geometry components from their original to final locations.  The DAGMC
+transformation tool is used to apply the motion vectors and create HDF5 mesh
+files of the geometry at each time step.   
+The geometry file at each time step along with the adjoint photon source, the
+Flux-to-dose conversion factors, are given as input into a script that
+generates a Partisn input file.  Deterministic adjoint photon transport is
+carried out and a Partisn output of the resulting adjoint photon flux is
+returned.  This Partisn output is converted to a an HDF5 structured mesh file
+through a PyNE conversion method.  
+Because we ultimately need to sum the contribution from each time step in each
+volume element, the adjoint photon flux voxel mesh is mapped onto the
+tetrahedral mesh of the geometry at that same time step.  Each tet
+mesh element has an ID associated with it.  Those IDs are constant across all
+geometry files.  This allows the contribution of the adjoint flux from each time step
+to be summed in each tet mesh element.
+
+%\todo create figure showing mapping of voxel to tet mesh
+
+\subsubsection{Generation of the Adjoint Neutron Source}
+
+\begin{figure}\label{fig:gen_q_n_+}
 \centering
 
         \tikzstyle{script} = [ellipse, fill=blue!20, draw, text centered, node distance=3cm]
@@ -155,13 +190,16 @@ solution for the adjoint neutron source
         
         \begin{tikzpicture}[node distance = 2 cm, auto]
         	%Generate adj gamma Partisn input
-                \node [script] (partgen) {part.py};
-                \node [file, left =0.9 of partgen] (pgeom) {$\gamma$ DAGMC
-		geometry at t};
-                \node [file, right=0.9 of partgen] (f2d) {Flux-to-dose
-		converstion factors};
+                \node [file] (pgeom_0) {DAGMC geometry at $t_{0}$};
+		\node [script, below = 0.4 of pgeom_0] (dagtrans) {DAGMC
+		transform tool};
+                \node [script, below = 0.4 of dagtrans] (partgen) {part.py};
+                \node [file, left = 0.9 of partgen] (pgeom_i) {DAGMC geometry at $t_{i}$};
+                \node [file, right=0.9 of partgen] (f2d) {Flux-to-dose converstion factors};
                 \node [file, below =0.4 of partgen] (ppartinp) {Partisn input file};
-                \path [line] (pgeom) -- (partgen);
+                \path [line] (pgeom_0) -- (dagtrans);
+		\path [line] (dagtrans) -- (pgeom_i);
+                \path [line] (pgeom_i) -- (partgen);
                 \path [line] (f2d) -- (partgen);
         	\path [line] (partgen) -- (ppartinp);
         	% Partisn adj gamma transport
