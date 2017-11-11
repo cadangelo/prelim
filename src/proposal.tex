@@ -501,19 +501,52 @@ enough to effect SDR.
 
 
 \section{Demonstration} \label{sec:demo}
+This section will outline the experiments proposed to demonstrate the utility
+of TGT-CADIS.  
 
+\subsection{Toy Problem}
+The same geometry used in the GT-CADIS experiment shown in \ref{ch:experiment}
+will be used to demonstrate the efficacy of TGT-CADIS.  The only difference
+will be a modular component of the chamber located on the far side of the
+detector will be moved to a location close to the detector.  
 
-\subsection{Time-integrated Dose Map}
+First, the TR2S process without any MC VR for the neutron or photon transport
+steps will be applied to this problem.  This will ultimately result in a
+time-integrated dose map.
+Next, the photon transport steps will be optimized via the CADIS method.  This
+will require deterministic adjoint photon simulations at each time step to
+produce VR parameters for the forward MC photon transport runs.
+Finally, TGT-CADIS will be applied to optimize the neutron transport step.  The
+same adjoint photon flux solutions used in the last step can be used to
+calculate T which is then used to calculate the adjoint neutron source for
+adjoint neutron transport which results in the adjoint neutron flux used to
+produce the VR parameters.
 
-\subsubsection{Analog Monte Carlo Neutron and Photon Transport}\label{sec:analog_n_p}
+These incremental additions of optimization will be fundamental in assessing the
+utility of TGT-CADIS. 
 
-\subsubsection{Variance Reduction to Optimize Photon Transport}\label{sec:vr_p}
+%\subsection{Time-integrated Dose Map}
 
-\subsubsection{Variance Reduction to Optimize both Neutron and Photon Transport}\label{sec:vr_n_p}
+%\subsubsection{Analog Monte Carlo Neutron and Photon Transport}\label{sec:analog_n_p}
+
+%\subsubsection{Variance Reduction to Optimize Photon Transport}\label{sec:vr_p}
+
+%\subsubsection{Variance Reduction to Optimize both Neutron and Photon Transport}\label{sec:vr_n_p}
 
 \subsection{Error Propagation}\label{sec:error}
+Error Propagation in SDR analysis is a topic currently being investigated.
+If a full TR2S simulation was carried out, the final SDR would have an error associated
+with the MC neutron photon transport steps.  The error from the photon transport
+step can be avoided by not performing MC photon transport and calculating the
+SDR using Eq. \ref{eq:} *need eqn from background*.
+
 
 \subsection{Full-scale FES Model} \label{sec:full_scale}
+As the intended purpose of this work is  
+calculating the SDR during a maintenance or
+intervention activity in a FES, the final challenge problem will involve 
+TGT-CADIS optimization of the neutron transport step of TR2S for a full-scale
+FES.
 
 \section{Summary}\label{sec:summary}
 

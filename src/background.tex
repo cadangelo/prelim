@@ -11,14 +11,27 @@ moving geometries and sources.
 \section{Shutdown Dose Rate Analysis}\label{sec:sdr_calcs}
 Shutdown dose rate (SDR) calculations are necessary to quantify the potential
 dose to personnel working in facilities exposed to intense radiation fields
-like fusion energy systems (FES).  The dose rate is caused by decay photons
-that are emitted by materials irradiated by neutrons.  Therefore, these calculations involve a neutron
-transport step, then an activation analysis to determine the decay photon
-spectrum for a specific irradiation and decay scenario,
-and finally a photon transport step to determine the dose rate.
-One methodology for calculating the SDR is known as the Rigorous Two Step (R2S)
-method.  This method relies on a MC code for both neutron and photon transport
-and a nuclear inventory code for activation analysis.
+such as those present in fusion energy systems (FES).  The dose rate in these
+facilities is caused by decay photons that are emitted by materials irradiated
+by neutrons. There are two primary workflows used to investigate the SDR:
+the Direct 1-Step (D1S) \cite{d1s} and the Rigorous 2-Step (R2S) \cite{r2s} method.
+
+The D1S method performs coupled neutron-gamma transport in the same simulation
+It relies upon a modified version of MCNP5 with special cross-section data and
+the FISPACT nuclear inventory code for time correction factors.  The decay gammas are emitted as prompt
+so they can be transported at the same time as neutrons.  A time correction
+factor is later applied.
+Because both neutron and photon transport occur in the same simulation,
+therefore on the same geometry, D1S
+%neither the D1S or Advanced D1S (an improved version with additional features)
+is not currently applicable to geometries that undergo movement after shutdown.
+This has been identified as a necessary improvement and the development of a
+subroutine to produce portable decay photon sources for pure photon
+calculations is underway \cite{adv-d1s}. 
+%errmmm.. this sounds like TR2S
+
+In constrast to D1S, the R2S method relies upon separate MC neutron and photon
+transport steps.  The transport steps are coupled by activation analysis.
 The goal of the neutron transport step is to determine the neutron flux
 as a function of space and energy.  This neutron flux along with a specific irradiation
 and decay scenario are used as input into a nuclear inventory
@@ -26,7 +39,7 @@ code to determine the photon spectrum as a function of decay time.
 The calculated photon spectrum for each decay time
 is then used as the source for the photon transport step.  A photon flux tally
 fitted with flux-to-dose-rate conversion factors is used during this step to
-determine the final SDR \cite{Chen_2002}.
+determine the final SDR \cite{r2s}.
 
 %\section{Computational Radiation Transport}
 
@@ -63,7 +76,7 @@ rather than deterministic methods *need source*.
 
 In general, MC calculations rely on repeated, random sampling to solve
 mathematical problems.  In radiation transport applications, the MC method is 
-used to solve the Boltzmann transport equation through the simulation of random particle
+used to solve the Boltzmann transport equation \cite{l_m} through the simulation of random particle
 walks through phase space.  In analog operation mode (i.e. no variance reduction), 
 the source particle's position, energy, direction
 and subsequent collisions are sampled from probability
@@ -408,7 +421,11 @@ gives a relationship
 In order to solve for the adjoint neutron source, $q_n^{+}$, an equation
 relating the photon source, $q_p$, to the neutron flux, $\phi_n$, is needed.
 %One can solve for the photon source by performing a full activation analysis,
-%but as an approximation, 
+%but as an approximation,
+
+The Groupwise-Transmutation (GT)-CADIS method, an implementation of MS-CADIS
+solely for SDR analysis, provides a means to do just that \cite{gtcadis}.
+
 The decay photon source is a result of neutron irradiation and 
 the two quantities can be related by the following
 definition:
@@ -437,35 +454,67 @@ an approximation of a linear relationship between $q_p$ and $\phi_n$ will suffic
 
 
 \section{Moving Systems} \label{sec:moving_sys}
-This section will discuss how systems that involve moving components are
-currently modeled.
+%This section will discuss how systems that involve moving components are
+%currently modeled.
 Historically, Monte Carlo analysis of dynamic systems is performed using a series of separate
-calculations with different input files that contain step-wise changes of the
-geometric position.  The moving objects capability in MCNP6 allows for the
-motion of objects during a single simulation.
+simulations with different input files that contain step-wise changes of the
+geometry configuration. 
+A new capability that will be available in a future version of MCNP6 allows for the
+motion of objects, sources, and delayed particles during a single simulation
+\cite{mcnp_moving_1}, \cite{mcnp_moving_2}.
+The Mesh Coupled implementation of the R2S methon (MCR2S) \cite{mcr2s}
+developed by the Culham Science Center was updated to allow for geometry
+components to change location after shutdown.
 
 \subsection{MCNP6 Moving Objects Capability} \label{sec:mcnp_move}
-This new capability available in MCNP6 allows for rigid body transformations of
-objects
-including rectilinear translations and curvilinear translations and rotations.
+The moving objects capability in MCNP6 allows for rigid body transformations of 
+objects including rectilinear translations and curvilinear translations and rotations.
 The objects can move with constant velocity, constant acceleration, or be
 relocated.
 Object kinetics are not treated so the user must use caution and supply
 transformations that will not cause objects to overlap.
 This capability is currently applicable to MCNP's native geometry format,
 constructive solid geometry (CSG) and is not available for mesh-based
-geometries *make sure this is true*.
+geometries.
 
-Sources can also be assigned to moving objects, therefore can move with the
+Sources can be assigned to moving objects, therefore can move with the
 same dynamics as other objects in the problem.
-
 This capability also allows for the treatment of secondary particles emitted by
-objects in motion. The delayed particle's location, direction, energy, and
+objects in motion. This treatment is only approximate because the geometry is fixed during the
+transport of source or delayed particles. This is a valid approximation due to
+the assumption that the geometry movement is orders of magnitude slower than
+particle transport.
+During the MCNP simulation, source particles are tracked through the geometry
+from the time of emission to termination.  If any of the source particle's
+interactions result in the creation of a prompt or delayed secondary particle,
+that information is stored.  After the source particle has terminated, any
+stored secondary particles are retrieved and transported.
+%The geometry is updated to the time a source or delayed particle is created.
+In the case of delayed particles emitted from moving objects, the location, direction, energy, and
 time are stored at the time of fission or activation and then at the time of
-emission, the object's updated location and orientation are calculated to
-provide the correct location and orientation of the delayed particle emission
-at the time of emission. 
+emission, the geometry configuration is updated to provide the correct 
+location and orientation of the delayed particle at the time of emission. 
 
-Should reference presentation on FLUKA simulation w/ moving geom.
+% would not allow for parts of the geometry to be removed or added (e.g. adding
+% equipment to move modules around facility, adding shielding, )
 
+% Reference presentation on FLUKA simulation w/ moving geom?
+
+\subsection{MCR2S Geometry Movement in SDR Analysis}
+The capability of MCR2S that allows for components to change location after
+shutdown was developed to facilitate SDR calculation during maintenance and
+intervention activities.  MCR2S relies on MCNP for both neutron and photon
+transport steps and FISPACT for the activation calculations. 
+It allows multiple components to be moved to
+different locations prior to the photon transport step.
+These geometry translations occur by creating a copy of the
+components that will move.  Transform cards are applied to the copies. 
+The original components remain in their original locations and their material
+is changed to vacuum.  Any source particle that starts in one of the
+components that moves after shutdown is automatically translated to the correct
+location according to the same transformation.
+The requirement that both the original component (set as void) and its
+transformed copy are present during the photon transport step means that there
+can be no overlap between the parts which could be problematic for small
+transformations.
 
