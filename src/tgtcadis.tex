@@ -1,0 +1,172 @@
+%% This section will discuss how to adapt the MS-CADIS method to dynamic
+%% systems
+%\chapter{Adapt MS-CADIS for Moving Geometries}\label{ch:adapt}
+\chapter{Variance Reduction for Time-integrated Multiphysics Analysis}\label{ch:ti}
+
+The Multi-Step Consistent Adjoint Weighted Importance Sampling (MS-CADIS)
+method of variance reduction is used to formulate an adjoint neutron source
+that represents the importance of the neutrons to the final quantity of interest
+%that captures both the potential of regions to become activated and produce
+%decay photons that contribute to the SDR at the detector location.
+%The solution resulting from the adjoint neutron transport with this source
+%is used to generate biasing parameters that will optimize the neutron 
+%transport step of
+in a coupled, multi-step process. The first implementation of this method 
+was applied to the coupled neutron activation-photon decay process that occurs
+in FES.  Specifically, it
+%was shown to decrease
+%the variance in the neutron transport step of the R2S workflow
+was used to optimize the neutron transport step in the 
+%SDR analysis of the 
+ITER SDR benchmark experiment \cite{mscadis}.
+In its current form, MS-CADIS is only applicable to static systems where
+the geometry remains unchanged in all steps of the multi-step process.
+
+This chapter will first discuss MS-CADIS outside of the context of SDR analysis. 
+Next, a time-integrated solution to the adjoint of the 
+physical process occuring during geometry movement will be derived.  
+Finally, this time-integrated solution will be applied to the GT-CADIS method to
+form the TGT-CADIS adjoint neutron source that will optimize the neutron
+transport step of SDR analysis.
+
+\section{Generalized MS-CADIS Method}
+In the current literature, MS-CADIS is primarily discussed as it applies to SDR
+analysis \cite{mscadis}.  In actuality, MS-CADIS can be applied to any multi-step process in
+which the primary radiation transport is coupled to a secondary physical process.
+The addition of time integration to this methodology can then also be applied to
+any coupled multiphysics process. For this reason, it is prudent to discuss
+MS-CADIS in a more generalized manner.
+
+Begin with the adjoint identity for the neutral particle transport
+equation, 
+ \begin{equation}\label{eq:adj_identity}
+%		\langle \phi(\overrightarrow{r},E), q^{+}(\overrightarrow{r},E) \rangle =
+%		\langle \phi^{+}(\overrightarrow{r},E) , q(\overrightarrow{r},E) \rangle
+		\langle q^{+}, \phi \rangle =
+		\langle \phi^{+}, q \rangle
+ \end{equation}
+where $\phi$ is the forward and 
+$\phi^{+}$ is the adjoint particle flux, and
+$q$ is the forward and 
+$q^{+}$ is the adjoint source distribution and $\langle \rangle$ signifies the
+integration over all dependent variables.
+The left-hand side of Eq. \ref{eq:adj_identity} has the same form as the
+equation for detector response
+if a detector response function is chosen as the adjoint source.
+For a coupled, multi-step process, the MS-CADIS method 
+constrains the primary adjoint response such that it is equal to  
+the final response of the system (i.e. the response of the secondary process) as shown below
+ \begin{equation}\label{eq:adj_1}
+%	 R_{final} = \langle \phi_{1}(\overrightarrow{r},E), q_{1}^{+}(\overrightarrow{r},E) \rangle =
+%		\langle \phi_{1}^{+}(\overrightarrow{r},E) , q_{1}(\overrightarrow{r},E) \rangle
+	 R_{final} = \langle \phi_{1}, q_{1}^{+} \rangle =
+		\langle \phi_{1}^{+} , q_{1} \rangle
+ \end{equation}
+
+	 
+ \begin{equation}\label{eq:adj_2}
+%	 R_{final} = \langle \phi_{2}(\overrightarrow{r},E), q_{2}^{+}(\overrightarrow{r},E) \rangle =
+%		\langle \phi_{2}^{+}(\overrightarrow{r},E) , q_{2}(\overrightarrow{r},E) \rangle
+	 R_{final} = \langle \phi_{2}, q_{2}^{+} \rangle =
+		\langle \phi_{2}^{+} , q_{2} \rangle
+ \end{equation}
+ 
+ \todo{Unsure about symbols chosen for secondary physics and not listing
+ explicit depedent variables here}
+
+Subscripts 1 and 2 denote primary and secondary physical processes,
+respectively.  Ultimately, the goal is to find a solution for the adjoint
+transport of the primary physical process to use as an importance
+function for the forward primary transport. Therefore, a
+source for the adjoint primary transport is needed.  Equating the set of adjoint
+identities in Eq. \ref{eq:adj_1} and \ref{eq:adj_2}, yields the expression in Eq.
+\ref{eq:adj_src}.
+
+ \begin{equation}\label{eq:adj_src}
+%	 \langle \phi_{1}(\overrightarrow{r},E), q_{1}^{+}(\overrightarrow{r},E) \rangle =
+%	 \langle \phi_{2}^{+}(\overrightarrow{r},E) , q_{2}(\overrightarrow{r},E) \rangle
+	 \langle \phi_{1}, q_{1}^{+} \rangle =
+	 \langle \phi_{2}^{+}, q_{2} \rangle
+ \end{equation}
+
+In a practical scenario, the forward source of primary physics (e.g. neutron
+source resulting from D-T fusion) will be known.  According to the MS-CADIS
+method, the source of adjoint
+secondary physics is chosen to be the response function for the
+detector of interest.
+Given that these sources are known, both solutions, $ \phi_{1} $ and
+$\phi_{2}^{+} $ can be found through transport operations.
+The source of the forward secondary and adjoint primary physics are both
+unknown, therefore a second equation is needed.  This is a coupled, multi-step
+system where the source of the secondary physics is
+a response of the primary transport therefore the two processes can be related
+by equation \ref{eq:fwd_2src}
+
+ \begin{equation}\label{eq:fwd_2src}
+%	 q_{2}(\overrightarrow{r},E_{2}) =
+%	 \langle \sigma_{1,2}, \phi_{1}(\overrightarrow{r},E_{1}) \rangle
+	 q_{2} =
+	 \langle \sigma_{1\rightarrow2}, \phi_{1} \rangle
+ \end{equation}
+where $\sigma_{1\rightarrow2}$ is a function that couples the primary
+and secondary physics.
+Consider the process of neutron-induced prompt photon production.
+In this case, the function, $sigma_{1\rightarrow2}$, is the neutron-gamma production
+cross section $\sigma_{n\rightarrow\gamma}$.  The primary focus of SDR analysis
+is the process of neutron-induced delayed gamma production. 
+GT-CADIS provides a method for calculating $\sigma_{1\rightarrow2}$ when
+certain conditions (known as SNILB) hold true. In this case, the
+coupling term, $T$, is an approximation of the transmutation
+process \cite{gtcadis}.  As long as there is a solution for the
+function that couples the primary and secondary physics together,
+there also exists a solution for the adjoint primary source as shown in Eq.
+\ref{eq:adj_1src}
+
+ \begin{equation}\label{eq:adj_1src}
+%	 q_{1}^{+}(\overrightarrow{r},E_{1}) = 
+%	 \langle \sigma_{1,2}, \phi_{2}^{+}(\overrightarrow{r},E_{2}) \rangle
+	 q_{1}^{+} = 
+	 \langle \sigma_{1\rightarrow2}, \phi_{2}^{+} \rangle
+ \end{equation}
+
+
+\section{Time-integrated Solution of Adjoint Secondary Transport}
+If the configuration of the geometry is changing over time during
+the secondary transport, it will affect the construction of the adjoint primary
+source.  Instead of a single solution to the adjoint secondary transport, there
+is a solution at each position and each time represented by the term
+	$ \phi_{2}^{+}(\overrightarrow{r}_{v}(t), t)$
+where $\overrightarrow{r}_{v}(t)$ refers to the position of volume element, v,
+at time, t. 
+\todo{need to introduce volume element}
+To solve for the adjoint primary source in each volume element
+$q_{1,v}^{+}$, the time-dependent solutions of the 
+adjoint secondary transport are combined by integrating over time
+
+ \begin{equation}\label{eq:adj_src_1_avg}
+	 q_{1,v}^{+} =
+	 \int_{t}  \phi_{2}^{+}(\overrightarrow{r}_{v}(t), t)
+	 \sigma_{1\rightarrow 2,v}(t)\, dt
+ \end{equation}
+\todo{explain only sum, not average, is needed}
+\todo{This assumes that the coupling term $\sigma_{1 \rightarrow 2,v}$
+does not change over time-- is that a fair assumption?}
+ 
+\section{Time-integrated GT-CADIS}
+
+GT-CADIS is an implementation of MS-CADIS that is specific to SDR analysis.  It
+provides a method to calculate a coupling term, T, that relates the neutron
+flux to the photon source.
+Applying time integration to the GT-CADIS methodology results in the following
+solution for the adjoint neutron source
+
+ \begin{equation}\label{eq:adj_src_1_avg}
+	 q_{n,v}^{+}(E_{n}) =
+	 \int_{t}     \phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t)
+	 T_{v}(E_n, E_{\gamma}, t)\, dt
+ \end{equation}
+ There is a T value calculated for every volume element for every decay time of
+ interest.  For many practical problems, T will not change over the course of
+ $t_mov$  because the time constants of decay and geometry
+ motion are very different.  The motion of components occurs over a very short
+ period of time relative to photon decay.  
