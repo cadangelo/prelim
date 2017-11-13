@@ -31,7 +31,11 @@ and then the GT-CADIS method was used to generate VR parameters
 to optimize the neutron transport step of R2S.
 
 \begin{figure}\label{fig:geom}
-  \caption Cutaway view of the geometry.  
+	\caption[Experimental Geometry] 
+	{Cutaway view of the geometry.  Steel
+	chamber with 2 m thick and central cavity measuring 2 m x 2 m x 2 m.
+	The central cavity is filled with helium and chamber is surrounded by air.
+	A SDR detector is located 0.5 m in the x-direction from the chamber.}
 \end{figure}
 
 %\subsection{Results}
@@ -50,7 +54,8 @@ flux tally was binned into the 175 group VITAMIN-J energy structure.  The result
 neutron flux and relative error for the 13.8-14.2 MeV energy group is shown in
 Fig. \ref{fig:nflux}.
 \begin{figure} \label{fig:nflux}
-  \caption Neutron flux and relative error resulting from analog MC simulation.
+	\caption [Analog neutron flux and error] 
+	{Neutron flux and relative error resulting from analog MC simulation.}
 \end{figure}
 
 PyNE R2S *need source* was used
@@ -59,9 +64,9 @@ ALARA was run using FENDL2.0 nuclear data *need source*. PyNE R2S
 was used again to generate a mesh-based photon source from the ALARA output.  
 
 
-\begin{figure} \label{fig:pflux}
-  \caption Photon flux and relative error resulting from analog MC simulation.
-\end{figure}
+%\begin{figure} \label{fig:pflux}
+%  \caption Photon flux and relative error resulting from analog MC simulation.
+%\end{figure}
 
 \subsection{GT-CADIS}\label{sec:gtcadis}
 The steps of the GT-CADIS method used to generate a biased source and weight windows to optimize
@@ -80,7 +85,8 @@ a conformal Cartesian mesh.  The resulting adjoint photon flux mesh is shown in
 Fig. \ref{fig:adj_p_flux}.
 
 \begin{figure}\label{fig:adj_p_flux}
-  \caption Adjoint photon flux used to generate adjoint neutron source.  
+	\caption [GT-CADIS adjoint photon flux] 
+	{Adjoint photon flux used to generate adjoint neutron source.}
 \end{figure}
 
 This shows that......
@@ -96,8 +102,9 @@ adjoint neutron flux for the *need energy group* is shown in Fig.
 \ref{fig:adj_n_flux}.
 
 \begin{figure}\label{fig:adj_n_flux}
-  \caption Adjoint neutron flux used to generate the biased source and weight
-	windows.  
+	\caption [GT-CADIS adjoint neutron flux] 
+	{Adjoint neutron flux used to generate the biased source and weight
+	windows. }
 \end{figure}
 
 This adjoint neutron source functions as an importance map of neutrons to the
@@ -110,11 +117,13 @@ windows via the CADIS method.  These are seen in Fig. \ref{fig:biased_src} and
 Fig. \ref{fig:wwinp}.
 
 \begin{figure} \label{fig:biased_src}
-  \caption Biased source generated with GT-CADIS method.
+	\caption [GT-CADIS biased neutron source] 
+	{Biased neutron source generated with GT-CADIS method.}
 \end{figure}
 
 \begin{figure} \label{fig:wwinp}
-  \caption Weight window mesh generated with GT-CADIS method.
+	\caption [GT-CADIS weight window mesh]
+	{Weight window mesh generated with GT-CADIS method.}
 \end{figure}
 
 The biased source and weight window files were used to optimize the neutron
@@ -123,19 +132,25 @@ parameters and the resulting neutron flux and relative error are shown in Fig.
 \ref{fig:gt_nflux}.
 
 \begin{figure} \label{fig:gt_nflux}
-  \caption Neutron flux and relative error resulting from MC simulation using
-  GT-CADIS biased source and weight window mesh.
+	\caption [GT-CADIS neutron flux and relative error] 
+	{Neutron flux and relative error resulting from MC simulation using
+	 GT-CADIS biased source and weight window mesh.}
 \end{figure}
 
 
 ALARA was run using the neutron flux and the same irradiation and decay scenario used to calculate
-T.  A photon source distribution was generated and used as input for DAGMCNP5
-photon transport.  
+T.  A photon source distribution generated is shown in Fig. \ref{fig:gt_psrc}
 
-\begin{figure} \label{fig:gt_pflux}
-  \caption Photon flux and relative error resulting from MC simulation using
-  GT-CADIS biased source and weight window mesh.
+\begin{figure} \label{fig:gt_psrc}
+	\caption [GT-CADIS photon source]
+	{Photon source generated after ALARA activation calculation using the
+	GT-CADIS optimized neutron transport result.}
 \end{figure}
+
+%\begin{figure} \label{fig:gt_pflux}
+%  \caption Photon flux and relative error resulting from MC simulation using
+%  GT-CADIS biased source and weight window mesh.
+%\end{figure}
 
 
 %\subsection{Discussion}

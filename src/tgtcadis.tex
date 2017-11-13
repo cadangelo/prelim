@@ -130,7 +130,8 @@ there also exists a solution for the adjoint primary source as shown in Eq.
  \end{equation}
 
 
-\section{Time-integrated Solution of Adjoint Secondary Transport}
+%\section{Time-integrated Solution of Adjoint Secondary Transport}
+\section{Time-integrated MS-CADIS}
 If the configuration of the geometry is changing over time during
 the secondary transport, it will affect the construction of the adjoint primary
 source.  Instead of a single solution to the adjoint secondary transport, there
@@ -153,7 +154,6 @@ adjoint secondary transport are combined by integrating over time
 does not change over time-- is that a fair assumption?}
  
 \section{Time-integrated GT-CADIS}
-
 GT-CADIS is an implementation of MS-CADIS that is specific to SDR analysis.  It
 provides a method to calculate a coupling term, T, that relates the neutron
 flux to the photon source.
@@ -170,3 +170,4 @@ solution for the adjoint neutron source
  $t_mov$  because the time constants of decay and geometry
  motion are very different.  The motion of components occurs over a very short
  period of time relative to photon decay.  
+

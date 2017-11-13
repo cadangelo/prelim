@@ -5,6 +5,32 @@
 %% geometry capability (DAGMC tool and ability to read from MCNP input)
 
 \subsection{Production of Stepwise Geometry Files}\label{sec:timestep_geoms}
+A tool has be developed to generate CAD geometry files that capture the 
+movement of components over time.  First, a geometry file of the model in its 
+original position it loaded.  The geometry components are tagged with 
+transformation numbers that correspond to stepwise transformation vectors
+ that are also given as input to this tool.  The position of the components 
+is updated according to these transformations and a new geometry file is 
+produced for each time step.  This tool only handles rigid-body transformations
+ and no geometric deformations or scaling.  It also does not handle kinetics, 
+so the user must be cautious to not cause any overlap of components during the
+ motion.  As an example, consider an activated component of a fusion device 
+that needs to be moved around the facility during a maintenance procedure.  
+The movement of the component would be captured in a stepwise manner and each of
+ the new geometry files generated will be used as the input geometry for the
+ photon transport calculations to determine the SDR at each time step
 
 \subsection{DAGMCNP Geometry Transformations}\label{sec:mcnp_tr}
+The ability to read transformation (TRn) cards from the MCNP input file and 
+update the position of the geometry has also been added to DAGMC.  This
+ capability relies upon the same tagging of components in the CAD geometry 
+file as previously discussed.  The transformation will be applied to any 
+geometry component that is tagged with the number on the TR card.  If using 
+this capability to perform stepwise radiation transport calculations over time, 
+the user would create one MCNP input file per time step.  Each input file 
+should contain the TR cards necessary to update the position of each component 
+to its new location for that time step.  During a DAGMCNP simulation, the 
+geometry is loaded, the MCNP input file is read, the geometry position is 
+updated and then transport is performed.
+
 

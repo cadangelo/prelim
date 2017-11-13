@@ -16,6 +16,7 @@ facilities is caused by decay photons that are emitted by materials irradiated
 by neutrons. There are two primary workflows used to investigate the SDR:
 the Direct 1-Step (D1S) \cite{d1s} and the Rigorous 2-Step (R2S) \cite{r2s} method.
 
+\subsection{D1S}
 The D1S method performs coupled neutron-gamma transport in the same simulation
 It relies upon a modified version of MCNP5 with special cross-section data and
 the FISPACT nuclear inventory code for time correction factors.  The decay gammas are emitted as prompt
@@ -30,6 +31,7 @@ subroutine to produce portable decay photon sources for pure photon
 calculations is underway \cite{adv-d1s}. 
 %errmmm.. this sounds like TR2S
 
+\subsection{R2S}
 In constrast to D1S, the R2S method relies upon separate MC neutron and photon
 transport steps.  The transport steps are coupled by activation analysis.
 The goal of the neutron transport step is to determine the neutron flux
@@ -60,7 +62,7 @@ determine the final SDR \cite{r2s}.
 % Section about analog MC and the challenges faced when trying to calculate SDR in
 % FES with no VR.
 
-\subsection{Analog Monte Carlo Calculations} \label{sec:analog_mc}
+\section{Analog Monte Carlo Calculations} \label{sec:analog_mc}
 
 The quantification of the SDR requires a detailed distribution of first the
 neutron and then the photon flux throughout all regions of phase space.  
@@ -325,8 +327,11 @@ bounds are given by
 	(\frac{\alpha + 1}{2})}
 \end{equation}
 
+\subsection{FW-CADIS}
 
-\section{Automated Variance Reduction for SDR}\label{sec:auto_vr_sdr}
+\subsection{MAGIC}
+
+\section{Automated Variance Reduction for Multiphysics}\label{sec:auto_vr_sdr}
 
 The R2S method requires two transport steps; 
 the initial neutron transport to simulate the irradiation and the subsequent photon
@@ -354,6 +359,8 @@ straightforward
 %computational steps of activation and decay photon transport \cite{mscadis}.
 because the importance function needs to represent the importance of the neutrons to the
 final quantity of interest\cite{mscadis}.
+
+\subsection{Multi-Step CADIS}
 When applied to SDR calculations, the Multi-Step Consistent Adjoint Driven Importance Sampling (MS-CADIS) method
 aims to increase the efficiency of the neutron transport step using an importance function
 that captures the potential of regions to become activated and the importance of
@@ -424,6 +431,7 @@ relating the photon source, $q_p$, to the neutron flux, $\phi_n$, is needed.
 %One can solve for the photon source by performing a full activation analysis,
 %but as an approximation,
 
+\subsection{Groupwise-Transmutation CADIS}
 The Groupwise-Transmutation (GT)-CADIS method, an implementation of MS-CADIS
 solely for SDR analysis, provides a means to do just that \cite{gtcadis}.
 \todo{probably make GT-CADIS a subsection and fill out description}
@@ -460,7 +468,7 @@ a photon source that is a function of each neutron energy group.  Dividing this
 photon source by the neutron flux results in the coupling term T.
 \todo{Move this from proposal section to here}
 
-\section{Moving Systems} \label{sec:moving_sys}
+\section{Moving Geometries and Sources} \label{sec:moving_sys}
 %This section will discuss how systems that involve moving components are
 %currently modeled.
 Historically, Monte Carlo analysis of dynamic systems is performed using a series of separate
@@ -507,7 +515,7 @@ location and orientation of the delayed particle at the time of emission.
 
 % Reference presentation on FLUKA simulation w/ moving geom?
 
-\subsection{MCR2S Geometry Movement in SDR Analysis}
+\subsection{MCR2S with Geometry Movement}
 The capability of MCR2S that allows for components to change location after
 shutdown was developed to facilitate SDR calculation during maintenance and
 intervention activities.  MCR2S relies on MCNP for both neutron and photon
