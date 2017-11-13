@@ -328,8 +328,23 @@ bounds are given by
 \end{equation}
 
 \subsection{FW-CADIS}
+The Foward-Weighted CADIS method is another hybrid deterministic/MC VR method
+that aims to increase the efficiency of global flux or dose distributions or
+detector responses at multiple locations \cite{fwcadis}.
+The goal is to create uniform particle density in the scoring regions such that
+there is uniform statistical uncertainty in the MC solution in these regions.
+This method relies on using a forward deterministic transport solution to
+weight the source for adjoint deterministic transport.  The adjoint solution is
+then used with the standard CADIS method to produce source and transport
+biasing pararameters for the forward MC transport simulation.
 
-\subsection{MAGIC}
+The adjoint source is given as
+\begin{equation}
+	q^{+} = \frac{1}{\phi(\overrightarrow{r}, E)}
+\end{equation}
+	%\Bigg{\sum{\frac{\sigma_d,i}}}
+
+%\subsection{MAGIC}
 
 \section{Automated Variance Reduction for Multiphysics}\label{sec:auto_vr_sdr}
 
