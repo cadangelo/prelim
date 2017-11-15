@@ -11,6 +11,135 @@ using these methods.
 Next, a demontration of these methods will be proposed.
 Finally, a summary of goals to accomplish will be given.
 
+\section{TR2S}\label{sec:tr2s}
+To produce time-integrated SDR maps, the
+first two steps of the R2S workflow remain unchanged
+while a photon transport step needs to be performed at each time-step of
+geometry movement.
+\begin{enumerate}
+	\item{MC neutron transport simulation on geometry at time step $t_{mov}=0$}
+	\item{ALARA activation analysis} 
+	\item{MC photon transport simulations on geometry at each time step $t_{mov}=1..N$}
+\end{enumerate}
+The MC neutron transport will be performed on the configuration of the geometry 
+during irradiation.
+A tetrahedral mesh that conforms to
+the geometry position at $t_{mov}=0$ is used as a tally to score the neutron flux.
+This mesh is tagged with the geometry transformations that will occur after
+shutdown.  The tetrahedral mesh neutron flux tally along with an irradiation and decay
+scenario of interest are given as input to the PyNE R2S
+script to generate ALARA input files.  ALARA is run and produces photon source
+files for each decay time of interest.  These ALARA photon source files are
+converted to tetrahedral mesh based sources by another PyNE R2S script.  All
+source mesh files generated will reflect the original position of the geometry.
+Both the source mesh and DAGMC geometry files are transformed to the 
+correct locations for each $t_{mov}$ with the DAGMC transform tool.
+
+\begin{figure}\label{fig:tr2s_flow}
+\centering
+
+        \tikzstyle{script} = [ellipse, fill=blue!20, draw, text centered, node distance=3cm]
+        \tikzstyle{code} = [ellipse, fill=green!20, draw, text centered, node distance=3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{line} = [draw, -latex]
+        \tikzstyle{arrow} = [thick, ->, >=stealth]
+        
+        \begin{tikzpicture}[node distance = 2 cm, auto]
+		% Optimized neutron transport
+		\node [code] (nmc) {DAGMCNP neutron transport};
+%		\node [file, above =0.9 of nmc] (biased) {Biased neutron
+%		source};
+%		\node [file, right = 0.3 of biased] (wwinp) {Weight window
+%		mesh};
+		\node [file, above = 0.4 of nmc] (mcinp) {DAGMCNP input
+		file};
+        	\node [file, right = 0.7 of mcinp] (ngeom) {DAGMC geom at
+		$t_{mov}=0$};
+        	\node [file, left = 0.3 of nmc] (ntally) {Tet mesh tally};
+		\node [file, below =0.4 of nmc] (nflux) {$\phi_n$ tet mesh};
+%		\path [line] (biased) -- (nmc);
+%		\path [line] (wwinp) -- (nmc);
+		\path [line] (ngeom) -- (nmc);
+		\path [line] (mcinp) -- (nmc);
+		\path [line] (ntally) -- (nmc);
+		\path [line] (nmc) -- (nflux);
+		% ALARA
+		\node [script, below =0.4 of nflux] (step1) {pyne.r2s
+		step1};
+		\node [file, below =0.4 of step1] (alaraflux) {ALARA flux
+		file};
+		\node [file, left = 0.9 of alaraflux] (alarainp) {ALARA input
+		file};
+		\node [file, right =0.9 of alaraflux] (alaramat) {ALARA
+		material library};
+		\node [code, below =0.4 of alaraflux] (alara) {ALARA};
+		\node [file, below =0.4 of alara] (psrc) {ALARA photon
+		source};
+		\node [script, below =0.4 of psrc] (step2) {pyne.r2s step2};
+		\node [file, below =0.4 of step2] (psrcmesh) {$q_{\gamma,t_{dec}}$
+		tet mesh};
+		\path [line] (nflux) -- (step1);
+		\path [line] (step1) -- (alarainp);
+		\path [line] (step1) -- (alaraflux);
+		\path [line] (step1) -- (alaramat);
+		\path [line] (alarainp) -- (alara);
+		\path [line] (alaraflux) -- (alara);
+		\path [line] (alaramat) -- (alara);
+		\path [line] (alara) -- (psrc);
+		\path [line] (psrc) -- (step2);
+		\path [line] (step2) -- (psrcmesh);
+		% Update source mesh position
+		\node [script, below =0.4 of psrcmesh] (trtool) {DAGMC
+		transform tool};
+		\node [file, left = 0.9 of psrcmesh] (tr) {Transformation
+		file};
+		\node [file, below =0.4 of trtool] (psrcmoved) {$q_{\gamma,t_{dec},t_{mov}}$ tet mesh};
+		\path [line] (psrcmesh) -- (trtool);
+		\path [line] (tr) -- (trtool);
+		\path [line] (trtool) -- (psrcmoved);
+		% Photon Transport
+%		\node [script, below = 0.4 of psrcmoved] (cadis) {cadis.py};
+%		\node [file, left = 0.9 of cadis] (adjpfmesh) {$\phi_{\gamma,
+%		t_{mov}}^{+}$ tet mesh};
+%		\node [file, below = 0.4 of cadis] (biasedp) {Biased
+%		$q_{\gamma, t_{mov}}$};
+%		\node [file, right = 0.9 of biasedp] (wwinp) {Weight window
+%		mesh};
+		\node [file, right = 0.9 of psrcmoved] (geomtd) {DAGMC geom at
+		$t_{mov}$};
+		\node [file, left = 0.3 of psrcmoved] (mcpinp) {DAGMCNP input
+		file};
+		\node [code, below =0.4 of psrcmoved] (pmc) {DAGMCNP photon
+		transport};
+                \node [file, left=0.9 of pmc] (f2d) {Flux-to-dose};
+		\node [file, below =0.4 of pmc] (sdr) {$SDR_{t_{mov}}$ tet mesh};
+%		\path [line] (ngeom) -- (trtool);
+		\draw [arrow] (ngeom) |-
+		([xshift=0.5cm,yshift=0.5cm]alaramat.north east) |- (trtool);
+		\path [line] (trtool) -- (geomtd);
+%		\draw [arrow] (geomtd) |-
+%		([xshift=0.5cm,yshift=0.5cm]wwinp.north east) |- (pmc);
+		\path [line] (geomtd) -- (pmc);
+%		\path [line] (geomtd) -- (pmc);
+		\path [line] (mcpinp) -- (pmc);
+%		\path [line] (psrcmoved) -- (cadis);
+		\path [line] (psrcmoved) -- (pmc);
+%		\path [line] (adjpfmesh) -- (cadis);
+%		\path [line] (cadis) -- (biasedp);
+%		\path [line] (biasedp) -- (pmc);
+%		\path [line] (cadis) -- (wwinp);
+%		\path [line] (wwinp) -- (pmc);
+		\path [line] (f2d) -- (pmc);
+		\path [line] (pmc) -- (sdr);
+
+	\end{tikzpicture}
+
+	\caption[Time-integrated R2S (TR2S) workflow]
+	{Time-integrated R2S (TR2S) workflow for calculating the SDR.
+	Scripts are shown in
+	blue ovals, physics codes in green ovals, and files in white
+	rectangles.}
+\end{figure}
 
 \section{Implementation: Time-integrated SDR Analysis}\label{sec:implementation}
 
@@ -219,28 +348,7 @@ generate a biased neutron source and a weight window mesh via the CADIS method.
 \end{figure}
 
 \subsection{Optimized, Time-integrated R2S Workflow}
-To produce time-integrated SDR maps, the
-first two steps of the R2S workflow remain unchanged
-while a photon transport step needs to be performed at each time-step of
-geometry movement.
-\begin{enumerate}
-	\item{MC neutron transport on geometry at $t_mov=0$}
-	\item{ALARA activation analysis} 
-	\item{MC photon transport on geometry at each $t_mov$}
-\end{enumerate}
-The MC neutron transport will be performed on the configuration of the geometry 
-during irradiation.
-A tetrahedral mesh that conforms to
-the geometry position at $t_{mov}=0$ is used as a tally to score the neutron flux.
-This mesh is tagged with the geometry transformations that will occur after
-shutdown.  The tetrahedral mesh neutron flux tally along with an irradiation and decay
-scenario of interest are given as input to the PyNE R2S
-script to generate ALARA input files.  ALARA is run and produces photon source
-files for each decay time of interest.  These ALARA photon source files are
-converted to tetrahedral mesh based sources by another PyNE R2S script.  All
-source mesh files generated will reflect the original position of the geometry.
-Both the source mesh and DAGMC geometry files are transformed to the 
-correct locations for each $t_{mov}$ with the DAGMC transform tool.
+
 The source mesh file in its updated position along with the previously
 generated adjoint photon flux mesh are used to generate a biased photon source 
 and weight window mesh are generated via the CADIS method.  At this point,
@@ -258,7 +366,7 @@ transport step.  The fully optimized TR2S implementation is shown in \ref{fig:r2
 %the interval of time spent at each position and then summed to 
  
 
-\begin{figure}\label{r2s_flow}
+\begin{figure}\label{otr2s_flow}
 \centering
 
         \tikzstyle{script} = [ellipse, fill=blue!20, draw, text centered, node distance=3cm]
@@ -355,8 +463,8 @@ transport step.  The fully optimized TR2S implementation is shown in \ref{fig:r2
 
 	\end{tikzpicture}
 
-	\caption[Time-integrated R2S workflow]
-	{Time-integrated R2S workflow for calculating the SDR.  This particular flow
+	\caption[Fully optimized, time-integrated R2S workflow]
+	{Fully-optimized, time-integrated R2S workflow for calculating the SDR.  This particular flow
 	chart shows the use of a biased source and weight windows to
 	optimize both neutron and photon transport steps.
 	Scripts are shown in
@@ -366,35 +474,89 @@ transport step.  The fully optimized TR2S implementation is shown in \ref{fig:r2
 
 
 \subsection{Error Propagation}\label{sec:error}
-Error Propagation in SDR analysis is a topic currently being investigated.
-If a full TR2S simulation was carried out, the final SDR would have an error associated
+The total statistical error in the the SDR
+arises from the MC calculations of the neutron and photon flux.
+\begin{equation}\label{eq:toterr}
+	\sigma_{SDR}^{2} = \sigma_n^2 + \sigma_{\gamma}^2
+\end{equation}
+The uncertainty in the SDR due to the uncertainty in the photon transport can
+be calculated during MC transport. However, the 
+uncertainty in the SDR due to the uncertainty in the neutron MC
+calculation is more complicated and an area of research currently under investigation by Harb et.
+al.  This work aims to produce a methodology for propagating the error from the
+neutron transport to the photon source and then from the photon source to the
+SDR.
+%This work explores the degree to which the neutron flux calculated in
+%each point in space are correlated.
+
+If a full R2S simulation is carried out, the final SDR has an error associated
 with the MC neutron photon transport steps.  Introducing error from the photon transport
 step can be avoided by not performing MC photon transport and calculating the
 SDR using Eq. \ref{eq:} *need eqn from background*.
+\begin{equation}\label{eq:resp_v}
+	SDR_v = \phi_{\gamma, v}^{+} q_{\gamma, v}
+\end{equation}
+where $SDR_v$ is the respsonse from a discrete volume element, v.
+Recall that $\phi_{gamma, v}$ is the result of the sum of adjoint photon flux 
+over all time steps and required to form the TGT-CADIS adjoint neutron source
+and $q_{\gamma, v}$ is the photon source produced by ALARA, so both quantities
+are already available.
+
+There is some relative error associated with the photon source term that
+originates from the MC forward neutron calculation.  
+The relative error in the
+SDR, $\Re_{SDR}$ is then expressed as 
+\begin{equation}\label{eq:err}
+	\Re_{SDR} = \frac{1}{SDR} \sqrt{\sum_v{(SDR_v \Re_{SDR_v})^2}}
+\end{equation}
+
+This error in the SDR can then be used to calculate the neutron transport
+FOM, shown in Eq. \ref{eq:}, which is important to quantifying the usefulness of TGT-CADIS.
+\begin{equation}\label{eq:fom}
+	FOM = \frac{SDR^2}{t_{proc}\sum_v{(SDR_v \Re_{SDR_v})^2}}
+\end{equation}
+
+
+
+
+
 
 \subsection{Assumptions and Practical Considerations}
 There are three very different time scales: photon transport,
-geometry movement, and decay.  The time of photon transport happens on a much
-faster time scale than the geometry movement, therefore performing radiaton
-transport on static time-steps of geometry is ok.  It is also assumed that the
-time it takes for the source strength to change is much longer than the
-geometry movement so the same source strength can be used for all photon
-transport steps after shutdown.  This also allows the same T to be used at each time
-step.
+geometry movement, and decay.  Photon transport happens on a much
+faster time scale than the geometry movement, therefore it is reasonable to
+performing radiaton transport on static time-steps of geometry.  It is also assumed that the
+time for the photon emission density to change is much longer than the
+period of time between the initial and final geometry configurations so the 
+same photon source generated for a particular decay time
+is used for all photon transport steps $t_{mov} = 0..N$.
+transport steps during the geometry movement. 
+This also allows the same T to be used at each time step.
 Discuss need to explore criteria for situations that this new method will
-optimize the neutron transport step.  What does this depend on?  Time constants
-of geometric movement, change in source strength, photon transport.  source
-strength will depend on at which point during decay the movement is occuring.
-How to prove that for an 8 hr window of time the source strength doesn't change
-enough to effect SDR.
+effectively optimize the neutron transport step.
+It is assumed that the source strength does not change during geometry
+movement, but a metric will need to be defined to be sure this is true.
+This depends on the length of time between shutdown and geometry movement.
+Will need to verify that for a certain window of time, perhaps an eight-hour
+work shift, the source does not change appreciably 
+In the case that the source strength is changing appreciably during geometry
+movement, a  series of photon sources that capture these changes over time
+will need to be used.  This will also require the calculation of different T
+values for each of these time steps.
+It is also assumed that the geometry is moving at a constant acceleration
+and therefore geometry is at each position for an equal amount of time.  If
+this was not true, the sum of adjoint photon fluxes would need to be weighted
+by time. 
+
+\subsubsection{Data management}
+Will be generating a geometry file at each time step, 3-D flux maps for every adjoint
+		photon time step, for the adjoint neutron flux, tet mesh for
+		forward neutron flux, tet mesh of photon source. Need to run
+		adjoint photon transport for many time steps, adjoint neutron,
+		then forward neutron then ALARA.
 \begin{itemize}
-		\item list of assumptions: all time steps are of equal length;
-			if they weren't, would need a time-weighted average.
-			Assume large difference in time constants of photon
-			transport, geometry movement, and photon source decay
         \item efficient obb tree
 	\item htc scripts to run many photon MCNP and compile results
-
 \end{itemize}
 
 

@@ -476,12 +476,21 @@ tedious to capture.  As the purpose of calculating T is only a step in
 calculating $q_{n}^{+}$ which will be used to generate our biasing parameters,
 an approximation of the relationship between $q_p$ and $\phi_n$ will suffice.  
 
+
 A series of single energy group irradiations is performed on each material in
 the geometry.  The total number of irradiations performed is the product of the
 number of materials and the number of neutron energy groups.  This results in
 a photon source that is a function of each neutron energy group.  Dividing this
 photon source by the neutron flux results in the coupling term T.
 \todo{Move this from proposal section to here}
+
+GT-CADIS provides an analytical solution to T when the SNILB criteria are met.
+It has been shown that for typical FES spectra, materials, and irradiation
+scenarios, these criteria are met and the following solution of T is as follows
+
+When met, the photon emission density resulting from the irradiation of a
+material with a neutron flux is the sum of contributions from each neutron
+energy group.
 
 \section{Moving Geometries and Sources} \label{sec:moving_sys}
 %This section will discuss how systems that involve moving components are
