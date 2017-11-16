@@ -1,3 +1,5 @@
+\myexternaldocument{prelim}
+
 \chapter{Proposal}\label{ch:proposal}
 
 As demonstrated by the experiment in chapter \ref{ch:experiment},  the variance
@@ -492,11 +494,11 @@ SDR.
 If a full R2S simulation is carried out, the final SDR has an error associated
 with the MC neutron photon transport steps.  Introducing error from the photon transport
 step can be avoided by not performing MC photon transport and calculating the
-SDR using Eq. \ref{eq:} *need eqn from background*.
+SDR using a form of Eq. \ref{eq:resp_adj}
 \begin{equation}\label{eq:resp_v}
 	SDR_v = \phi_{\gamma, v}^{+} q_{\gamma, v}
 \end{equation}
-where $SDR_v$ is the respsonse from a discrete volume element, v.
+where $SDR_v$ is the response from a discrete volume element, v.
 Recall that $\phi_{gamma, v}$ is the result of the sum of adjoint photon flux 
 over all time steps and required to form the TGT-CADIS adjoint neutron source
 and $q_{\gamma, v}$ is the photon source produced by ALARA, so both quantities
