@@ -3,28 +3,39 @@
 \section{DAGMC Simulations with Geometry Transformations}\label{sec:dagmc_trans}
 %% This section will discuss the progress that has been made toward the moving
 %% geometry capability (DAGMC tool and ability to read from MCNP input)
+This chapter will discuss the progress of 1) a tool to create geometries in
+different configurations and 2) an update to DAGMCNP that facilitates the
+implementation of user-supplied geometry transformations. Both are fundamental to 
+this thesis work.
 
 \subsection{Production of Stepwise Geometry Files}\label{sec:timestep_geoms}
+There are various scenarios that involve the motion of geometry components 
+during a radiation transport simulation.  One example is the movement of
+activated components of a fusion energy device during a maintenance operation.
 A tool has be developed to generate CAD geometry files that capture the 
-movement of components over time.  First, a geometry file of the model in its 
-original position it loaded.  The geometry components are tagged with 
-transformation numbers that correspond to stepwise transformation vectors
- that are also given as input to this tool.  The position of the components 
+movement of components over time.  
+
+First, a geometry file of the model in its 
+original position is created. The geometry components are tagged with 
+transformation numbers that correspond to stepwise motion vectors.
+%that are also given as input to this tool.  
+The tool loads the original geometry and a file containing the motion vectors.
+The position of the components 
 is updated according to these transformations and a new geometry file is 
-produced for each time step.  This tool only handles rigid-body transformations
- and no geometric deformations or scaling.  It also does not handle kinetics, 
+produced for each time step.  This tool only handles rigid-body
+transformations; no geometric deformations or scaling.  It also does not handle kinetics, 
 so the user must be cautious to not cause any overlap of components during the
- motion.  As an example, consider an activated component of a fusion device 
-that needs to be moved around the facility during a maintenance procedure.  
-The movement of the component would be captured in a stepwise manner and each of
- the new geometry files generated will be used as the input geometry for the
- photon transport calculations to determine the SDR at each time step
+motion.  
+
+The new geometry files that contain stepwise changes of the geometry 
+configuration are used as the input geometry for
+transport calculations to determine the response of interest at each time step.
 
 \subsection{DAGMCNP Geometry Transformations}\label{sec:mcnp_tr}
 The ability to read transformation (TRn) cards from the MCNP input file and 
-update the position of the geometry has also been added to DAGMC.  This
+update the position of the geometry has been added to DAGMCNP.  This
  capability relies upon the same tagging of components in the CAD geometry 
-file as previously discussed.  The transformation will be applied to any 
+file discussed in the previous section.  The transformation will be applied to any 
 geometry component that is tagged with the number on the TR card.  If using 
 this capability to perform stepwise radiation transport calculations over time, 
 the user would create one MCNP input file per time step.  Each input file 

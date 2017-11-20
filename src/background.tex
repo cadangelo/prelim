@@ -451,8 +451,18 @@ The Multi-Step CADIS method described in the next section
 provides an explaination for this challege and a method for solving it.
 
 \subsection{MS-CADIS}\label{sec:mscadis}
+The Multi-Step Consistent Adjoint Weighted Importance Sampling (MS-CADIS)
+method of variance reduction 
+was developed to optimize the primary radiation transport
+in a coupled, multi-step process.
+%The first implementation of this method 
+%was applied to the coupled neutron activation-photon decay process that occurs
+%in FES.  Specifically, it
+%ITER SDR benchmark experiment \cite{mscadis}.
 
-Optimizing the inital step of a coupled, multi-step process relies upon
+Optimizing the inital radiation transport
+%step of a coupled, multi-step process
+relies upon
 an importance function that represents the importance of the particles to the
 final response of interest, not the response of that individual step \cite{mscadis}.  
 This is challenging because the the final response of interest depends on the subsequent 

@@ -66,18 +66,20 @@ equation was given in Eq. \ref{eq:3.2b}.
 %where $\phi$ is the forward and 
 %$\phi^{+}$ is the adjoint particle flux, and
 %$q$ is the forward and 
-%$q^{+}$ is the adjoint source distribution and $\langle \cdot \rangle$ signifies the
+%$q^{+}$ is the adjoint source distribution and 
+%$\langle \cdot \rangle$ signifies the
 %integration over all dependent variables.
 This identity is valid for an arbitrary adjoint source function
 \cite{l_m}, therefore the secondary physics has an adjoint identity of the same
-form.
+form
 \begin{center}
-{$\Psi^{+}, \langle L\Psi \rangle = \langle \Psi, L^{+}\Psi^{+} \rangle $}
+{$\langle \Psi^{+}, L\Psi \rangle = \langle \Psi, L^{+}\Psi^{+} \rangle $}
 \end{center}
 \begin{equation}\label{eq:adj_2_identity}
 	\langle \Psi^{+}, b \rangle =
 	\langle \Psi, b^{+} \rangle 
 \end{equation}
+where $\langle \cdot \rangle$ signifies the integration over all dependent variables.
 This is a two-step system, therefore the response of the secondary physics 
 is the final response of interest and takes the form
 \begin{equation}\label{eq:response}
@@ -158,15 +160,16 @@ radiation transport to the secondary physics.
 
 Consider the process of neutron-induced prompt photon production.
 In this case, the function, $\sigma_c$, is the neutron-gamma production
-cross section $\sigma_{n\rightarrow\gamma}$.  The primary focus of SDR analysis
+cross section $\sigma_{n,\gamma}$.  The primary focus of SDR analysis
 is the process of neutron-induced delayed gamma production. 
 GT-CADIS provides a method for calculating $\sigma_c$ when
 certain conditions (known as SNILB) hold true. In this case, the
 coupling term, $T$, is an approximation of the transmutation
 process \cite{gtcadis}.  As long as there is a solution for $\sigma_c$, the
 function that couples the primary and secondary physics together,
-there also exists a solution for the adjoint radiation transport source as shown in Eq.
-\ref{eq:adj_1src}
+there also exists a solution for the adjoint radiation transport source.
+This can be discovered by substituting Eq. \ref{eq:fwd_2src} into Eq. 
+\ref{eq:adj_src} and solving for $q^{+}$.
 
  \begin{equation}\label{eq:adj_1src}
 %	 q_{1}^{+}(\overrightarrow{r},E_{1}) = 
@@ -180,57 +183,78 @@ there also exists a solution for the adjoint radiation transport source as shown
 \section{Time-integrated MS-CADIS}
 If the configuration of the geometry is changing over time during
 the secondary physics, it will affect the construction of the adjoint radiation
-transport source.  Instead of a single solution to the adjoint secondary
-physics, there is a solution at each position and each time represented by the term
-	$ \Phi^{+}(\overrightarrow{r}_{v}(t), t)$
-where $\overrightarrow{r}_{v}(t)$ refers to the position of volume element, v,
-at time, t. 
-\todo{need to introduce volume element}
-To solve for the adjoint primary source in each volume element
-$q_{1,v}^{+}$, the time-dependent solutions of the 
+transport source, $q^{+}$.  
+The solutions to both forward and adjoint transport will be calculated in discrete
+volume elements.
+Instead of a single solution to the adjoint secondary
+physics, there is a solution at each position and each time.% represented by the term
+\begin{itemize}
+	\item	{$ \Psi^{+}(\overrightarrow{r}_{v}(t), t)$ Adjoint flux in volume
+		element v at time t}
+	\item  {$\overrightarrow{r}_{v}(t)$ Position of volume element v at
+		time t}
+\end{itemize}
+To solve for the adjoint primary source in each volume element,
+$q_{v}^{+}$, the time-dependent solutions of the 
 adjoint secondary transport are combined by integrating over time
 
  \begin{equation}\label{eq:adj_src_1_avg}
-	 q_{1,v}^{+} =
+	 q_{v}^{+} =
 	 \int_{t}  \Psi^{+}(\overrightarrow{r}_{v}(t), t)
-	 \sigma_{v}(t)\, dt
+	 \sigma_{c,v}(t)\, dt
  \end{equation}
-\todo{explain only sum, not average, is needed}
-\todo{This assumes that the coupling term $\sigma_{v}$
-does not change over time-- is that a fair assumption?}
- 
+%\todo{explain only sum, not average, is needed}
+%\todo{This assumes that the coupling term $\sigma_{c,v}$
+%does not change over time-- is that a fair assumption?}
+This time-integrated source term is then used
+for adjoint radiation transport to obtain $\phi_{v}^{+}$.
+
 \section{Time-integrated GT-CADIS}
 GT-CADIS is an implementation of MS-CADIS that is specific to SDR analysis.  It
 provides a method to calculate a coupling term, T, that relates the neutron
 flux to the photon source.
-Applying time integration to the GT-CADIS methodology results in the following
-solution for the adjoint neutron source
+T is then used to solve for the adjoint neutron source as shown in Eq.
+\ref{eq:gt_adj_nsrc}.
+If the geometry configuration changes after shutdown, the time-integrated
+MS-CADIS methodology shown in the previous section can be applied to the
+GT-CADIS adjoint neutron source.
+%Applying time integration to the GT-CADIS methodology results in the following
+%solution for the adjoint neutron source
 
  \begin{equation}\label{eq:adj_src_1_avg}
 	 q_{n,v}^{+}(E_{n}) =
-	 \int_{t}     \phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t)
-	 T_{v}(E_n, E_{\gamma}, t)\, dt
+	 \int_{t}  \int_{E_{\gamma}}
+	 T_{v}(E_n, E_{\gamma}, t) 
+	 \phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t)
+	 \, dE_{\gamma} \, dt
  \end{equation}
+%\begin{equation}\label{eq:sum}
+%	\phi_{\gamma,v, h}^{+} = \sum_{t_{mov}}{\phi_{\gamma,v,h,t_{mov}}}
+%\end{equation}
+where $\phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t) $ is the 
+adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t
+and $T_{v}(E_n, E_{\gamma}, t) $ is the T value of the material in volume
+element v, at decay time t.
 
-\begin{equation}\label{eq:sum}
-	\phi_{\gamma,v, h}^{+} = \sum_{t_{mov}}{\phi_{\gamma,v,h,t_{mov}}}
-\end{equation}
- There is a T value calculated for every volume element for every decay time of
- interest.  For many practical problems, T will not change over the course of
- $t_mov$  because the time constants of decay and geometry
- motion are very different.  The motion of components occurs over a very short
- period of time relative to photon decay.  
-The coupling term $T_{g,h}$ is found with Eq.
+There is a T value calculated for every volume element for every decay time of
+interest.  For many practical problems, T will not change over the course of
+geometry movement  because the time constants of decay and geometry
+motion are very different.  The motion of components occurs over a very short
+period of time relative to photon decay.  
+Discretizing the energy spectrum into groups, the coupling term that relates 
+the irradiation of the material in volume
+element v, by neutrons in energy group g, to the corresponding source of
+photons in energy group h, $T_{v,g,h}$, is found with Eq.
 \ref{eq:T}
 
 \begin{equation}\label{eq:T}
-	T_{g,h} = \dfrac{q_{\gamma, h}(\phi_{n,g})}{\phi_{n,g}}
+	T_{v,g,h} = \dfrac{q_{\gamma,v,h}(\phi_{n,v,g})}{\phi_{n,v,g}}
 \end{equation}
-
-For practical SDR analysis, this integral can be estimated by the sum
- 
-\ref{eq:tgt_n_src}
+Using this groupwise calculation of T, the integral in Eq. \ref{eq:adj_src_1_avg} can be estimated by the sum
 \begin{equation}\label{eq:tgt_n_src}
 	q_{n,v,g}^{+} =
 	\sum_{t_{mov}}\Bigg(\sum_{h} T_{v,g,h} \phi_{\gamma,v,h,t_{mov}}^{+}\Bigg)
 \end{equation}
+where $t_{mov}$ is a time step after shutdown that corresponds to a change in
+geometry configuration and $\phi_{\gamma,v,h,t_{mov}}^{+}$ is the adjoint flux
+of photons in energy group h, in volume element v, at time step $t_{mov}$.
