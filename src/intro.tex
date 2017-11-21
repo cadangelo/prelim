@@ -4,57 +4,70 @@
 
 The successful completion of this project will provide the workflow and tools
 necessary to efficiently calculate quantities of interest resulting from
-coupled, multi-physics processes in dynamic systems.  The MC physics code will
+coupled, multi-physics processes in dynamic systems.  
+The driving force behind this work is the quantification of the shutdown dose rate
+(SDR) resulting from the coupled neutron
+irradiation-photon emission that occurs in fusion energy systems (FES);
+specifically investigating how to optimize the SDR calculation when%changes as a function of time when
+activated system components are moved during maintenance activities.
+The Monte Carlo radiation transport code will
 be modified to implement rigid-body transformations on the CAD-based geometry.
 MS-CADIS, a VR method for coupled, multi-physics problems, will be adapted to
 incorporate dynamics.  An experiment will be contrived to demonstrate the
 limitations of existing VR methods as they apply to dynamic problems and verify
-the efficacy of this new method.  Given these objectives, the following chapters
+the efficacy of this new method.  Given these objectives, the Chapter \ref{ch:litrev}
 will include background and theory relevant to VR methods in coupled,
-multi-physics systems.  Chapter \ref{ch:litrev} will provide an introduction to computational
-radiation transport and specifically the VR methods used in MC calculations.
- Chapter no. will discuss SDR analysis and the VR methods specific to these
-calculations.  Chapter no. will introduce radiation transport in dynamic systems,
-discuss how they are handled now and how motion affects VR in coupled
-multi-physics problems like SDR calculations.  Finally, chapter no. will discuss
-the progress that has been made towards this new methodology and outline a
-proposal of the work to be done.
+multi-physics systems.  It begins with an introduction to computational
+radiation transport, specifically the Monte Carlo method.
+It will then introduce the methods currently used for SDR analysis and the
+need for optimization.  Several MC VR techniques and how they have been applied
+ to optimize SDR analysis are then discussed.
+Finally, this chapter ends with a discussion about radiation transport in
+dynamic systems.  
+Next, Chapter \ref{ch:experiment} shows the experiment demonstrating the need
+for a new VR method to optimize the SDR in dynamic systems.  The derivation of
+VR parameters that will optimize the SDR in dynamic systems is given in
+Chapter \ref{ch:tgt} and an implementation plan in Chapter \ref{ch:proposal}.
+Chapter \ref{ch:proposal} will also discuss
+the progress that has been made towards this new methodology and summarize the
+work to be done.
 
 The rapid design iteration process of complex nuclear systems has long been
 aided by the use of computational simulation.  Traditionally, these simulations
 involve radiation transport in static geometries.  However, in certain
 scenarios, it is desirable to investigate dynamic systems and the effects caused
 by the motion of one or more components.  
-For example, Fusion Energy Systems
-(FES) are purposefully designed with modular components that can be moved in and
+For example, FES are purposefully designed with modular components that can be moved in and
 out of a facility after shutdown for maintenance.  
 To ensure the safety of maintenance personnel, it is important to accurately quantify the
-shutdown dose rate (SDR) caused by the gammas emitted by structural materials that became 
+SDR caused by the photons emitted by structural materials that were
 activated during the device operation time.  
 This type of analysis requires neutron transport to determine the neutron flux,
-activation calculation to determine the isotopic inventory, and finally a 
+activation analysis to determine the isotopic inventory, and finally a 
 photon transport calculation to determine the SDR.
 While MC calculations are revered to be the most accurate method for simulating
-radiation transport, the computational expense of obtaining low error results 
+radiation transport, the computational expense of obtaining results with low
+error 
 in systems with heavy shielding can be prohibitive.  
-However there are techniques, known as variance reduction (VR)
-methods, that can be used to increase the computational efficiency.  
+However, VR
+methods can be used to increase the computational efficiency.  
 There are several types
 of VR methods, but the basic theory is to artificially increase the simulation of
 events that will contribute to the quantity of interest such as flux or dose
 rate. 
  One class of VR techniques relies upon a deterministic estimate of the adjoint 
 solution of the transport equation to
-formulate biasing parameters used in the MC transport. 
+formulate biasing parameters to accelerate the MC transport. 
 The adjoint flux has physical significance as the importance of a region of
 phase space to the objective function.
 
-The purpose of this work is to create a methodology for the efficient calculation
-of quantities of
-interest in dynamic, geometrically complex nuclear systems.
+%The purpose of this work is to create a methodology for the efficient calculation
+%of quantities of
+%interest in dynamic, geometrically complex nuclear systems.
 %The motion is discretized into time steps and MC transport is performed at each
 %step.  
-For cases involving coupled multi-physics analysis, such as SDR calculations,
+For cases involving coupled multi-physics analysis in dynamics systems, such as SDR calculations
+during maintenance activities,
 a new hybrid deterministic/MC VR technique will be proposed.
 This new method will adapt the Multi-Step Consistent Adjoint Driven Importance Sampling
 (MS-CADIS) method to dynamic systems.
@@ -66,15 +79,16 @@ also changes.
 In the specific case of SDR calculations, the importance function for the neutron transport step
 must capture the probability of materials to become activated and subsequently emit photons that
 will make a significant contribution to the SDR.
-This new VR method will also take advantage of
+This new VR method will also adapt 
  the Groupwise Transmutation (GT)-CADIS method 
 which is an implementation of MS-CADIS
 %uses single-energy-group irradiations to generate an adjoint neutron source for
 that optimizes the neutron transport step of SDR calculations.
 GT-CADIS generates an adjoint
 neutron source based on certain assumptions and approximations about the
-transmutation network.  To adapt this method for dynamic systems, the adjoint
-neutron source will be calculated at each time step and then averaged
+transmutation network.  To adapt this method for dynamic systems, 
+a time-integrated adjoint
+neutron source will be calculated 
 in order to generate the biasing functions for the neutron transport step.
 
 
