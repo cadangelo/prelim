@@ -1,12 +1,12 @@
 \chapter{Literature Review} \label{ch:litrev}
 
 The goal of this thesis work is to optimize the neutron transport step of a
-coupled, multi-physics process occuring in a system that has moving components.  One
-important application of this work is the quatification of the shutdown dose
-rate (SDR) during maintenace operations in fusion energy systems (FES).
+coupled, multi-physics process occurring in a system that has moving components.  One
+important application of this work is the quantification of the shutdown dose
+rate (SDR) during maintenance operations in fusion energy systems (FES).
 
 During the operation of a fusion device, the nuclear reactions (e.g. D-T
-fusion) occuring in the plasma result in the production of high energy (~14 MeV) neutrons
+fusion) occurring in the plasma result in the production of high energy (~14 MeV) neutrons
 that penetrate deeply into the system components.  Some of the neutron reaction
 pathways result in the production of radioisotopes that persist long after
 device shutdown.  The activated components emit high energy photons as they
@@ -130,14 +130,14 @@ calculations is underway \cite{adv-d1s}.
 %errmmm.. this sounds like TR2S
 
 \subsection{R2S}\label{sec:r2s}
-In constrast to D1S, the R2S method relies upon separate MC neutron and photon
+In contrast to D1S, the R2S method relies upon separate MC neutron and photon
 transport simulations.  The transport steps are coupled through activation analysis 
 by a dedicated nuclear inventory code.
 The goal of the neutron transport step is to determine the neutron flux
 as a function of space and energy.  This neutron flux along with a specific irradiation
 and decay scenario are used as input into a nuclear inventory
-code to determine the photon emmission density as a function of decay time.
-The calculated photon emmission density for each decay time
+code to determine the photon emission density as a function of decay time.
+The calculated photon emission density for each decay time
 is then used as the source for MC photon transport.  A photon flux tally
 fitted with flux-to-dose-rate conversion factors is used to
 determine the final SDR \cite{r2s}.
@@ -149,7 +149,7 @@ As mentioned in section \ref{sec:analog_mc}, the presence of heavy shielding in
 FES presents a challenge for MC calculations because of the high degree of 
 uncertainty caused by low particle fluxes. A set of techniques, known as 
 variance reduction (VR),
-improve the effiency of these calculations by reducing the compute time 
+improve the efficiency of these calculations by reducing the compute time 
 necessary to achieve a statistically reasonable result.
 %Some MC problems are so challenging that without VR, would be impossible to 
 %simulate. 
@@ -169,8 +169,8 @@ governs particle behavior is as follows
 \begin{equation} \label{eq:2.1}
 		w_{biased} pdf_{biased} = w_{unbiased} pdf_{unbiased}
 \end{equation}
-If this biased sampling results in an event occuring more frequently than it actually does,
-the particle weight is decreased and vice versa.
+If this biased sampling results in an event occurring more frequently than it actually does,
+the particle weight is decreased and vice verse.
 
 One of the earliest and still commonly used methods of VR is particle splitting
 and rouletting.  This is particularly useful in simulations where particles
@@ -340,7 +340,7 @@ to the total detector response, R.
 	q(\overrightarrow{r}, E, \widehat{\Omega})}{R}
 \end{equation}
 This essentially is a way to bias the sampling of source particles as a function of their 
-contribuiton to the total detector response.
+contribution to the total detector response.
 As previously mentioned, when sampling from a biased distribution, the particle weight
 needs to be adjusted to eliminate systematic bias.  
 \begin{equation} \label{eq:3.9}
@@ -395,7 +395,7 @@ target.  There are other methods, such as FW-CADIS, that are suited for reducing
 several targets or even globally.
 
 \subsection{FW-CADIS}
-The Foward-Weighted CADIS method is another hybrid deterministic/MC VR method.
+The Forward-Weighted CADIS method is another hybrid deterministic/MC VR method.
 FW-CADIS aims to increase the efficiency of 
 detector responses globally or in multiple localized targets \cite{fwcadis}.
 The goal is to create uniform particle density in the tally regions so in turn,
@@ -403,7 +403,7 @@ there is uniform statistical uncertainty in the MC solution.
 This method relies upon a forward deterministic transport solution to
 weight the source for adjoint deterministic transport.  The adjoint solution is
 then used with the standard CADIS method to produce source and transport
-biasing pararameters for the forward MC transport simulation.
+biasing parameters for the forward MC transport simulation.
 
 If the objective is a spatially dependent total response rate, the FW-CADIS 
 adjoint source is formulated as
@@ -416,13 +416,13 @@ where $\sigma_d(\overrightarrow{r}, E) $ is the response function.
 This effectively weights the adjoint source by the inverse of %the  deterministic estimate of
 the total forward response
 which means that in regions with low forward flux, the adjoint flux, and therefore
-importance, will be high and vice versa.  This will result in the overall goal of
+importance, will be high and vice verse.  This will result in the overall goal of
 nearly equal statistical uncertainty in regions of interest.  
 
 \section{Automated Variance Reduction for Multiphysics}\label{sec:auto_vr_sdr}
 
 In its essence, SDR analysis is the analysis of a coupled, multiphysics system;
-the inital neutron irradiation is coupled to the decay photon transport
+the initial neutron irradiation is coupled to the decay photon transport
 through activation analysis.
 As discussed in section \ref{sec:r2s}, the R2S method requires separate MC calculations 
 for the neutron and photon transport.
@@ -448,7 +448,7 @@ straightforward.
 %Because the response function depends on the subsequent
 %computational steps of activation and decay photon transport \cite{mscadis}.
 The Multi-Step CADIS method described in the next section 
-provides an explaination for this challege and a method for solving it.
+provides an explanation for this challenge and a method for solving it.
 
 \subsection{MS-CADIS}\label{sec:mscadis}
 The Multi-Step Consistent Adjoint Weighted Importance Sampling (MS-CADIS)
@@ -460,7 +460,7 @@ in a coupled, multi-step process.
 %in FES.  Specifically, it
 %ITER SDR benchmark experiment \cite{mscadis}.
 
-Optimizing the inital radiation transport
+Optimizing the initial radiation transport
 %step of a coupled, multi-step process
 relies upon
 an importance function that represents the importance of the particles to the
