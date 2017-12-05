@@ -1,0 +1,75 @@
+\documentclass{beamer}
+
+
+\usetheme[white]{Wisconsin}
+\begin{document}
+\newcommand*{\alphabet}{ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz}
+\newlength{\highlightheight}
+\newlength{\highlightdepth}
+\newlength{\highlightmargin}
+\setlength{\highlightmargin}{2pt}
+\settoheight{\highlightheight}{\alphabet}
+\settodepth{\highlightdepth}{\alphabet}
+\addtolength{\highlightheight}{\highlightmargin}
+\addtolength{\highlightdepth}{\highlightmargin}
+\addtolength{\highlightheight}{\highlightdepth}
+\newcommand*{\Highlight}{\rlap{\textcolor{HighlightBackground}{\rule[-\highlightdepth]{\linewidth}{\highlightheight}}}}
+
+
+%% Slides
+
+%% Title
+\title{Variance Reduction for Multiphysics Analysis \\ of Moving Systems}
+%\subtitle{Graduate Student Seminar}
+\date{ Dec. 8, 2017}
+\author{Chelsea D'Angelo}
+%\institute{University of Wisconsin}
+\begin{frame}
+	\titlepage
+\end{frame}
+
+%%Background
+\begin{frame}
+\frametitle{Shutdown Dose Rate Analysis}
+
+\begin{columns}
+
+\column{0.5\textwidth}
+\begin{itemize}
+	\item{Fusion Energy Systems (FES)}
+		\begin{itemize}
+			\item{Burning plasma, D-T fusion}
+			\item{$^{2}H + ^{3}H \rightarrow ^{4}_{2}He + n$}
+		\end{itemize}
+	\item{Neutrons penetrate deeply into system components,
+				causing activation}
+	\item{Radioisotopes persist long after shutdown}
+	\item{Important to quantify the dose caused by decay photons}
+\end{itemize}
+\column{0.5\textwidth}
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.22]{iter.jpg}
+	\caption{Cutaway view of ITER drawing.}
+\end{figure}
+
+\end{columns}
+		
+\end{frame}
+
+\begin{frame}
+\frametitle{SDR Analysis: Maintenance Operations}
+	\begin{itemize}
+		\item{During a maintenance procedure:}
+			\begin{itemize}
+				\item{Need to move component(s) around facility}
+				\item{Interested in SDR at a particular
+					location}
+				\item{SDR will change as a function of the
+					activated component's position over
+					time}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\end{document}
