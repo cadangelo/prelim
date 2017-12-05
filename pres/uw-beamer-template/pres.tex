@@ -1,5 +1,6 @@
 \documentclass{beamer}
-
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows}
 
 \usetheme[white]{Wisconsin}
 \begin{document}
@@ -14,7 +15,6 @@
 \addtolength{\highlightdepth}{\highlightmargin}
 \addtolength{\highlightheight}{\highlightdepth}
 \newcommand*{\Highlight}{\rlap{\textcolor{HighlightBackground}{\rule[-\highlightdepth]{\linewidth}{\highlightheight}}}}
-
 
 %% Slides
 
@@ -72,4 +72,43 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}
+\frametitle{SDR Solution Method}
+\begin{itemize}
+\item{Rigorous 2-Step Method (R2S)}
+\begin{itemize}
+\item{Monte Carlo neutron transport}
+\item{Activation analysis}
+\item{Monte Carlo photon transport}
+\end{itemize}
+\begin{figure}
+\centering
+
+        \tikzstyle{script} = [ellipse, fill=blue!20, draw, text centered, node distance=3cm]
+        \tikzstyle{code} = [ellipse, fill=green!20, draw, text centered, node distance=3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{line} = [draw, -latex]
+        \tikzstyle{arrow} = [thick, ->, >=stealth]
+        
+        \begin{tikzpicture}[node distance = 2 cm, auto]
+		% Optimized neutron transport
+		\node [code] (nmc) {Monte Carlo neutron transport};
+                \node [file, left of = nmc, xshift=0.9 cm] (nflux) {Neutron flux};
+		\node [code, below of = nmc, yshift=1cm] (act) {Activation analysis};
+                \node [file, left of = act, xshift=0.9cm] (psrc) {Photon source};
+		\node [code, below of = act, yshift=1cm] (pmc) {Monte Carlo photon transport};
+                \node [file, below of = pmc, yshift=1cm] (sdr) {Shutdown dose rate};
+		\path [line] (nmc) -- (nflux);
+                \path [line] (nflux) -- (act);
+                \path [line] (act) -- (psrc);
+                \path [line] (psrc) -- (pmc);
+		\path [line] (pmc) -- (sdr);
+
+	\end{tikzpicture}
+
+	\caption{R2S workflow \label{fig:r2s_flow}}
+\end{figure}
+
+\end{itemize}
+\end{frame}
 \end{document}
