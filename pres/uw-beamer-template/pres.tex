@@ -76,16 +76,16 @@
 \frametitle{SDR Solution Method}
 \begin{itemize}
 \item{Rigorous 2-Step Method (R2S)}
-\begin{itemize}
-\item{Monte Carlo neutron transport}
-\item{Activation analysis}
-\item{Monte Carlo photon transport}
-\end{itemize}
+%\begin{itemize}
+%\item{Monte Carlo neutron transport}
+%\item{Activation analysis}
+%\item{Monte Carlo photon transport}
+%\end{itemize}
 \begin{figure}
 \centering
 
-        \tikzstyle{script} = [ellipse, fill=blue!20, draw, text centered, node distance=3cm]
-        \tikzstyle{code} = [ellipse, fill=green!20, draw, text centered, node distance=3cm]
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
         \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
         \tikzstyle{line} = [draw, -latex]
         \tikzstyle{arrow} = [thick, ->, >=stealth]
@@ -93,11 +93,11 @@
         \begin{tikzpicture}[node distance = 2 cm, auto]
 		% Optimized neutron transport
 		\node [code] (nmc) {Monte Carlo neutron transport};
-                \node [file, left of = nmc, xshift=0.9 cm] (nflux) {Neutron flux};
-		\node [code, below of = nmc, yshift=1cm] (act) {Activation analysis};
-                \node [file, left of = act, xshift=0.9cm] (psrc) {Photon source};
-		\node [code, below of = act, yshift=1cm] (pmc) {Monte Carlo photon transport};
-                \node [file, below of = pmc, yshift=1cm] (sdr) {Shutdown dose rate};
+                \node [file, left of = nmc, yshift=-0.9 cm, xshift=-1.8cm] (nflux) {Neutron flux};
+		\node [script, below of = nmc, yshift=1.2cm] (act) {Activation analysis};
+                \node [file, left of = act, yshift=-0.9cm, xshift=-1.8cm] (psrc) {Photon source};
+		\node [code, below of = act, yshift=1.2cm] (pmc) {Monte Carlo photon transport};
+                \node [file, below of = pmc, yshift=1.4cm] (sdr) {Shutdown dose rate};
 		\path [line] (nmc) -- (nflux);
                 \path [line] (nflux) -- (act);
                 \path [line] (act) -- (psrc);
@@ -106,9 +106,158 @@
 
 	\end{tikzpicture}
 
-	\caption{R2S workflow \label{fig:r2s_flow}}
+%	\caption{R2S workflow \label{fig:r2s_flow}}
 \end{figure}
 
 \end{itemize}
 \end{frame}
+
+%!!!!! Should add in pic of ITER flux
+\begin{frame}
+\frametitle{Monte Carlo Radiation Transport}
+\begin{columns}
+
+\column{0.7\textwidth}
+\begin{itemize}
+\item{Monte Carlo (MC) analysis of fusion energy systems is challenging due to the highly attenuating structural materials}
+   \begin{itemize}
+   \item{Results scored in regions that have low particle flux, have higher statistical uncertainty}
+   \end{itemize}
+\item{To decrease statistical uncertainty:}
+\begin{itemize}
+\item{Increase number of histories}
+\item{Use variance reduction (VR) techniques}
+\end{itemize}
+\end{itemize}
+
+\column{0.3\textwidth}
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.5]{iter_pflux.jpg}
+	\caption{Photon flux in ITER tokamak building.}
+\end{figure}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{MC Variance Reduction Techniques}
+\begin{itemize}
+\item{Techniques to modify particle behavior}
+\begin{itemize}
+\item{Preferentially sample events that will contribute to results of interest}
+\end{itemize}
+\item{Statistical weight of particles is adjusted to keep playing a fair game}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Hybrid Deterministic/MC VR Methods}
+\begin{itemize}
+\item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to generate \textbf{Monte Carlo} biasing prarameters}
+\end{itemize}
+%\item{ 
+%}
+\begin{itemize}
+\item{Adjoint flux can define the importance of regions of phase space to the detector response}
+\end{itemize}
+
+\vspace{0.2cm}
+       \begin{equation}
+        H^+\Psi^+ = q^+
+       \end{equation} 
+       \begin{equation}
+	H^{+} = -\widehat{\Omega} \cdot \nabla +
+	    \sigma_{t}(\overrightarrow{r},E) - 
+		\int_{0}^{\infty} dE'
+		\int_{4\pi} d\Omega'
+		\sigma_{s}( \overrightarrow{r}, E 
+		\rightarrow E', \widehat{\Omega} 
+		\rightarrow \widehat{\Omega}' )
+       \end{equation}
+\end{frame}
+
+\begin{frame}
+\frametitle{Hybrid Deterministic/MC VR Methods}
+\begin{itemize}
+\item{Consistent Adjoint Driven Importance Sampling (CADIS)}
+  \begin{itemize}
+  \item{Use the adjoint flux to generate source and transport biasing parameters in a consistent manner}
+    \begin{itemize}
+    \item{Source: sample from biased PDF}
+    \item{Transport: weight windows to control particle flow}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Variance Reduction for SDR Analysis}
+\begin{itemize}
+\item{VR for photon transport step is straightforward}
+  \begin{itemize}
+  \item{Can use CADIS method}
+    \begin{itemize}
+    \item{Flux-to-dose conversion factors define adjoint source}
+    \end{itemize}
+  \end{itemize}
+\item{VR for neutron transport step is more complicated}
+    \begin{itemize}
+    \item{Biasing function needs to capture}
+      \begin{enumerate}
+        \item{Potential of regions to become activated}
+        \item{Potential to produce photons that will contribute to the SDR}
+      \end{enumerate}
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Variance Reduction for SDR Analysis}
+\begin{itemize}
+\item{Multi-Step (MS)-CADIS}
+  \begin{itemize}
+  \item {VR method to optimize the initial radiation transport step of a coupled, multi-step process}
+  \item{When applied to SDR analysis, MS-CADIS will optimize the neutron transport}
+    \begin{itemize}
+    \item{Use a function that represents the   importance of the neutrons to the final dose rate}
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{VR for SDR Analysis: GT-CADIS}
+\begin{itemize}
+\item{Groupwise Transmutation (GT)-CADIS}
+  \begin{itemize}
+  \item{Implementation of MS-CADIS specifically for SDR analysis}
+  \item{Provides method to calculate optimal adjoint neutron source, $q_n^+$}
+    \begin{itemize}
+    \item{This is used as the source in the deterministic calculation of the    adjoint neutron flux, $\phi_{n}^{+}$, used as the importance function}
+    
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+\centering
+{$q_n^+(E_n)=\int_{E_p} T(E_n, E_p) \phi_p^+(E_p) dE_p$}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{VR for SDR Analysis: GT-CADIS}
+\begin{itemize}
+\item{Coupling term, T, defined by}
+\end{itemize}
+
+%\begin{equation}
+\centering
+{$q_p(E_p) = \int_{E_n} T(E_n, E_p) \phi_n(E_n) dE_n$}
+%\end{equation}
+
+
+\end{frame}
+
+
 \end{document}
