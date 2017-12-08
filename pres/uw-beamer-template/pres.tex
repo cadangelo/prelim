@@ -1,6 +1,8 @@
 \documentclass{beamer}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
+\usepackage{animate}
+\usepackage{xmpmulti}
 
 \usetheme[white]{Wisconsin}
 \begin{document}
@@ -70,6 +72,11 @@
 					time}
 			\end{itemize}
 	\end{itemize}
+	\begin{center}
+	%\animategraphics[loop,controls,width=\textwidth]{5}{config-}{0}{5}
+	\transduration<0-5>{0}
+	\multiinclude[<+->][format=jpg, graphics={ scale=0.3}]{config}
+	\end{center}
 \end{frame}
 
 \begin{frame}
@@ -152,9 +159,11 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Hybrid Deterministic/MC VR Methods}
+\frametitle{Hybrid Deterministic/MC VR Methods: CADIS}
 \begin{itemize}
+\item{Consistent Adjoint Driven Importance Sampling (CADIS)}
 \item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to generate \textbf{Monte Carlo} biasing prarameters}
+\item{Use the detector response function as the adjoint source}
 \end{itemize}
 %\item{ 
 %}
@@ -178,17 +187,25 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{Hybrid Deterministic/MC VR Methods}
-\begin{itemize}
-\item{Consistent Adjoint Driven Importance Sampling (CADIS)}
+\frametitle{Hybrid Deterministic/MC VR Methods: CADIS}
   \begin{itemize}
-  \item{Use the adjoint flux to generate source and transport biasing parameters in a consistent manner}
+  \item{Use the adjoint flux to generate MC source and transport biasing parameters in a consistent manner}
     \begin{itemize}
     \item{Source: sample from biased PDF}
     \item{Transport: weight windows to control particle flow}
+    \item{*Particles are born within weight windows}
     \end{itemize}
   \end{itemize}
-\end{itemize}
+	\begin{columns}
+        \column{0.5\textwidth}
+		\begin{itemize}
+			\item{weight window pic}
+		\end{itemize}
+        \column{0.5\textwidth}
+		\begin{itemize}
+			\item{biased source pic}
+		\end{itemize}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
@@ -208,56 +225,252 @@
         \item{Potential of regions to become activated}
         \item{Potential to produce photons that will contribute to the SDR}
       \end{enumerate}
+    \item{Can use CADIS if an adjoint source that will fulfill these criteria is
+	    found}
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}
-\frametitle{Variance Reduction for SDR Analysis}
+\frametitle{Variance Reduction for SDR Analysis: MS-CADIS}
 \begin{itemize}
 \item{Multi-Step (MS)-CADIS}
   \begin{itemize}
   \item {VR method to optimize the initial radiation transport step of a coupled, multi-step process}
   \item{When applied to SDR analysis, MS-CADIS will optimize the neutron transport}
     \begin{itemize}
-    \item{Use a function that represents the   importance of the neutrons to the final dose rate}
+    \item{Use a function that represents the   importance of the neutrons to
+	    the final dose rate}
     \end{itemize}
   \end{itemize}
 \end{itemize}
+ \centering
+	\begin{equation}
+	\int_{\overrightarrow{r}} \int_{E_n} \phi_n(\overrightarrow{r}, E_n)
+	q_n^+(\overrightarrow{r}, E_n) d\overrightarrow{r} dE_n = SDR
+	\end{equation}
+% \vspace{0.03 cm}
+
+ \centering
+	\begin{equation}
+	SDR = \int_{\overrightarrow{r}} \int_{E_p} 
+		\phi_p^+(\overrightarrow{r}, E_p)  q_p(\overrightarrow{r}, E_p)
+		dr dE_p 
+	\end{equation}
 \end{frame}
 
 \begin{frame}
-\frametitle{VR for SDR Analysis: GT-CADIS}
+\frametitle{Variance Reduction for SDR Analysis: MS-CADIS}
+Combining these equations:
+ \centering
+	\begin{equation}
+	\int_{\overrightarrow{r}} \int_{E_n} \phi_n(\overrightarrow{r}, E_n)
+	q_n^+(\overrightarrow{r}, E_n) d\overrightarrow{r} dE_n =
+	 \int_{\overrightarrow{r}} \int_{E_p} 
+		\phi_p^+(\overrightarrow{r}, E_p)  q_p(\overrightarrow{r}, E_p)
+		dr dE_p 
+	\end{equation}
+
+To solve for the adjoint neutron source, $q_n^+$, a relationship between $q_p$
+and $\phi_n$ is required
+\centering
+\begin{equation}
+q_p(E_p) = \int_{E_n} T(E_n, E_p) \phi_n(E_n) dE_n
+\end{equation}
+
+
+\end{frame}
+		
+\begin{frame}
+\frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
 \begin{itemize}
 \item{Groupwise Transmutation (GT)-CADIS}
   \begin{itemize}
   \item{Implementation of MS-CADIS specifically for SDR analysis}
-  \item{Provides method to calculate optimal adjoint neutron source, $q_n^+$}
-    \begin{itemize}
-    \item{This is used as the source in the deterministic calculation of the    adjoint neutron flux, $\phi_{n}^{+}$, used as the importance function}
-    
-    \end{itemize}
+  \item{Provides method to calculate optimal adjoint neutron source, $q_n^+$,
+	  by first calculating, T}
+  \item{Calculate T:}
+	  \begin{enumerate}
+		  \item{Irradiate each material with neutrons from a single
+			  energy group, g}
+		  \item{Record resulting photon emission in each energy group,
+			  h}
+	  \end{enumerate}
   \end{itemize}
+
 \end{itemize}
 \centering
-{$q_n^+(E_n)=\int_{E_p} T(E_n, E_p) \phi_p^+(E_p) dE_p$}
+	\begin{equation}
+		T_{g,h} = \frac{q_{p,h}(\phi_{n,g})}{\phi_{n,g}}
+	\end{equation}
+
 \end{frame}
 
 
 \begin{frame}
-\frametitle{VR for SDR Analysis: GT-CADIS}
-\begin{itemize}
-\item{Coupling term, T, defined by}
-\end{itemize}
+\frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
 
-%\begin{equation}
+\begin{itemize}
+	\item{Use T to solve for adjoint neutron source:}
+\end{itemize}
 \centering
-{$q_p(E_p) = \int_{E_n} T(E_n, E_p) \phi_n(E_n) dE_n$}
-%\end{equation}
+\begin{equation}
+q_n^+(E_n)=\int_{E_p} T(E_n, E_p) \phi_p^+(E_p) dE_p
+\end{equation}
+
+\begin{itemize}
+\item{This is used as the source in the deterministic calculation of the    adjoint neutron flux, $\phi_{n}^{+}$, used as the importance function}
+\end{itemize}
 
 
 \end{frame}
 
+\begin{frame}
+\frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
+
+
+{GT-CADIS workflow}
+
+\begin{figure}
+\centering
+
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
+	node distance=1.4cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
+	distance=1.4cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=1.4cm]
+        \tikzstyle{line} = [draw, -latex]
+        \tikzstyle{arrow} = [thick, ->, >=stealth]
+        
+        \begin{tikzpicture}[node distance = 0.5 cm, auto]
+		% Optimized neutron transport
+		\node [script] (adjnsrc) {Calculate adjoint
+		neutron source};
+		\node [code, above of = adjnsrc, xshift=-3 cm] (adjp) {Adjoint photon transport};
+		%\node [file] (adjpflux) {Adjoint photon flux};
+		\node [script, right of = adjp, xshift=5 cm] (tcalc) {Calculate T};
+		\node [code, below of = adjnsrc ] (adjn) {Adjoint neutron transport};
+		%\node [file] (adjnflux) {Adjoint neutron flux};
+		\node [script, below of = adjn] (vr) {Calculate MC neutron biasing parameters};
+		\node [file, below of = vr, xshift =-3cm] (ww) {Weight windows};
+		\node [file, below of = vr, xshift=3cm] (bsrc) {Biased source};
+
+		\path [line] (adjp) -- (adjnsrc);
+		\path [line] (tcalc) -- (adjnsrc);
+		\path [line] (adjnsrc) -- (adjn);
+		\path [line] (adjn) -- (vr);
+		\path [line] (vr) -- (ww);
+		\path [line] (vr) -- (bsrc);
+
+	\end{tikzpicture}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{GT-CADIS Demonstration}
+
+	\begin{columns}
+        \column{0.5\textwidth}
+        \begin{figure}
+%	\centering
+		%\vspace{1cm}
+		\hspace{-1cm}
+	\includegraphics[scale=0.27, xshift=-3cm]{config-0.jpg}
+		\vspace{-1.4cm}
+	\caption{Demo model. Steel chamber, walls are 2 m thick.  14 MeV
+		neutron source in center.  Chamber surrounded by air.}
+        \end{figure}
+
+        \column{0.5\textwidth}
+        \begin{figure}
+	\centering
+	\includegraphics[scale=0.20]{gtcadis_adjn.jpg}
+		\caption{GT-CADIS adjoint neutron flux. Functions as importance
+		map.}
+	\end{figure}
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{GT-CADIS Demonstration}
+	GT-CADIS importance map is \textbf{insufficient} for moving systems.
+
+	\begin{columns}
+        \column{0.5\textwidth}
+        \begin{figure}
+%	\centering
+	\vspace{0.8cm}
+		\hspace{-1cm}
+%	\includegraphics[scale=0.27, xshift=-3cm]{config-0.jpg}
+	\transduration<0-5>{0}
+	\multiinclude[<+->][format=jpg, graphics={ scale=0.22}]{config}
+		\vspace{-0.3cm}
+	\caption{Demo model. Steel chamber, walls are 2 m thick.  14 MeV
+		neutron source in center.  Chamber surrounded by air.}
+        \end{figure}
+
+        \column{0.5\textwidth}
+        \begin{figure}
+	\centering
+	\includegraphics[scale=0.20]{gtcadis_adjn_hi.jpg}
+		\caption{GT-CADIS adjoint neutron flux. Functions as importance
+		map.}
+	\end{figure}
+	\end{columns}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Derive New Adjoint Neutron Source}
+	\begin{itemize}
+		\item{Geometry movement during photon transport effects the
+			construction of the adjoint neutron source}
+		\item{Need to:}
+			\begin{enumerate}
+				\item{Perform adjoint photon transport at each
+					time step of geometry movement}
+				\item{Integrate the adjoint photon flux over time}
+			\end{enumerate}
+	\end{itemize}
+
+  \begin{equation}\label{eq:adj_src_1_avg}
+	 q_{n,v}^{+}(E_{n}) =
+	 \int_{t}  \int_{E_{\gamma}}
+	 T_{v}(E_n, E_{\gamma}, t) 
+	 \phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t)
+	 \, dE_{\gamma} \, dt
+  \end{equation}
+
+\begin{itemize}
+\item{$\phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t) $ is the 
+adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
+\item{$T_{v}(E_n, E_{\gamma}, t) $ is the T value of the material in volume
+		element v, at decay time t}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Time-integrated GT-CADIS}
+	\begin{itemize}
+		\item{Perform deterministic adjoint neutron transport using the
+			time-integrated source}
+		\item{Resultant adjoint neutron flux should look something like
+			this:}
+	\end{itemize}
+        \begin{figure}
+	\centering
+	\includegraphics[scale=0.20]{tgt_adj_n.jpg}
+%		\caption{GT-CADIS adjoint neutron flux. Functions as importance
+%		map.}
+	\end{figure}
+	\begin{itemize}
+		\item{Use this adjoint neutron flux to generate biasing
+			parameters that will optimize the MC neutron transport
+			step of R2S.}
+	\end{itemize}
+\end{frame}
 
 \end{document}
