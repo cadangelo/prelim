@@ -161,7 +161,7 @@
 \begin{itemize}
 \item{Techniques to modify particle behavior}
 \begin{itemize}
-\item{Preferentially sample events that will contribute to results of interest}
+	\item{\textbf{Goal}: preferentially sample events that will contribute to results of interest}
 \end{itemize}
 \item{Statistical weight of particles is adjusted to keep playing a fair game}
 \end{itemize}
@@ -171,7 +171,8 @@
 \frametitle{Hybrid Deterministic/MC VR Methods: CADIS}
 \begin{itemize}
 \item{Consistent Adjoint Driven Importance Sampling (CADIS)}
-\item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to generate \textbf{Monte Carlo} biasing parameters}
+\item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to
+	generate \textbf{Monte Carlo} VR parameters}
 \item{Adjoint flux can define the importance of regions of phase space to the detector response}
 \end{itemize}
 
@@ -235,7 +236,7 @@
     \item{Flux-to-dose-rate conversion factors define adjoint source}
     \end{itemize}
   \end{itemize}
-\item{VR for neutron transport step is more complicated}
+\item{VR for \textbf{neutron} transport step is more \textbf{complicated}}
     \begin{itemize}
     \item{Biasing function needs to capture}
       \begin{enumerate}
@@ -344,9 +345,9 @@
 	dE_{\gamma}
 \end{equation}
 
-\begin{itemize}
-\item{This is used as the source in the deterministic calculation of the    adjoint neutron flux, $\phi_{n}^{+}$}
-\end{itemize}
+%\begin{itemize}
+%\item{This is used as the source in the deterministic calculation of the    adjoint neutron flux, $\phi_{n}^{+}$}
+%\end{itemize}
 
 
 \end{frame}
@@ -502,6 +503,46 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 \end{frame}
 
 \begin{frame}
+	\frametitle{Time-integrated R2S}
+	\begin{itemize}
+		\item{R2S workflow for geometry movement after shutdown}
+	\end{itemize}
+	\vspace{1cm}
+	\begin{figure}
+        \centering
+
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{line} = [draw, -latex]
+        \tikzstyle{arrow} = [thick, ->, >=stealth]
+        
+	\resizebox{!}{4cm}{
+        \begin{tikzpicture}[node distance = 2 cm, auto]
+		% Optimized neutron transport
+		\node [code] (nmc) {Monte Carlo neutron transport};
+                \node [file, left of = nmc, yshift=-0.9 cm, xshift=-1.8cm] (nflux) {Neutron flux};
+		\node [file, right of = nmc, yshift=-0.9cm, xshift=1.9cm]
+		(irrdec) {Irradiation and decay scenario};
+		\node [script, below of = nmc, yshift=1.2cm] (act) {Activation analysis};
+                \node [file, left of = act, yshift=-0.9cm, xshift=-1.8cm] (psrc) {Photon source};
+		\node [code, below of = act, yshift=1.2cm] (pmc) {Monte Carlo
+		photon transport at each time step};
+                \node [file, below of = pmc, yshift=1.4cm] (sdr) {Shutdown dose
+		rate at each time step};
+		\path [line] (nmc) -- (nflux);
+                \path [line] (nflux) -- (act);
+                \path [line] (irrdec) -- (act);
+                \path [line] (act) -- (psrc);
+                \path [line] (psrc) -- (pmc);
+		\path [line] (pmc) -- (sdr);
+
+	\end{tikzpicture}
+        }
+%	\caption{R2S workflow \label{fig:r2s_flow}}
+\end{figure}
+\end{frame}
+\begin{frame}
 	\frametitle{Time-integrated GT-CADIS}
 	\begin{itemize}
 		\item{Assumptions}
@@ -527,5 +568,12 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 			\end{itemize}
 	\end{itemize}
 	
+\end{frame}
+
+\begin{frame}[c]
+	\frametitle{\tiny{.}}
+	\begin{center}
+	{\Huge Questions?}
+	\end{center}
 \end{frame}
 \end{document}
