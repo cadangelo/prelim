@@ -88,9 +88,8 @@
 %\item{Activation analysis}
 %\item{Monte Carlo photon transport}
 %\end{itemize}
-	\vspace{1cm}
-	\begin{figure}
-        \centering
+\begin{figure}
+\centering
 
         \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
         \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
@@ -98,26 +97,22 @@
         \tikzstyle{line} = [draw, -latex]
         \tikzstyle{arrow} = [thick, ->, >=stealth]
         
-	\resizebox{!}{4cm}{
         \begin{tikzpicture}[node distance = 2 cm, auto]
 		% Optimized neutron transport
 		\node [code] (nmc) {Monte Carlo neutron transport};
                 \node [file, left of = nmc, yshift=-0.9 cm, xshift=-1.8cm] (nflux) {Neutron flux};
-		\node [file, right of = nmc, yshift=-0.9cm, xshift=1.9cm]
-		(irrdec) {Irradiation and decay scenario};
 		\node [script, below of = nmc, yshift=1.2cm] (act) {Activation analysis};
                 \node [file, left of = act, yshift=-0.9cm, xshift=-1.8cm] (psrc) {Photon source};
 		\node [code, below of = act, yshift=1.2cm] (pmc) {Monte Carlo photon transport};
                 \node [file, below of = pmc, yshift=1.4cm] (sdr) {Shutdown dose rate};
 		\path [line] (nmc) -- (nflux);
                 \path [line] (nflux) -- (act);
-                \path [line] (irrdec) -- (act);
                 \path [line] (act) -- (psrc);
                 \path [line] (psrc) -- (pmc);
 		\path [line] (pmc) -- (sdr);
 
 	\end{tikzpicture}
-        }
+
 %	\caption{R2S workflow \label{fig:r2s_flow}}
 \end{figure}
 
@@ -131,14 +126,10 @@
 
 \column{0.7\textwidth}
 \begin{itemize}
-	\item{Monte Carlo (MC) analysis of fusion energy systems is:}
-	\begin{itemize}
-		\item{Accurate for large, complex models}
-		\item{Challenging due to the highly attenuating structural materials}
-                  \begin{itemize}
-                  \item{Results scored in regions that have low particle flux, have higher statistical uncertainty}
-                  \end{itemize}
-	\end{itemize}
+\item{Monte Carlo (MC) analysis of fusion energy systems is challenging due to the highly attenuating structural materials}
+   \begin{itemize}
+   \item{Results scored in regions that have low particle flux, have higher statistical uncertainty}
+   \end{itemize}
 \item{To decrease statistical uncertainty:}
 \begin{itemize}
 \item{Increase number of histories}
@@ -171,10 +162,14 @@
 \frametitle{Hybrid Deterministic/MC VR Methods: CADIS}
 \begin{itemize}
 \item{Consistent Adjoint Driven Importance Sampling (CADIS)}
-\item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to generate \textbf{Monte Carlo} biasing parameters}
+\item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to generate \textbf{Monte Carlo} biasing prarameters}
+\item{Use the detector response function as the adjoint source}
+\end{itemize}
+%\item{ 
+%}
+\begin{itemize}
 \item{Adjoint flux can define the importance of regions of phase space to the detector response}
 \end{itemize}
-
 
 \vspace{0.2cm}
        \begin{equation}
@@ -189,10 +184,6 @@
 		\rightarrow E', \widehat{\Omega} 
 		\rightarrow \widehat{\Omega}' )
        \end{equation}
-\begin{itemize}
-\item{Adjoint transport $\sim$ "backwards" transport}
-\item{Detector response function is the adjoint source}
-\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -202,18 +193,10 @@
     \begin{itemize}
     \item{Source: sample from biased PDF}
     \item{Transport: weight windows to control particle flow}
-%    \item{Particles are born within weight windows}
+    \item{*Particles are born within weight windows}
     \end{itemize}
   \end{itemize}
 	\begin{columns}
-        \column{0.5\textwidth}
-		\begin{itemize}
-			\item{Uniform vs. biased source distribution}
-		\end{itemize}
-                \begin{figure}
-		\centering
-		\includegraphics[scale=0.32]{bsrc_ex.jpg}
-		\end{figure}
         \column{0.5\textwidth}
 		\begin{itemize}
 			\item{Splitting/rouletting with weight windows}
@@ -222,17 +205,25 @@
 		\centering
 		\includegraphics[scale=0.51]{ww_ex2.png}
 		\end{figure}
+        \column{0.5\textwidth}
+		\begin{itemize}
+			\item{Uniform vs. biased source distribution}
+		\end{itemize}
+                \begin{figure}
+		\centering
+		\includegraphics[scale=0.32]{bsrc_ex.jpg}
+		\end{figure}
 	\end{columns}
 \end{frame}
 
 \begin{frame}
 \frametitle{Variance Reduction for SDR Analysis}
 \begin{itemize}
-	\item{VR for \textbf{photon} transport step is \textbf{straightforward}}
+\item{VR for photon transport step is straightforward}
   \begin{itemize}
-  \item{Can use CADIS method to direct photons towards detector}
+  \item{Can use CADIS method}
     \begin{itemize}
-    \item{Flux-to-dose-rate conversion factors define adjoint source}
+    \item{Flux-to-dose conversion factors define adjoint source}
     \end{itemize}
   \end{itemize}
 \item{VR for neutron transport step is more complicated}
@@ -242,8 +233,8 @@
         \item{Potential of regions to become activated}
         \item{Potential to produce photons that will contribute to the SDR}
       \end{enumerate}
-    \item{Can use CADIS if we can construct adjoint source that will fulfill
-	    these criteria}
+    \item{Can use CADIS if an adjoint source that will fulfill these criteria is
+	    found}
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -271,36 +262,29 @@
 
  \centering
 	\begin{equation}
-		SDR = \int_{\overrightarrow{r}} \int_{E_{\gamma}} 
-		\phi_{\gamma}^+(\overrightarrow{r}, E_{\gamma})
-		q_{\gamma}(\overrightarrow{r}, E_{\gamma})
-		dr dE_{\gamma} 
+	SDR = \int_{\overrightarrow{r}} \int_{E_p} 
+		\phi_p^+(\overrightarrow{r}, E_p)  q_p(\overrightarrow{r}, E_p)
+		dr dE_p 
 	\end{equation}
 \end{frame}
 
 \begin{frame}
 \frametitle{Variance Reduction for SDR Analysis: MS-CADIS}
-	\begin{itemize}
-		\item{Combining these equations:}
-	\end{itemize}
-	\begin{centering}
+Combining these equations:
+ \centering
 	\begin{equation}
 	\int_{\overrightarrow{r}} \int_{E_n} \phi_n(\overrightarrow{r}, E_n)
 	q_n^+(\overrightarrow{r}, E_n) d\overrightarrow{r} dE_n =
-		\int_{\overrightarrow{r}} \int_{E_{\gamma}} 
-		\phi_{\gamma}^+(\overrightarrow{r}, E_{\gamma})
-		q_{\gamma}(\overrightarrow{r}, E_{\gamma})
-		d\overrightarrow{r} dE_{\gamma} 
+	 \int_{\overrightarrow{r}} \int_{E_p} 
+		\phi_p^+(\overrightarrow{r}, E_p)  q_p(\overrightarrow{r}, E_p)
+		dr dE_p 
 	\end{equation}
-	\end{centering}
-	\begin{itemize}
-		\item{To solve for the adjoint neutron source, $q_n^+$, a
-			relationship between $q_{\gamma}$
-			and $\phi_n$ is required}
-	\end{itemize}
+
+To solve for the adjoint neutron source, $q_n^+$, a relationship between $q_p$
+and $\phi_n$ is required
 \centering
 \begin{equation}
-	q_{\gamma}(E_{\gamma}) = \int_{E_n} T(E_n, E_{\gamma}) \phi_n(E_n) dE_n
+q_p(E_p) = \int_{E_n} T(E_n, E_p) \phi_n(E_n) dE_n
 \end{equation}
 
 
@@ -326,7 +310,7 @@
 \end{itemize}
 \centering
 	\begin{equation}
-		T_{g,h} = \frac{q_{\gamma,h}(\phi_{n,g})}{\phi_{n,g}}
+		T_{g,h} = \frac{q_{p,h}(\phi_{n,g})}{\phi_{n,g}}
 	\end{equation}
 
 \end{frame}
@@ -340,12 +324,11 @@
 \end{itemize}
 \centering
 \begin{equation}
-	q_n^+(E_n)=\int_{E_{\gamma}} T(E_n, E_{\gamma}) \phi_{\gamma}^+(E_{\gamma})
-	dE_{\gamma}
+q_n^+(E_n)=\int_{E_p} T(E_n, E_p) \phi_p^+(E_p) dE_p
 \end{equation}
 
 \begin{itemize}
-\item{This is used as the source in the deterministic calculation of the    adjoint neutron flux, $\phi_{n}^{+}$}
+\item{This is used as the source in the deterministic calculation of the    adjoint neutron flux, $\phi_{n}^{+}$, used as the importance function}
 \end{itemize}
 
 
@@ -354,10 +337,9 @@
 \begin{frame}
 \frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
 
-\begin{itemize}
-\item{GT-CADIS workflow}
-\end{itemize}
-	\vspace{1cm}
+
+{GT-CADIS workflow}
+
 \begin{figure}
 \centering
 
@@ -368,8 +350,7 @@
         \tikzstyle{file} = [rectangle, draw, text centered, node distance=1.4cm]
         \tikzstyle{line} = [draw, -latex]
         \tikzstyle{arrow} = [thick, ->, >=stealth]
-       
-	\resizebox{!}{4cm}{
+        
         \begin{tikzpicture}[node distance = 0.5 cm, auto]
 		% Optimized neutron transport
 		\node [script] (adjnsrc) {Calculate adjoint
@@ -379,7 +360,7 @@
 		\node [script, right of = adjp, xshift=5 cm] (tcalc) {Calculate T};
 		\node [code, below of = adjnsrc ] (adjn) {Adjoint neutron transport};
 		%\node [file] (adjnflux) {Adjoint neutron flux};
-		\node [script, below of = adjn] (vr) {Calculate MC VR parameters};
+		\node [script, below of = adjn] (vr) {Calculate MC neutron biasing parameters};
 		\node [file, below of = vr, xshift =-3cm] (ww) {Weight windows};
 		\node [file, below of = vr, xshift=3cm] (bsrc) {Biased source};
 
@@ -391,7 +372,6 @@
 		\path [line] (vr) -- (bsrc);
 
 	\end{tikzpicture}
-	}
 \end{figure}
 
 \end{frame}
@@ -460,7 +440,7 @@
 			\begin{enumerate}
 				\item{Perform adjoint photon transport at each
 					time step of geometry movement}
-				\item{Integrate over time}
+				\item{Integrate the adjoint photon flux over time}
 			\end{enumerate}
 	\end{itemize}
 
@@ -501,31 +481,4 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Time-integrated GT-CADIS}
-	\begin{itemize}
-		\item{Assumptions}
-			\begin{itemize}
-				\item{Photon transport occurs much faster than
-					geometry movement $\therefore$
-					reasonable to do quasi-static
-					simulation}
-				\item{Period of geometry movement is short
-					enough that the photon source will not
-					change appreciably $\therefore$ can use
-					same photon source for all MC
-					calculations}
-			\end{itemize}
-		\item{Challenges}
-			\begin{itemize}
-				\item{Depending on complexity of model and
-					fidelity of time resolution, can amass
-					large number of CAD geometry files,
-					volume mesh tally files}
-				\item{Need to optimize this workflow in order
-					to keep file storage at minimum}
-			\end{itemize}
-	\end{itemize}
-	
-\end{frame}
 \end{document}
