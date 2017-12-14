@@ -1,6 +1,6 @@
 \chapter{Literature Review} \label{ch:litrev}
 
-The goal of this thesis work is to optimize the neutron transport step of a
+The goal of this thesis work is to optimize the initial radiation transport step of a
 coupled, multi-physics process occurring in a system that has moving components.  One
 important application of this work is the quantification of the shutdown dose
 rate (SDR) during maintenance operations in fusion energy systems (FES).
@@ -15,13 +15,14 @@ can cause grave health effects, therefore it is necessary to
 quantify the dose rate in order to ensure the safety of personnel working in
 fusion facilities.  This is not only important for the time during operation
 and immediately after shutdown when the device is in a static configuration,
-but quantifying the dose rate during a maintenance activity when activated
-components are moving around the facility.
+but also during a maintenance activity when activated
+components are moving around the facility and the dose rate is changing over
+time.
 
 Performing computational simulations of the radiation transport in these
 devices and calculating quantities of interest, such as flux and dose rate, are
 a crucial part of the fusion reactor design phase.  These simulations can
-inform decisions about sustainability and safety of the device.  
+inform decisions about the sustainability and safety of the device.  
 This chapter will provide background on computational radiation
 transport, methods for SDR analysis, methods for optimizing radiation transport
 calculations, and finally  how radiation transport calculations are currently
@@ -65,30 +66,45 @@ rather than deterministic methods.
 In general, MC calculations rely on repeated random sampling to solve
 mathematical problems.  In radiation transport applications, the MC method is 
 used to solve the Boltzmann transport equation \cite{l_m} through the simulation of random particle
-walks through phase space.  In analog operation mode (i.e. no variance reduction), 
-the source particle's position, energy, direction
-and subsequent collisions are sampled from probability
-distribution functions (PDFs).  Quantities of interest such as flux can be
-scored, or tallied, by averaging particle behavior
+walks through phase space.  
+In analog operation mode (i.e. no variance reduction), 
+the source particle's position, energy, direction,
+and subsequent collisions are sampled from unbiased probability
+distribution functions (PDFs) that describe physical particle behavior.
+The particle's journey through space, or history, is tracked until it is
+terminated.
+Quantities of interest such as flux can be
+scored, or tallied, by averaging particle tracks
 in discrete regions of phase space.
 
 One challenge incurred by MC simulations of FES is the presence of heavily
 shielded regions.  The particles undergo a high degree of
 collisions (absorption and scattering) in the shielding which results in low
 particle fluxes in the attenuated regions.  Regions that have low
-particle fluxes have higher statistical uncertainty.
+particle fluxes are sampled less frequently and therefore have higher
+statistical uncertainty than regions with high flux that are sampled very
+often.
 
-The statistical error is a function of the relative error, $\Re$, which is defined as
+This uncertainty can be represented by the relative error, $\Re$,
+which is defined as the statistical precision, $\overline{x}$ (the average of
+the tally scores), divided by the mean, $\sigma_{\overline{x}}$ (the standard
+deviation of the tally scores).  
 \begin{equation} \label{eq:1.2}
 		\Re = \frac{\sigma_{\overline{x}}}{{\overline{x}}}
 \end{equation}
-where $\overline{x}$ is the average of the tally scores, and $\sigma_{\overline{x}}$ is the standard
-deviation of the tally scores.  For a well behaved tally, $\Re$ is proportional
-to $1/\sqrt{N}$ where N is the number of tally scores \cite{mcnp_manual}.
 
-The relative error is inversely proportional to the number of tally scores.
-Therefore, to reliably predict results in these regions, many particle
-histories need to be simulated which can require large amounts of computer time.
+For a well behaved, properly converged tally, $\Re$ is proportional
+to $1/\sqrt{N}$ where N is the number
+of histories \cite{mcnp_manual}.
+\todo{Should I explain why this is prop. to $1/sqrt{N}$?}
+%The relative error is inversely proportional to the number of tally scores.
+Therefore, to reduce the uncertainty, one can 
+increase the number of particle histories simulated.
+%which will in turn increase the amount of computer time. 
+Compute time scales linearly with $N$, and
+$\Re$ is inversely proportional to $\sqrt{N}$, therefore to reduce the
+error by half, the number of histories, and therefore time, required will
+quadruple.  
 
 The efficiency of MC calculations is measured by a quantity known as the figure of merit
 (FOM).  The FOM is a function of relative error, $\Re$, and computer processing
@@ -98,7 +114,7 @@ as given by
 	FOM = \frac{1}{{{{\Re}^2}t_{proc}}}
 \end{equation}
 A high FOM is desirable because it means that less computation time is needed to achieve
-a reasonably low error ( >0.1 \cite{mcnp_manual}). 
+a reasonably low error ( >0.1 \cite{mcnp_manual}).   
 
 \section{Shutdown Dose Rate Analysis}\label{sec:sdr_calcs}
 This section will discuss the two primary workflows used to investigate the SDR:
@@ -108,18 +124,22 @@ analysis to calculate the SDR.
 
 \subsection{D1S}
 As its name implies, the D1S method performs coupled neutron-photon transport
-in the same simulation.  It relies upon a modified version of the MC code,
-MCNP5, with special cross-section data and the FISPACT nuclear inventory code
-for time correction factors.  
-The nuclear data available in the standard MCNP code includes prompt photon 
-production cross sections, $\sigma_{n,\gamma}$.
-If a prompt photon reaction is sampled,
+in a single simulation.  It relies upon a version of the MC code,
+MCNP5 \cite{mcnp_manual}, that has slight modifications as well as special 
+cross-section data that replaces prompt gammas with decay gammas.
+%The nuclear data available in the standard MCNP code includes prompt photon 
+%production cross sections, $\sigma_{n,\gamma}$.
+When a prompt photon reaction is sampled in a standard MCNP simulation,
 the photon is stored until the original neutron transport is
 completed. Then, the photon is transported as part of the same simulation.
-The version of MCNP5 used by D1S includes a set of modified cross sections that
-approximate the transmutation process.  This allows the delayed 
+The version of MCNP5 used by D1S 
+%includes a set of modified cross sections that
+%approximate the transmutation process.  This 
+allows the delayed 
 photons to be emitted as prompt so they can be transported in the same simulations
-as neutrons. A time correction factor is later applied.
+as neutrons. A time correction factor calculated with FISPACT \cite{fispact} is later applied.
+The Advanced D1S \cite{adv-d1s} includes improvements to allow for the
+calculation of dose rate on a 3D mesh.
 Because both neutron and photon transport occur in the same simulation,
 therefore on the same geometry, D1S
 %neither the D1S or Advanced D1S (an improved version with additional features)
@@ -132,7 +152,7 @@ calculations is underway \cite{adv-d1s}.
 \subsection{R2S}\label{sec:r2s}
 In contrast to D1S, the R2S method relies upon separate MC neutron and photon
 transport simulations.  The transport steps are coupled through activation analysis 
-by a dedicated nuclear inventory code.
+by a nuclear inventory code.
 The goal of the neutron transport step is to determine the neutron flux
 as a function of space and energy.  This neutron flux along with a specific irradiation
 and decay scenario are used as input into a nuclear inventory
@@ -142,39 +162,72 @@ is then used as the source for MC photon transport.  A photon flux tally
 fitted with flux-to-dose-rate conversion factors is used to
 determine the final SDR \cite{r2s}.
 \todo{Add subsection to introduce mesh-based R2S and PyNE R2S \cite{mesh_r2s}}
+Because the neutron and photon transport are performed in separately,
+different geometries can be used for each transport step which is key for
+simulating geometry movement after shutdown.
+\subsubsection{Mesh-based R2S}
+In order to calculate an accurate dose rate, it is necessary to obtain
+detailed distributions of the neutron flux and photon source
+throughout the geometry.
+The Mesh-tally Coupled R2S (MCR2S) tool was the first implementation of a mesh-based R2S methodology
+\cite{mcr2s}.  It couples MCNP neutron and photon transport calculations with
+the FISPACT nuclear inventory code. First, multi-group neutron fluxes are
+scored on a 3D mesh.
+%Because activation codes require the geometry/material
+%descriptions in discrete cells or mesh elements, 
+Then, the geometry used for MC
+transport is discretized onto a mesh, a requirement of activation codes.  Using
+the mesh-based geometry/material description,
+multi-group neutron fluxes, and irradiation and decay scenario, the inventory code
+calculates the photon emission density in each mesh element for each decay time
+\cite{mcr2s}.  These photon emission density distributions are then used as
+sources for MC photon transport simulations.  
+
+PyNE R2S \cite{mesh_r2s} is an implementation of mesh-based R2S for CAD
+geometries.  It relies on the Direct Accelerated Geometry Monte Carlo (DAGMC) toolkit and an MC
+code, such as MCNP, for neutron and
+photon transport and ALARA \cite{alara} for nuclear inventory analysis.  
+The DAGMC toolkit allows MC transport to be performed directly on CAD geometry.
 
 \section{Monte Carlo Variance Reduction Methods}\label{sec:vr_methods}
 
-As mentioned in section \ref{sec:analog_mc}, the presence of heavy shielding in
-FES presents a challenge for MC calculations because of the high degree of 
-uncertainty caused by low particle fluxes. A set of techniques, known as 
-variance reduction (VR),
-improve the efficiency of these calculations by reducing the compute time 
+As mentioned in section \ref{sec:analog_mc}, the presence of highly attenuating
+structural materials in 
+FES presents a challenge for MC calculations.
+Regions with low particle fluxes are not sampled as frequently and therefore
+have higher statistical uncertainty associated with results scored there.
+A set of techniques, known as variance reduction (VR), can be used to decrease
+the statistical uncertainty in these results in a more efficient way than the
+brute force method of increasing the number of particle histories.
+VR methods aim to increase the FOM, a measure of efficiency given
+in Eq. \ref{eq:1.3}, by reducing the compute time 
 necessary to achieve a statistically reasonable result.
-%Some MC problems are so challenging that without VR, would be impossible to 
-%simulate. 
-
-More specifically, VR methods aim to increase the FOM given in Eq. \ref{eq:1.3} 
-by increasing N and decreasing $\Re$, a function of $\sigma_{\overline{x}}$,
-by preferentially sampling trajectories that are likely to
+This is done by modifying particle behavior to preferentially sample trajectories that are likely to
 contribute to the tallies of interest.
 %This effectively forces more collisions in regions of phase space that are
 %important to the tally of interest. 
 
-One way this is accomplished is by sampling from biased PDFs that govern particle behavior. 
+One way this is accomplished is by sampling from biased PDFs instead of the
+standard PDFs used in analog calculations that describe actual particle behavior.
+\todo{Wording: want to clearly make distinction btwn PDFs of actual, physical particle
+behavior and biased PDFs that modify real behavior}
 In order to compensate for this biased sampling, the particle statistical weight
-is adjusted accordingly \cite{cadis}.
-The relationship between the particle statistical weight, w, and the PDF that
-governs particle behavior is as follows
+is adjusted as follows \cite{cadis}
+%The relationship between the particle statistical weight, $w$, and the PDF that
+%governs particle behavior is as follows
 \begin{equation} \label{eq:2.1}
 		w_{biased} pdf_{biased} = w_{unbiased} pdf_{unbiased}
 \end{equation}
-If this biased sampling results in an event occurring more frequently than it actually does,
-the particle weight is decreased and vice verse.
+If the biased sampling results in an event occurring more frequently than it
+does in reality,
+the particle weight is decreased and vice verse.  Sampling from biased PDFs 
+to preferentially sample events that will result in an increased number of histories that
+contribute to the tally of interest 
+can decrease the standard deviation, and
+therfore relative error, $\Re$, which will increase the FOM.
 
-One of the earliest and still commonly used methods of VR is particle splitting
-and rouletting.  This is particularly useful in simulations where particles
-penetrate deeply into shielded regions, like in FES.
+Another method of VR is particle splitting
+and rouletting.  
 To increase the number of particle histories that can contribute to a tally of
 interest, it is desirable to split particles as they enter more important 
 regions and roulette particles as they enter less important regions. 
@@ -192,13 +245,16 @@ the ratio of importances is calculated.  If region B is more important than
 region A such that 
 $I_{B}/I_{A} \geqslant 1$, 
 the particle with original weight $w_{0}$ is split into 
-$N = I_{B}/I_{A}$
-particles, each with weight $w_{0}/N$.  If instead region B is less important
+$n = I_{B}/I_{A}$
+particles, each with weight $w_{0}/n$.  If instead region B is less important
 than region A such that
 $I_{B}/I_{A} < 1$, 
 the particle will undergo roulette. 
-The particle will survive with a probability $N$ and weight $w_{0}/N$
+The particle will survive with a probability $n$ and weight $w_{0}/n$
 \cite{Carter_Cashwell_1975}.
+This is particularly useful in calculating results in heavily attenuated
+regions, like in FES.  Importances can be assigned in a way that will force
+particle flow towards the region of interest.
 
 The weight window method in the Monte Carlo N-Particle (MCNP) code utilizes both
 splitting and rouletting.  A weight window is a region of phase-space that is 
@@ -214,17 +270,21 @@ be discussed in the following section.
 \section{Automated Variance Reduction}\label{sec:auto_vr}
 
 Historically, VR techniques have required a priori knowledge of the problem physics
-in order to assign importance parameters.
+in order to assign modified sampling and weight control parameters.
 Many techniques have been developed over the years to automate the selection and
 assignment of these parameters to reduce computational and human effort.
 
 One class of VR techniques, known as hybrid deterministic/MC methods,
-is based upon the solution to the adjoint Boltzmann transport equation having
+takes advantage of the speed of deterministic transport to
+estimate a solution to the adjoint Boltzmann transport equation 
+which can then be used to generate MC VR parameters.
+The adjoint solution has
 significance as the measure of importance of a particle to some specified
 objective function.  
-Because deterministic solutions to the transport equation %are less precise but
-require much less computation time, they are useful as an estimate of the
-adjoint particle flux throughout phase space.  
+\todo{Need to discuss pro/con of deterministic/MC in earlier section}
+%Because deterministic solutions to the transport equation %are less precise but
+%require much less computation time, they are useful as an estimate of the
+%adjoint particle flux throughout phase space.  
 %This estimate of adjoint flux
 %can then be used to determine the importance of specific regions.
 To demonstrate the use of the adjoint solution as an importance function,
@@ -246,7 +306,7 @@ which describes all particle behavior is given by
 \end{equation}
 where $\sigma_{t}$ is the total cross-section and $\sigma_{s}$ is the
 double-differential scattering cross-section.  The source and angular flux are
-functions of five independent variables: a three-dimensional position vector ($\overrightarrow{r}$) 
+functions of six independent variables: a three-dimensional position vector ($\overrightarrow{r}$) 
 a two-dimensional directional vector ($\widehat{\Omega}$), and energy (E).
 The adjoint identity is stated as
 \begin{equation} \label{eq:3.2}
@@ -269,7 +329,7 @@ This identity can be used to form the adjoint transport equation.
 		H^{+}\Psi^{+} = q^{+}
 \end{equation}
 
-Substituting Eq.\ref{eq:3.1b} and \ref{eq:3.3} into Eq. \ref{eq:3.2}, 
+Substituting Eq.\ref{eq:3.1a} and \ref{eq:3.3} into Eq. \ref{eq:3.2}, 
 the adjoint identity can also be written as
 \begin{equation} \label{eq:3.2b}
 		\langle \Psi^{+} , q \rangle =
@@ -295,7 +355,7 @@ and substituted into Eq. \ref{eq:3.4}
 		R = \langle \Psi, q^{+} \rangle %= \langle \Psi^{+}, q \rangle
 \end{equation}
 the response has the same form as the right side of Eq. \ref{eq:3.2b}, therefore
-the response can also be written as 
+the response can also be written as a function of the adjoint solution
 \begin{equation}\label{eq:resp_adjf}
 		R = \langle \Psi^{+}, q \rangle
 \end{equation}
@@ -303,15 +363,18 @@ the response can also be written as
 %the adjoint flux $\Psi^{+}$ represents the importance of a region to R.
 %$\sigma_{d}$. /// I think this is wrong and should be R
 This final relation allows us to know the response $R$ for any source $q$ once the
-adjoint flux $\Psi^{+}$ for a detector of interest is known.
+adjoint solution $\Psi^{+}$ to a quantity of interest is known.
 
 \subsection{CADIS}
 The Consistent Adjoint Driven Importance Sampling (CADIS) method is one of the
 hybrid deterministic/MC VR
 techniques that uses the adjoint solution as an importance function to 
-formulate source and transport biasing parameters for MC transport \cite{cadis}.
+formulate VR parameters for MC transport \cite{cadis}.
 More specifically, CADIS provides a method for generating
 a biased source and the weight window lower bounds in a consistent manner.
+The consistent generation of biasing parameters
+ensures that particles are born within weight windows, eliminating any loss
+of efficiency due to particle splitting/rouletting immediately after birth.
 Recall that the response, or tally, of interest in a transport calculation can be 
 represented in terms of the adjoint flux by Eq. \ref{eq:resp_adjf}.
 %the following equation
@@ -342,24 +405,26 @@ to the total detector response, R.
 This essentially is a way to bias the sampling of source particles as a function of their 
 contribution to the total detector response.
 As previously mentioned, when sampling from a biased distribution, the particle weight
-needs to be adjusted to eliminate systematic bias.  
+needs to be adjusted such that total weight is conserved in order to eliminate systematic bias.  
 \begin{equation} \label{eq:3.9}
 	w(\overrightarrow{r}, E,
 	\widehat{\Omega})\widehat{q}(\overrightarrow{r}, E, \widehat{\Omega})=
 	w_{0}q(\overrightarrow{r}, E, \widehat{\Omega})
 \end{equation}
-Substituting in Eq. \ref{eq:3.8} and setting $w_0$ equal to one, the corrected 
+Substituting Eq. \ref{eq:3.8} into Eq. \ref{eq:3.9} and setting $w_0$ equal to one, the corrected 
 particle weight is given as
 \begin{equation} \label{eq:3.10}
 	w(\overrightarrow{r}, E, \widehat{\Omega})=
 	\frac{R}{\Psi^{+}(\overrightarrow{r}, E, \widehat{\Omega})}
 \end{equation}
-There is an inverse relation to the adjoint flux, or importance function.
-This relationship for the particle statistical weight is used in the source sampling
-and transport process so that source particles are created with weights that reside 
-within their corresponding weight window.
+
+%The corrected particle weight has an inverse relation to the adjoint flux, or importance function.
+%This relationship for the particle statistical weight is used in the source sampling
+%and transport process so that source particles are created with weights that reside 
+%within their corresponding weight window.
 %%The biased transport operator is derived consistently from the biased source
 %%parameter.
+
 %In the weight window technique, particles are either split or
 %rouletted as they move from region to region based on the ratio of their
 %importances and their weight is updated accordingly.  
@@ -379,6 +444,9 @@ within their corresponding weight window.
 %	{\Psi^{+}(\overrightarrow{r}, E, \widehat{\Omega})} \right ]
 %\end{equation}
 %The consistently generated transport biasing parameter, 
+The width of the weight windows is determined by a parameter defined to be the
+ratio between upper and lower bounds $\alpha =
+w_{u}/w_{l}$.  MCNP uses a default value of 5 for $\alpha$.
 The equation for weight window lower bounds
 is given as 
 \begin{equation} \label{eq:3.12}
@@ -386,20 +454,19 @@ is given as
 	\frac{R}{\Psi^{+}(\overrightarrow{r}, E, \widehat{\Omega})
 	(\frac{\alpha + 1}{2})}
 \end{equation}
-The width of the weight windows is determined by a parameter defined to be the
-ratio between upper and lower bounds $\alpha =
-w_{u}/w_{l}$.  MCNP uses a default value of 5 for $\alpha$.
 
 CADIS is ideally suited to reduce the variance of a detector response in a single
-target.  There are other methods, such as FW-CADIS, that are suited for reducing the variance in 
-several targets or even globally.
+target because the source chosen for adjoint transport is the detector response
+function corresponding to the detector of interest.  
+There are other methods, such as FW-CADIS, that are suited for reducing the variance in 
+multiple targets or even globally.
 
 \subsection{FW-CADIS}
-The Forward-Weighted CADIS method is another hybrid deterministic/MC VR method.
+The Forward-Weighted (FW)-CADIS method is another hybrid deterministic/MC VR method.
 FW-CADIS aims to increase the efficiency of 
 detector responses globally or in multiple localized targets \cite{fwcadis}.
-The goal is to create uniform particle density in the tally regions so in turn,
-there is uniform statistical uncertainty in the MC solution.
+The goal is to create uniform particle density in the tally regions thereby
+creating uniform statistical uncertainty in the MC results.
 This method relies upon a forward deterministic transport solution to
 weight the source for adjoint deterministic transport.  The adjoint solution is
 then used with the standard CADIS method to produce source and transport
@@ -419,14 +486,14 @@ which means that in regions with low forward flux, the adjoint flux, and therefo
 importance, will be high and vice verse.  This will result in the overall goal of
 nearly equal statistical uncertainty in regions of interest.  
 
-\section{Automated Variance Reduction for Multiphysics}\label{sec:auto_vr_sdr}
+\section{Automated Variance Reduction for Multi-physics Analysis}\label{sec:auto_vr_sdr}
 
-In its essence, SDR analysis is the analysis of a coupled, multiphysics system;
+In its essence, SDR analysis is the analysis of a coupled, multi-physics system;
 the initial neutron irradiation is coupled to the decay photon transport
 through activation analysis.
 As discussed in section \ref{sec:r2s}, the R2S method requires separate MC calculations 
-for the neutron and photon transport.
-Applying this workflow to full-scale, 3D FES becomes impractical 
+for the neutron and photon transport.  If the MC steps are performed in analog,
+applying the R2S workflow to full-scale, 3D FES becomes impractical 
 due to the computational effort required
 to produce accurate space- and energy-dependent fluxes throughout the geometry.
 
@@ -451,10 +518,8 @@ The Multi-Step CADIS method described in the next section
 provides an explanation for this challenge and a method for solving it.
 
 \subsection{MS-CADIS}\label{sec:mscadis}
-The Multi-Step Consistent Adjoint Weighted Importance Sampling (MS-CADIS)
-method of variance reduction 
-was developed to optimize the primary radiation transport
-in a coupled, multi-step process.
+The Multi-Step (MS)-CADIS method of VR was developed to optimize the primary
+radiation transport in a coupled, multi-step process.
 %The first implementation of this method 
 %was applied to the coupled neutron activation-photon decay process that occurs
 %in FES.  Specifically, it
@@ -470,8 +535,8 @@ steps of the multi-step process.
 
 MS-CADIS can be applied to any coupled, multi-step process, but when applied to
 SDR calculations, it aims to increase the efficiency of the neutron transport step
-using an importance function that captures the potential of regions to become 
-activated and the importance of the resulting decay photons to the final SDR \cite{mscadis}.
+using an importance function that captures both the potential of regions to become 
+activated and their potential to produce decay photons that contribute tto the final SDR \cite{mscadis}.
 
 %As shown before in Eq. *need eqn number*, //don't think this was mentioned
 The detector response can be
@@ -648,7 +713,8 @@ location and orientation of the delayed particle at the time of emission.
 
 \subsection{MCR2S with Geometry Movement}
 The Mesh Coupled implementation of R2S (MCR2S), developed by the Culham Science Center, 
-was updated to allow geometry components to change location after shutdown \cite{mcr2s}.
+was updated to allow geometry components to change location after shutdown
+\cite{mcr2s_mov}.
 This capability was developed to facilitate SDR calculation during maintenance and
 intervention activities.  MCR2S relies on MCNP for both neutron and photon
 transport steps and FISPACT for the activation calculations. 
