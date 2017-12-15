@@ -527,8 +527,7 @@ radiation transport in a coupled, multi-step process.
 
 Optimizing the initial radiation transport
 %step of a coupled, multi-step process
-relies upon
-an importance function that represents the importance of the particles to the
+relies upon the use of a function that represents the importance of the particles to the
 final response of interest, not the response of that individual step \cite{mscadis}.  
 This is challenging because the the final response of interest depends on the subsequent 
 steps of the multi-step process.
@@ -539,9 +538,12 @@ using an importance function that captures both the potential of regions to beco
 activated and their potential to produce decay photons that contribute tto the final SDR \cite{mscadis}.
 
 %As shown before in Eq. *need eqn number*, //don't think this was mentioned
-The detector response can be
-expressed as the integral of the importance function, $I$, multiplied by the source
-distribution, $q$
+The importance function represents the expected contribution from a particle 
+at some point in phase space to the detector response.
+In the theoretical scenario that every source particle contributes the exact 
+expected value, the detector response can be
+expressed as the inner product of the importance function, $I$, and the source
+distribution, $q$.
 \begin{equation} \label{eq:4.1}
 R = %\int_{V}\int_{E} 
     \langle I(\overrightarrow{r}, E), 
@@ -564,26 +566,44 @@ the detector and $\phi_{\gamma}$ is photon flux.
 %source and the flux is equal to the response, 
 %If equation \ref{eq:4.1}
 %is taken to have the same form as Eq. \ref{eq:resp_adjf}, and 
-If the adjoint photon
-source is chosen to be $\sigma_d$, the importance function, I,
-is defined as the adjoint solution, $\phi_{\gamma}^{+}$
-leading to the following relationship
-\begin{equation} \label{eq:4.3}
+Following the CADIS method, the adjoint photon source is chosen to be $\sigma_d$,
+so the equation for SDR becomes 
+\begin{equation} \label{eq:4.2.1}
 	SDR =  \langle q_{\gamma}^{+}(\overrightarrow{r},E_{\gamma}),
-  \phi_{\gamma}(\overrightarrow{r}, E_{\gamma}) \rangle 
-	= \langle q_{\gamma}(\overrightarrow{r},E_{\gamma}),
+                       \phi_{\gamma}(\overrightarrow{r}, E_{\gamma}) \rangle 
+\end{equation}
+From the adjoint identity, Eq. \ref{eq:3.2b}, the SDR can also be written as 
+\begin{equation} \label{eq:4.3}
+	SDR =
+	\langle q_{\gamma}(\overrightarrow{r},E_{\gamma}),
   \phi_{\gamma}^{+}(\overrightarrow{r}, E_{\gamma}) \rangle 
 \end{equation}
+which has the same form as Eq. \ref{eq:4.1}.  Therefore, it can be seen that 
+the adjoint flux, $\phi_{\gamma}^+$, is the importance function.
+%If the adjoint photon
+%source is chosen to be $\sigma_d$, the importance function, I,
+%is defined as the adjoint solution, $\phi_{\gamma}^{+}$
+%leading to the following relationship
+%\begin{equation} \label{eq:4.3}
+%	SDR =  \langle q_{\gamma}^{+}(\overrightarrow{r},E_{\gamma}),
+%  \phi_{\gamma}(\overrightarrow{r}, E_{\gamma}) \rangle 
+%	= \langle q_{\gamma}(\overrightarrow{r},E_{\gamma}),
+%  \phi_{\gamma}^{+}(\overrightarrow{r}, E_{\gamma}) \rangle 
+%\end{equation}
 
-Because the final goal is an importance function that represents the importance
+Because the final goal is to formulate a function that represents the importance
 of neutrons the final SDR, the
-neutron adjoint identity is also set equal to the photon response.
+neutron response is set equal to the photon response.
 \begin{equation} \label{eq:4.4}
   SDR =  \langle q_{n}^{+}\overrightarrow{r},E_{n}),
   \phi_{n}(\overrightarrow{r}, E_{n}) \rangle 
   = \langle q_{n}\overrightarrow{r},E_{n}),
   \phi_{n}^{+}(\overrightarrow{r}, E_{n}) \rangle 
 \end{equation}
+It can be seen that the far right side of Eq. \ref{eq:4.4} also has the same 
+form as Eq. \ref{eq:4.1} which means that the adjoint neutron flux, $\phi_n^+$, 
+serves as the importance function used to optimize the neutron transport.
+
 Combining equations \ref{eq:4.3} and \ref{eq:4.4}, 
 gives the relationship between the neutron and photon responses.
 \begin{equation} \label{eq:4.5}
@@ -599,26 +619,24 @@ gives the relationship between the neutron and photon responses.
   \phi_{\gamma}^{+}(\overrightarrow{r}, E_{\gamma}) \rangle 
 \end{equation}
 
-In order to use the adjoint neutron flux as an importance function to optimize
-the neutron transport, a solution for the adjoint neutron source, $q_n^{+}$, is needed.
-This requires an equation
+To generate the adjoint neutron flux, 
+an adjoint neutron source, $q_n^{+}$, first needs to be formulated.
+This requires Eq. \ref{eq:4.5} and another equation
 relating the photon source, $q_\gamma$, to the neutron flux, $\phi_n$.
+The solution method for the adjoint neutron source, $q_n^+$, will be discussed in the 
+next section.
 %One can solve for the photon source by performing a full activation analysis,
 %but as an approximation,
 
 \subsection{GT-CADIS}
-The Groupwise Transmutation (GT)-CADIS method, an implementation of MS-CADIS
-solely for SDR analysis, provides a solution to the adjoint neutron source 
-by calculating a coupling term that relates the neutron flux to the photon 
+The Groupwise Transmutation (GT)-CADIS method is an implementation of MS-CADIS
+solely for SDR analysis.  It provides a solution to the adjoint neutron source, 
+$q_n^+$, by calculating a coupling term that relates the neutron flux to the photon 
 source \cite{gtcadis}.
 
-The decay photon source at a single point
-%is a result of neutron irradiation and 
-%the two quantities can be related by the following
-%definition:
-%The photon source at a single point, Eq. \ref{eq:4.6} 
-can be
-expressed as this non-linear function of $\phi_n$ 
+Neutron activation is the cause of the photon decay source so the photon 
+source at a single point can be
+expressed as a non-linear function of $\phi_n$ 
 \begin{equation} \label{eq:4.8}
 	q_{\gamma}(E_{\gamma}) = \int_{E_n} f(\phi_{n}) dE_{n}
 \end{equation}
@@ -626,34 +644,29 @@ This function can not be linearized for arbitrary transmutation networks
 and irradiation scenarios, but a linear relationship can
 be formulated when a set of criteria, known as the Single Neutron Interaction
 Low Burnup (SNILB) criteria, are met.
-The SNILB criteria can be used to obtain solutions for the coupling term, 
-$T(\overrightarrow{r}, E_{n}, E_{\gamma})$, which is defined by the following equation.
+When met, a solution for the coupling term, 
+$T(\overrightarrow{r}, E_{n}, E_{\gamma})$, which approximates the
+ transmutation process and is defined by the following equation
 \begin{equation} \label{eq:Tdef}
 	q_{\gamma}(\overrightarrow{r}, E_{\gamma}) = 
 	\int_{E_n}T(\overrightarrow{r}, E_{n}, E_{\gamma})
 	\phi_{n}(\overrightarrow{r}, E_{n}) dE_{n}
 \end{equation}
-If a T can be found that satisfies this relationship, Eq. \ref{eq:Tdef} can be substituted into
-the photon source in Eq. \ref{eq:4.5} which can
-be used to solve for the adjoint neutron source given below % in Eq. \ref{eq:4.5}.
+can be found.
+Eq. \ref{eq:Tdef} can then be substituted into Eq. \ref{eq:4.5} in order to 
+solve for the adjoint neutron source as shown below
 \begin{equation} \label{eq:gt_adj_nsrc}
 	q_{n}^{+}(\overrightarrow{r},E_{n})
         = \int_{E_p}T(\overrightarrow{r}, E_{n}, E_{p})
 	\phi_{p}^{+}(\overrightarrow{r}, E_{p}) dE_{p}
 \end{equation}
 
-
-
-To calculate T, 
-A series of single energy group neutron irradiations is performed on each material in
-the geometry.  
+To calculate T, a series of single energy group neutron irradiations is 
+performed on each material in the geometry.  
 %The total number of irradiations performed is the product of the
 %number of materials and the number of neutron energy groups.  
-This results in
-a photon source that is a function of each neutron energy group.  According to 
-Eq. \ref{eq:Tdef}, dividing this
-photon source by the neutron flux results in the coupling term T.
-%\todo{Move this from proposal section to here}
+The photon sources that are a function of each neutron energy group 
+can then be used to calculate T via Eq. \ref{eq:Tdef}.
 
 %GT-CADIS provides an analytical solution to T when the SNILB criteria are met.
 It has been shown that for typical FES spectra, materials, and irradiation
@@ -670,7 +683,7 @@ transport for SDR analysis of FES.
 %currently modeled.
 
 \subsection{MCNP6 Moving Objects Capability} \label{sec:mcnp_move}
-Historically, Monte Carlo analysis of dynamic systems was performed using a 
+Historically, Monte Carlo analysis of moving systems was performed using a 
 series of separate simulations with different input files that contained 
 step-wise changes of the geometry configuration. 
 The new moving object capability that will be available in a future version
@@ -681,7 +694,7 @@ This capability allows for rigid body transformations of
 objects including rectilinear translations and curvilinear translations and rotations.
 The objects can move with constant velocity, constant acceleration, or be
 relocated.
-Object kinetics are not treated so the user must use caution and supply
+Object kinetics are not treated, however, so the user must use caution and supply
 transformations that will not cause objects to overlap.
 This capability is currently applicable to MCNP's native geometry format,
 constructive solid geometry (CSG), and is not available for mesh-based
@@ -704,7 +717,7 @@ stored secondary particles are retrieved and transported.
 In the case of delayed particles emitted from moving objects, the location, direction, energy, and
 time are stored at the time of fission or activation and then at the time of
 emission, the geometry configuration is updated to provide the correct 
-location and orientation of the delayed particle at the time of emission. 
+location and orientation of the delayed particle. 
 
 % would not allow for parts of the geometry to be removed or added (e.g. adding
 % equipment to move modules around facility, adding shielding, )
