@@ -2,62 +2,32 @@
 
 \chapter{Introduction} \label{ch:intro}
 
-The successful completion of this project will provide the workflow and tools
-necessary to efficiently calculate quantities of interest resulting from
-coupled, multi-physics processes in dynamic systems.  
-The driving force behind this work is the quantification of the shutdown dose rate
-(SDR) resulting from the coupled neutron
-irradiation-photon emission that occurs in fusion energy systems (FES);
-specifically investigating how to optimize the SDR calculation when%changes as a function of time when
-activated system components are moved during maintenance activities.
-The Monte Carlo radiation transport code will
-be modified to implement rigid-body transformations on the CAD-based geometry.
-MS-CADIS, a VR method for coupled, multi-physics problems, will be adapted to
-incorporate dynamics.  An experiment will be contrived to demonstrate the
-limitations of existing VR methods as they apply to dynamic problems and verify
-the efficacy of this new method.  Given these objectives, the Chapter \ref{ch:litrev}
-will include background and theory relevant to VR methods in coupled,
-multi-physics systems.  It begins with an introduction to computational
-radiation transport, specifically the Monte Carlo method.
-It will then introduce the methods currently used for SDR analysis and the
-need for optimization.  Several MC VR techniques and how they have been applied
- to optimize SDR analysis are then discussed.
-Finally, this chapter ends with a discussion about radiation transport in
-dynamic systems.  
-Next, Chapter \ref{ch:experiment} shows the experiment demonstrating the need
-for a new VR method to optimize the SDR in dynamic systems.  The derivation of
-VR parameters that will optimize the SDR in dynamic systems is given in
-Chapter \ref{ch:tgt} and an implementation plan in Chapter \ref{ch:proposal}.
-Chapter \ref{ch:proposal} will also discuss
-the progress that has been made towards this new methodology and summarize the
-work to be done.
-
 The rapid design iteration process of complex nuclear systems has long been
 aided by the use of computational simulation.  Traditionally, these simulations
 involve radiation transport in static geometries.  However, in certain
 scenarios, it is desirable to investigate dynamic systems and the effects caused
 by the motion of one or more components.  
-For example, FES are purposefully designed with modular components that can be moved in and
+For example, fusion energy systems (FES) are purposefully designed with modular components that can be moved in and
 out of a facility after shutdown for maintenance.  
 To ensure the safety of maintenance personnel, it is important to accurately quantify the
-SDR caused by the photons emitted by structural materials that were
+shutdown dose rate (SDR) caused by the photons emitted by structural materials that were
 activated during the device operation time.  
 This type of analysis requires neutron transport to determine the neutron flux,
 activation analysis to determine the isotopic inventory, and finally a 
 photon transport calculation to determine the SDR.
-While MC calculations are revered to be the most accurate method for simulating
+While Monte Carlo (MC) calculations are considered to be the most accurate method for simulating
 radiation transport, the computational expense of obtaining results with low
 error 
 in systems with heavy shielding can be prohibitive.  
-However, VR
+However, variance reduction (VR)
 methods can be used to increase the computational efficiency.  
 There are several types
 of VR methods, but the basic theory is to artificially increase the simulation of
 events that will contribute to the quantity of interest such as flux or dose
 rate. 
- One class of VR techniques relies upon a deterministic estimate of the adjoint 
-solution of the transport equation to
-formulate biasing parameters to accelerate the MC transport. 
+ One class of VR techniques takes advantage of a deterministic estimate of the adjoint 
+solution of the transport equation to automatically
+generate biasing parameters to accelerate the MC transport. 
 The adjoint flux has physical significance as the importance of a region of
 phase space to the objective function.
 
@@ -98,3 +68,33 @@ in order to generate the biasing functions for the neutron transport step.
 % transport biasing parameters for forward, MC neutron transport calc
 % Standard GT-CADIS is for static systems and would 
 % as the spatial configuration changes over time, the importance also changes?
+
+The successful completion of this project will provide the workflow and tools
+necessary to efficiently calculate quantities of interest resulting from
+coupled, multi-physics processes in dynamic systems.  
+The driving force behind this work is the quantification of the
+SDR resulting from the coupled neutron
+irradiation-photon emission that occurs in FES;
+specifically investigating how to optimize the SDR calculation when%changes as a function of time when
+activated system components are moved during maintenance activities.
+The Monte Carlo radiation transport code will
+be modified to implement rigid-body transformations on the CAD-based geometry.
+MS-CADIS, a VR method for coupled, multi-physics problems, will be adapted to
+incorporate dynamics.  An experiment will be contrived to demonstrate the
+limitations of existing VR methods as they apply to dynamic problems and verify
+the efficacy of this new method.  Given these objectives, the Chapter \ref{ch:litrev}
+will include background and theory relevant to VR methods in coupled,
+multi-physics systems.  It begins with an introduction to computational
+radiation transport, specifically the Monte Carlo method.
+It will then introduce the methods currently used for SDR analysis and the
+need for optimization.  Several MC VR techniques and how they have been applied
+ to optimize SDR analysis are then discussed.
+Finally, this chapter ends with a discussion about radiation transport in
+dynamic systems.  
+Next, Chapter \ref{ch:experiment} shows the experiment demonstrating the need
+for a new VR method to optimize the SDR in dynamic systems.  The derivation of
+VR parameters that will optimize the SDR in dynamic systems is given in
+Chapter \ref{ch:tgt} and an implementation plan in Chapter \ref{ch:proposal}.
+Chapter \ref{ch:proposal} will also discuss
+the progress that has been made towards this new methodology and summarize the
+work to be done.

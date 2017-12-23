@@ -55,7 +55,7 @@ neutron and photon flux throughout all regions of phase space (space, energy,
 and direction).  Due to the size and complexity of FES, the most optimal way to 
 obtain accurate particle distributions is through Monte Carlo (MC) radiation transport 
 rather than deterministic methods.
-\todo{do I mention deterministic anywhere else?}
+\todo{Add paragraph to compare/contrast deterministic and MC}
 
 %To quantify the dose rate, we need to know the flux of photons
 %produced by the decaying radionuclides in the activated components. The
@@ -78,7 +78,7 @@ scored, or tallied, by averaging particle tracks
 in discrete regions of phase space.
 
 One challenge incurred by MC simulations of FES is the presence of heavily
-shielded regions.  The particles undergo a high degree of
+shielded regions.  The particles undergo many
 collisions (absorption and scattering) in the shielding which results in low
 particle fluxes in the attenuated regions.  Regions that have low
 particle fluxes are sampled less frequently and therefore have higher
@@ -93,7 +93,7 @@ deviation of the tally scores).
 		\Re = \frac{\sigma_{\overline{x}}}{{\overline{x}}}
 \end{equation}
 
-For a well behaved, properly converged tally, $\Re$ is proportional
+For a well behaved, properly converged tally, $\sigma_{\overline{x}}$ is proportional
 to $1/\sqrt{N}$ where N is the number
 of histories \cite{mcnp_manual}.
 \todo{Should I explain why this is prop. to $1/sqrt{N}$?}
@@ -136,7 +136,7 @@ The version of MCNP5 used by D1S
 %includes a set of modified cross sections that
 %approximate the transmutation process.  This 
 allows the delayed 
-photons to be emitted as prompt so they can be transported in the same simulations
+photons to be emitted as if they were prompt so they can be transported in the same simulations
 as neutrons. A time correction factor calculated with FISPACT \cite{fispact} is later applied.
 The Advanced D1S \cite{adv-d1s} includes improvements to allow for the
 calculation of dose rate on a 3D mesh.
