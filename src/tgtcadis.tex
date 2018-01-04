@@ -35,10 +35,11 @@ ultimately be used to optimize the neutron transport step of SDR analysis.
 
 \section{Generalized MS-CADIS Method}
 In the current literature, MS-CADIS is primarily discussed as it applies to SDR
-analysis \cite{mscadis}.  In actuality, MS-CADIS can be applied to any multi-step process in
+analysis \cite{mscadis}.  In actuality, MS-CADIS has always been intended to
+apply to any multi-step process in
 which the primary radiation transport is coupled to a secondary physical process.
 The addition of time integration to this methodology can also be applied to
-any coupled multi-physics process. For this reason, it is prudent to discuss
+any coupled, multi-physics process. For this reason, it is prudent to discuss
 MS-CADIS in a more generalized manner.
 
 To describe the system of coupled, multi-physics,
@@ -47,14 +48,19 @@ the operator notation of the Boltzmann transport equation
 	H\phi = q
 \end{equation}
 where H operates on the particle flux $\phi$ and q is a source of particles, 
-will be used to represent the initial radiation transport and 
-an equation of the same form 
+will be used to represent the initial radiation transport.
+An equation of the same form 
 \begin{equation}
 	L\Psi = b
 \end{equation}
-where L operates on some function $\Psi$ and b is a source term, will be used
-to describe a generic secondary physics. 
-%Begin with 
+where L operates
+\todo{requirements for operator?-- not exactly sure what this means}
+on some function $\Psi$ and b is a source term, will be used
+to describe a generic secondary physics.
+Because this is a coupled system, the source of secondary physics, is a function
+of the primary particle flux.
+%, $b(\phi)$.
+
 The adjoint identity for the neutral particle transport
 equation was given in Eq. \ref{eq:3.2}.
 % \begin{equation}\label{eq:adj_identity}
@@ -69,7 +75,8 @@ equation was given in Eq. \ref{eq:3.2}.
 %$q^{+}$ is the adjoint source distribution and 
 %$\langle \cdot \rangle$ signifies the
 %integration over all dependent variables.
-This identity is valid for an arbitrary adjoint source function
+This identity is valid for an arbitrary
+adjoint source function
 \cite{l_m}, therefore the secondary physics has an adjoint identity of the same
 form
 \begin{center}
@@ -79,45 +86,55 @@ form
 	\langle \Psi^{+}, b \rangle =
 	\langle \Psi, b^{+} \rangle 
 \end{equation}
-where $\langle \cdot \rangle$ signifies the integration over all dependent variables.
+where $\langle \cdot \rangle$ signifies the integration over all phase space.
+\todo{Haven't found anything that states one variable can not be a function of
+the other variable in the inner product notation }
+For simplicity, a one-dimensional form of both primary and secondary physics
+will be used going forward.
+
 Assume this is a two-step system and the ultimate quantity of interest is the 
-response of the secondary physics which takes the form
+response of the secondary physics
+which takes the form
 \begin{equation}\label{eq:response}
-	R_{final} = \langle \sigma_b , \Psi \rangle
+%	R_{final} = \langle \sigma_b , \Psi \rangle
+	R_{final} = \int_s \omega_R(s)  \Psi(s) ds 
 \end{equation}
-where $\sigma_b$ is a response function.
-According to the CADIS method, 
-if the adjoint source is set equal to the detector response
-function, the adjoint solution forms the importance function. 
-\todo{Not sure if this is clear.}
-Substituting the adjoint source, $b^{+}$, into Eq. \ref{eq:response} yields the following
+where $\omega_R$ is a detector response function and $s$ is the single independent
+variable.
+Defining the adjoint source to be equal to the detector response
+function results in the adjoint solution having physical meaning as the
+importance function for that detector. 
+%\todo{Not sure if this is clear.}
+Therefore, $b^{+}$ is substituted into Eq. \ref{eq:response}.
 %the left side of the identity in Eq. \ref{eq:adj_2_identity} has the same
 %form as Eq. \ref{eq:response}
 %if a detector response function is chosen as the adjoint source.
  \begin{equation}\label{eq:response_2}
 %	 R_{final} = \langle \phi_{2}(\overrightarrow{r},E), q_{2}^{+}(\overrightarrow{r},E) \rangle =
 %		\langle \phi_{2}^{+}(\overrightarrow{r},E) , q_{2}(\overrightarrow{r},E) \rangle
-	 R_{final} = \langle \Psi, b^{+} \rangle 
+	 %R_{final} = \langle \Psi, b^{+} \rangle 
+	 R_{final} = \int_s \Psi(s) b^{+}(s) ds 
 %		=\langle \Psi^{+} , b \rangle
  \end{equation}
 Combining Eq. \ref{eq:response_2} with the adjoint identity yields
  \begin{equation}\label{eq:adj_2}
 %	 R_{final} = \langle \phi_{2}(\overrightarrow{r},E), q_{2}^{+}(\overrightarrow{r},E) \rangle =
 %		\langle \phi_{2}^{+}(\overrightarrow{r},E) , q_{2}(\overrightarrow{r},E) \rangle
-	 R_{final} %= \langle \Psi, b^{+} \rangle 
-		=\langle \Psi^{+} , b \rangle
+	 %R_{final}=\langle \Psi^{+} , b \rangle
+	 R_{final}= \int_s \Psi^{+}(s) b(s) ds
  \end{equation}
 
 For a coupled, multi-step process, the MS-CADIS method 
-constrains the primary adjoint response such that it is equal to  
-the final response of the system
+sets the primary adjoint response equal to  
+the final response of the system.  This results in the adjoint solution
+representing
+the importance of the primary physics to the final response of the system.
 %(i.e. the response of the secondary physics)
-as shown below
  \begin{equation}\label{eq:adj_1}
 %	 R_{final} = \langle \phi_{1}(\overrightarrow{r},E), q_{1}^{+}(\overrightarrow{r},E) \rangle =
 %		\langle \phi_{1}^{+}(\overrightarrow{r},E) , q_{1}(\overrightarrow{r},E) \rangle
-	 R_{final} = \langle \phi, q^{+} \rangle =
-		\langle \phi^{+} , q \rangle
+	 R_{final} = \int_r \phi(r) q^{+}(r)  dr
+	 =\int_r \phi^{+}(r) q(r) dr
  \end{equation}
 
 	 
@@ -128,17 +145,21 @@ as shown below
 Ultimately, the goal is to find a solution to the adjoint
 primary radiation transport to use as an importance
 function for the forward calculation. Therefore, a
-source for the adjoint radiation transport is needed.  Equating the adjoint
+source for the adjoint radiation transport is needed.
+Because this is a coupled, multi-step process, $q^{+}$ is a function of the
+secondary physics and therefore can not be uniquely defined.   
+MS-CADIS posits that there exists a way to represent an approximation of
+$q^{+}$ that can be used to speed up the forward calculation. 
+
+Begin by equating the adjoint
 response equations in Eq. \ref{eq:adj_1} and \ref{eq:adj_2}, yields the
 following expression.
-
  \begin{equation}\label{eq:adj_src}
 %	 \langle \phi_{1}(\overrightarrow{r},E), q_{1}^{+}(\overrightarrow{r},E) \rangle =
 %	 \langle \phi_{2}^{+}(\overrightarrow{r},E) , q_{2}(\overrightarrow{r},E) \rangle
-	 \langle \phi, q^{+} \rangle =
-	 \langle \Psi^{+}, b \rangle
+	 \int_r \phi(r) q^{+}(r) dr =
+	 \int_s \Psi^{+}(s) b(s) ds
  \end{equation}
-
 In a practical scenario, the forward source of radiation (e.g. neutron
 source resulting from D-T fusion) will be known.  
 The adjoint source of secondary physics is chosen to be the response function for the
@@ -146,38 +167,48 @@ detector of interest (e.g. flux-to-dose conversion factors).
 Given that these sources are known, both solutions, $ \phi $ and
 $\Psi^{+} $, can be found through transport operations.
 The source of the forward secondary, $b$,  and adjoint primary physics,
-$q^{+}$, are both unknown, therefore a second equation is needed.  
-This is a coupled, multi-physics system where the source of the secondary physics is
+$q^{+}$, are both unknown; therefore, a second equation is needed.  
+The source of the secondary physics is
 a response of the primary radiation transport therefore the two processes can be related
 by the following definition% \ref{eq:fwd_2src}
 
  \begin{equation}\label{eq:fwd_2src}
 %	 q_{2}(\overrightarrow{r},E_{2}) =
 %	 \langle \sigma_{1,2}, \phi_{1}(\overrightarrow{r},E_{1}) \rangle
-	 b =
-	 \langle \sigma_c, \phi \rangle
+	 b(s) = \int_r \sigma_b(r,s) \phi(r) dr
  \end{equation}
-where $\sigma_c$ is a function that couples the primary
+where $\sigma_b(r,s)$ is a function that couples the primary
 radiation transport to the secondary physics.
 
 Consider the process of neutron-induced prompt photon production.
-In this case, the function, $\sigma_c$, is the neutron-gamma production
+In this case, the function $\sigma_b$ is the neutron-gamma production
 cross section, $\sigma_{n,\gamma}$.  The primary focus of SDR analysis
 is the process of neutron-induced delayed gamma production. 
-GT-CADIS provides a method for calculating $\sigma_c$ when
-certain conditions (known as SNILB) hold true. In this case, the
-coupling term, $T$, is an approximation of the transmutation
-process \cite{gtcadis}.  As long as there is a solution for $\sigma_c$, the
+GT-CADIS provides a method for calculating $\sigma_b$ when
+certain conditions (known as SNILB) hold true. In this case, $\sigma_b$ is the
+coupling term $T$, an approximation of the transmutation
+process \cite{gtcadis}.  
+
+As long as there is a solution for $\sigma_b$, the
 function that couples the primary and secondary physics together,
 there also exists a solution for the adjoint radiation transport source.
 This can be discovered by substituting Eq. \ref{eq:fwd_2src} into Eq. 
-\ref{eq:adj_src} and solving for $q^{+}$.
+\ref{eq:adj_src} 
+\begin{equation}\label{eq:sub_b}
+	\int_r q^{+}(r) \phi(r) dr 
+	= \int_s \bigg[ \int_r \sigma_b(r,s) \phi(r) dr \bigg] \Psi^{+}(s) ds
+\end{equation}
+and switching the order of integration
+\begin{equation}\label{eq:switch}
+	\int_r q^{+}(r) \phi(r) dr 
+	= \int_r \bigg[ \int_s \sigma_b(r,s) \Psi^{+}(s) ds \bigg] \phi(r) dr
+\end{equation}
+to solve for $q^{+}$.
 
  \begin{equation}\label{eq:adj_1src}
 %	 q_{1}^{+}(\overrightarrow{r},E_{1}) = 
 %	 \langle \sigma_{1,2}, \phi_{2}^{+}(\overrightarrow{r},E_{2}) \rangle
-	 q^{+} = 
-	 \langle \sigma_c, \Psi^{+} \rangle
+	 q^{+} = \int_s \sigma_b(r,s) \Psi^{+}(s) ds
  \end{equation}
 
 
@@ -224,11 +255,12 @@ of photons of energy $E_{\gamma}$, in volume element v, at time t,
 $\phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t) $
 
  \begin{equation}\label{eq:adj_src_1_avg}
-	 q_{n,v}^{+}(E_{n}) =
-	 \int_{t}  \int_{E_{\gamma}}
+	 q_{n,v}^{+}(E_{n}) =\frac
+	 {\int_{t}  \int_{E_{\gamma}}
 	 T_{v}(E_n, E_{\gamma}, t) 
 	 \phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t)
-	 \, dE_{\gamma} \, dt
+	 \, dE_{\gamma} \, dt}
+	 {\int_t dt}
  \end{equation}
 %\begin{equation}\label{eq:sum}
 %	\phi_{\gamma,v, h}^{+} = \sum_{t_{mov}}{\phi_{\gamma,v,h,t_{mov}}}
@@ -241,7 +273,9 @@ element v, at time t.
 For many practical problems, T will not change over the course of
 geometry movement  because the time constants of decay and geometry
 motion are very different.  The motion of components occurs over a very short
-period of time relative to photon decay.  
+period of time relative to photon decay.  This is assuming that the geometry
+movement will not begin until at least $10^5 s$ after shutdown when the remaining
+photons have longer half-lives.  
 Discretizing the energy spectrum into groups, the coupling term that relates 
 the irradiation of the material in volume
 element v, by a flux of neutrons in energy group g, to the corresponding source of
@@ -253,9 +287,12 @@ is given by
 \end{equation}
 Using this groupwise calculation of T, the integral in Eq. \ref{eq:adj_src_1_avg} can be estimated by the sum
 \begin{equation}\label{eq:tgt_n_src}
-	q_{n,v,g}^{+} =
-	\sum_{t_{mov}}\Bigg(\sum_{h} T_{v,g,h} \phi_{\gamma,v,h,t_{mov}}^{+}\Bigg)
+	q_{n,v,g}^{+} = \frac
+	{\sum_{t_{mov}}\big(\sum_{h} T_{v,g,h}
+	\phi_{\gamma,v,h,t_{mov}}^{+}\big) \Delta t_{mov}}
+	{t_{tot}}
 \end{equation}
 where $t_{mov}$ is a time step after shutdown that corresponds to a change in
-geometry configuration and $\phi_{\gamma,v,h,t_{mov}}^{+}$ is the adjoint flux
-of photons in energy group h, in volume element v, at that time step.
+geometry configuration, $\Delta t_{mov}$ is the duration of the time step, and $\phi_{\gamma,v,h,t_{mov}}^{+}$ is the adjoint flux
+of photons in energy group h, in volume element v, at that time step, and
+$t_{tot}$ is the total duration of all the time steps.
