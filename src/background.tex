@@ -49,13 +49,19 @@ handled in systems with moving geometries and sources.
 % FES with no VR.
 
 \section{Analog Monte Carlo Calculations} \label{sec:analog_mc}
-
-The quantification of the SDR requires a detailed distribution of the
-neutron and photon flux throughout all regions of phase space (space, energy,
-and direction).  Due to the size and complexity of FES, the most optimal way to 
-obtain accurate particle distributions is through Monte Carlo (MC) radiation transport 
-rather than deterministic methods.
-\todo{Add paragraph to compare/contrast deterministic and MC}
+Computational analysis of nuclear systems is most often performed by either
+deterministic or stochastic codes.  Deterministic codes discretize the problem
+in space, energy, and direction in order to obtain an approximate solution to the Boltzmann transport equation.  Obtaining detailed solutions in every region of phase space is memory intensive for large problems.
+The Monte Carlo (MC) method is a stochastic solution to the transport equation \cite{l_m}
+that involves the simulation of random particle
+walks through phase space.  
+%The quantification of the SDR requires a detailed distribution of the
+%neutron and photon flux throughout all regions of phase space (space, energy,
+%and direction). 
+Due to the size and complexity of FES, the most optimal way to 
+obtain accurate particle distributions is through MC radiation transport.
+%rather than deterministic methods.
+%\todo{Add paragraph to compare/contrast deterministic and MC}
 
 %To quantify the dose rate, we need to know the flux of photons
 %produced by the decaying radionuclides in the activated components. The
@@ -64,10 +70,9 @@ rather than deterministic methods.
 %space.
 
 In general, MC calculations rely on repeated random sampling to solve
-mathematical problems.  In radiation transport applications, the MC method is 
-used to solve the Boltzmann transport equation \cite{l_m} through the simulation of random particle
-walks through phase space.  
-In analog operation mode (i.e. no variance reduction), 
+mathematical problems.  
+When the analog operation mode (i.e. no variance reduction) of MC analysis is 
+used to solve radiation transport calculations, 
 the source particle's position, energy, direction,
 and subsequent collisions are sampled from unbiased probability
 distribution functions (PDFs) that describe physical particle behavior.
@@ -86,8 +91,8 @@ statistical uncertainty than regions with high flux that are sampled very
 often.
 
 This uncertainty can be represented by the relative error, $\Re$,
-which is defined as the statistical precision, $\overline{x}$ (the average of
-the tally scores), divided by the mean, $\sigma_{\overline{x}}$ (the standard
+which is defined as the statistical precision, $sigma_{\overline{x}}$ (the average of
+the tally scores), divided by the mean, $\overline{x}$ (the standard
 deviation of the tally scores).  
 \begin{equation} \label{eq:1.2}
 		\Re = \frac{\sigma_{\overline{x}}}{{\overline{x}}}
@@ -96,7 +101,7 @@ deviation of the tally scores).
 For a well behaved, properly converged tally, $\sigma_{\overline{x}}$ is proportional
 to $1/\sqrt{N}$ where N is the number
 of histories \cite{mcnp_manual}.
-\todo{Should I explain why this is prop. to $1/sqrt{N}$?}
+%\todo{Should I explain why this is prop. to $1/sqrt{N}$?}
 %The relative error is inversely proportional to the number of tally scores.
 Therefore, to reduce the uncertainty, one can 
 increase the number of particle histories simulated.
@@ -114,7 +119,7 @@ as given by
 	FOM = \frac{1}{{{{\Re}^2}t_{proc}}}
 \end{equation}
 A high FOM is desirable because it means that less computation time is needed to achieve
-a reasonably low error ( >0.1 \cite{mcnp_manual}).   
+a reasonably low error ( <0.1 \cite{mcnp_manual}).   
 
 \section{Shutdown Dose Rate Analysis}\label{sec:sdr_calcs}
 This section will discuss the two primary workflows used to investigate the SDR:
@@ -161,8 +166,7 @@ The calculated photon emission density for each decay time
 is then used as the source for MC photon transport.  A photon flux tally
 fitted with flux-to-dose-rate conversion factors is used to
 determine the final SDR \cite{r2s}.
-\todo{Add subsection to introduce mesh-based R2S and PyNE R2S \cite{mesh_r2s}}
-Because the neutron and photon transport are performed in separately,
+Because the neutron and photon transport are performed separately,
 different geometries can be used for each transport step which is key for
 simulating geometry movement after shutdown.
 \subsubsection{Mesh-based R2S}
@@ -264,18 +268,21 @@ splitting and rouletting.  A weight window is a region of phase-space that is
 assigned an upper and lower bound.  The windows can be assigned to cells in the
 geometry, on a superimposed mesh, and to energy bins.  When a particle enters
 a weight window, its weight is assessed; if its weight is above the upper bound,
-it is split and if it is below the lower bound, it is rouletted.  There are various
+it is split and if it is below the lower bound, it is rouletted.  
+
+The manual generation of weight window bounds requires a priori knowledge of the problem physics and becomes increasingly difficult with the complexity of the geometry. 
+Historically, this process has required a considerable amount of time and effort of a skilled analystbut there are now various
 methods to produce these weight window bounds automatically which drastically reduces the
-time, effort, and expertise required by the analyst.  Some of these methods will 
+effort required by the analyst.  Some of these methods will 
 be discussed in the following section.
 
 
 \section{Automated Variance Reduction}\label{sec:auto_vr}
 
-Historically, VR techniques have required a priori knowledge of the problem physics
-in order to assign modified sampling and weight control parameters.
+%Historically, VR techniques have required a priori knowledge of the problem physics
+%in order to assign modified sampling and weight control parameters.
 Many techniques have been developed over the years to automate the selection and
-assignment of these parameters to reduce computational and human effort.
+assignment of modified sampling and weight control parameters to reduce computational and human effort.
 
 One class of VR techniques, known as hybrid deterministic/MC methods,
 takes advantage of the speed of deterministic transport to
@@ -284,7 +291,7 @@ which can then be used to generate MC VR parameters.
 The adjoint solution has
 significance as the measure of importance of a particle to some specified
 objective function.  
-\todo{Need to discuss pro/con of deterministic/MC in earlier section}
+%\todo{Need to discuss pro/con of deterministic/MC in earlier section}
 %Because deterministic solutions to the transport equation %are less precise but
 %require much less computation time, they are useful as an estimate of the
 %adjoint particle flux throughout phase space.  
@@ -488,6 +495,7 @@ the total forward response
 which means that in regions with low forward flux, the adjoint flux, and therefore
 importance, will be high and vice verse.  This will result in the overall goal of
 nearly equal statistical uncertainty in regions of interest.  
+\todo{mention that the formula for ww is same as cadis}
 
 \section{Automated Variance Reduction for Multi-physics Analysis}\label{sec:auto_vr_sdr}
 
@@ -553,7 +561,10 @@ R = %\int_{V}\int_{E}
     q(\overrightarrow{r}, E) \rangle
     %dV dE
 \end{equation}
-MS-CADIS provides a method to calculate an approximation of this importance function
+MS-CADIS provides a method to calculate an
+ approximation 
+\todo{why is this not always an approx?}
+of this importance function
 where the response is the final response of the multi-step process.  In the case
 of an R2S calculation, the final response is the SDR caused by the decay
 photons.  The SDR is defined as 
@@ -605,7 +616,7 @@ neutron response is set equal to the photon response.
 \end{equation}
 It can be seen that the far right side of Eq. \ref{eq:4.4} also has the same 
 form as Eq. \ref{eq:4.1} which means that the adjoint neutron flux, $\phi_n^+$, 
-serves as the importance function used to optimize the neutron transport.
+serves as the importance function.
 
 Combining equations \ref{eq:4.3} and \ref{eq:4.4}, 
 gives the relationship between the neutron and photon responses.
@@ -646,7 +657,7 @@ expressed as a non-linear function of $\phi_n$
 This function can not be linearized for arbitrary transmutation networks
 and irradiation scenarios, but a linear relationship can
 be formulated when a set of criteria, known as the Single Neutron Interaction
-Low Burnup (SNILB) criteria, are met.
+Low Burnup (SNILB) criteria, are met \cite{gtcadis}.
 When met, a solution for the coupling term, 
 $T(\overrightarrow{r}, E_{n}, E_{\gamma})$, which approximates the
  transmutation process and is defined by the following equation
@@ -673,7 +684,7 @@ can then be used to calculate T via Eq. \ref{eq:Tdef}.
 
 %GT-CADIS provides an analytical solution to T when the SNILB criteria are met.
 It has been shown that for typical FES spectra, materials, and irradiation
-scenarios, the SNILB criteria are met; therefore, GT-CADIS provides a solution
+scenarios, the SNILB criteria are met \cite{gtcadis}; therefore, GT-CADIS provides a solution
 for T, and therefore the adjoint neutron source needed to optimize the neutron
 transport for SDR analysis of FES.
 
@@ -730,7 +741,7 @@ location and orientation of the delayed particle.
 \subsection{MCR2S with Geometry Movement}
 The Mesh Coupled implementation of R2S (MCR2S), developed by the Culham Science Center, 
 was updated to allow geometry components to change location after shutdown
-\cite{mcr2s_mov}.
+\cite{mcr2s_move}.
 This capability was developed to facilitate SDR calculation during maintenance and
 intervention activities.  MCR2S relies on MCNP for both neutron and photon
 transport steps and FISPACT for the activation calculations. 
@@ -749,3 +760,4 @@ transformed copy are present during the photon transport step means that there
 can be no overlap between the parts which could be problematic for small
 transformations.
 
+\todo{add section: what hole is my work filling?}

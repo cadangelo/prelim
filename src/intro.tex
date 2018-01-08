@@ -49,11 +49,10 @@ also changes.
 In the specific case of SDR calculations, the importance function for the neutron transport step
 must capture the probability of materials to become activated and subsequently emit photons that
 will make a significant contribution to the SDR.
-This new VR method will also adapt 
- the Groupwise Transmutation (GT)-CADIS method 
+The Groupwise Transmutation (GT)-CADIS method 
 which is an implementation of MS-CADIS
 %uses single-energy-group irradiations to generate an adjoint neutron source for
-that optimizes the neutron transport step of SDR calculations.
+that optimizes the neutron transport step of SDR calculations will be updated to allow for movement after shutdown.
 GT-CADIS generates an adjoint
 neutron source based on certain assumptions and approximations about the
 transmutation network.  To adapt this method for dynamic systems, 
@@ -69,32 +68,32 @@ in order to generate the biasing functions for the neutron transport step.
 % Standard GT-CADIS is for static systems and would 
 % as the spatial configuration changes over time, the importance also changes?
 
-The successful completion of this project will provide the workflow and tools
+The successful completion of this project will demonstrate the efficacy of a workflow and tools
 necessary to efficiently calculate quantities of interest resulting from
 coupled, multi-physics processes in dynamic systems.  
 The driving force behind this work is the quantification of the
 SDR resulting from the coupled neutron
 irradiation-photon emission that occurs in FES;
-specifically investigating how to optimize the SDR calculation when%changes as a function of time when
+specifically investigating how to optimize the SDR calculation when %changes as a function of time when
 activated system components are moved during maintenance activities.
 The Monte Carlo radiation transport code will
 be modified to implement rigid-body transformations on the CAD-based geometry.
 MS-CADIS, a VR method for coupled, multi-physics problems, will be adapted to
 incorporate dynamics.  An experiment will be contrived to demonstrate the
 limitations of existing VR methods as they apply to dynamic problems and verify
-the efficacy of this new method.  Given these objectives, the Chapter \ref{ch:litrev}
+the efficacy of this new method.  Given these objectives, Chapter \ref{ch:litrev}
 will include background and theory relevant to VR methods in coupled,
-multi-physics systems.  It begins with an introduction to computational
+multi-physics systems.  
+It begins with an introduction to computational
 radiation transport, specifically the Monte Carlo method.
-It will then introduce the methods currently used for SDR analysis and the
-need for optimization.  Several MC VR techniques and how they have been applied
- to optimize SDR analysis are then discussed.
-Finally, this chapter ends with a discussion about radiation transport in
-dynamic systems.  
+%It will then introduce the methods currently used for SDR analysis and the
+%need for optimization.  Several MC VR techniques and how they have been applied
+% to optimize SDR analysis are then discussed.
+%Finally, this chapter ends with a discussion about radiation transport in
+%dynamic systems.  
 Next, Chapter \ref{ch:experiment} shows the experiment demonstrating the need
 for a new VR method to optimize the SDR in dynamic systems.  The derivation of
 VR parameters that will optimize the SDR in dynamic systems is given in
-Chapter \ref{ch:tgt} and an implementation plan in Chapter \ref{ch:proposal}.
-Chapter \ref{ch:proposal} will also discuss
-the progress that has been made towards this new methodology and summarize the
+Chapter \ref{ch:tgt}. Finally, Chapter \ref{ch:proposal} details an implementation plan, 
+the progress that has been made thusfar, and a summary of the
 work to be done.
