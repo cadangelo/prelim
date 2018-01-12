@@ -3,12 +3,12 @@
 \chapter{Introduction} \label{ch:intro}
 
 The rapid design iteration process of complex nuclear systems has long been
-aided by the use of computational simulation.  Traditionally, these simulations
+aided by computational simulation.  Traditionally, these simulations
 involve radiation transport in static geometries.  However, in certain
 scenarios, it is desirable to investigate dynamic systems and the effects caused
 by the motion of one or more components.  
 For example, fusion energy systems (FES) are purposefully designed with modular components that can be moved in and
-out of a facility after shutdown for maintenance.  
+out of a facility after shutdown for maintenance purposes.  
 To ensure the safety of maintenance personnel, it is important to accurately quantify the
 shutdown dose rate (SDR) caused by the photons emitted by structural materials that were
 activated during the device operation time.  
@@ -36,29 +36,40 @@ phase space to the objective function.
 %interest in dynamic, geometrically complex nuclear systems.
 %The motion is discretized into time steps and MC transport is performed at each
 %step.  
-For cases involving coupled multi-physics analysis in dynamics systems, such as SDR calculations
-during maintenance activities,
-a new hybrid deterministic/MC VR technique will be proposed.
-This new method will adapt the Multi-Step Consistent Adjoint Driven Importance Sampling
-(MS-CADIS) method to dynamic systems.
- The basis of MS-CADIS is that the importance function used
+%For cases involving coupled multi-physics analysis in dynamics systems, such as SDR calculations
+%during maintenance activities,
+%a new hybrid deterministic/MC VR technique will be proposed.
+%This new method will adapt i
+One hybrid VR technique used to optimize the initial transport step of a
+multi-step process is known as 
+the Multi-Step Consistent Adjoint Driven Importance Sampling
+(MS-CADIS). 
+%method to dynamic systems.
+ The basis of MS-CADIS is that the importance (adjoint) function used
 in each step of the problem must represent the importance of the particles to
-the final objective function.  As the spatial configuration of the materials
-changes, the probability that they will contribute to the objective function
-also changes.
+the final objective function.  
+%As the spatial configuration of the materials
+%changes, the probability that they will contribute to the objective function
+%also changes.
 In the specific case of SDR calculations, the importance function for the neutron transport step
 must capture the probability of materials to become activated and subsequently emit photons that
 will make a significant contribution to the SDR.
 The Groupwise Transmutation (GT)-CADIS method 
-which is an implementation of MS-CADIS
+%which 
+is an implementation of MS-CADIS
 %uses single-energy-group irradiations to generate an adjoint neutron source for
-that optimizes the neutron transport step of SDR calculations will be updated to allow for movement after shutdown.
+that optimizes the neutron transport step of SDR calculations.
+%, will be updated to allow for movement after shutdown.
 GT-CADIS generates an adjoint
 neutron source based on certain assumptions and approximations about the
-transmutation network.  To adapt this method for dynamic systems, 
-a time-integrated adjoint
-neutron source will be calculated 
-in order to generate the biasing functions for the neutron transport step.
+transmutation network.  
+This source is used for adjoint transport and the resulting flux is used to
+generate the biasing parameters to optimize the forward neutron transport.
+For cases involving coupled multi-physics analysis in dynamics systems, such as SDR calculations
+during maintenance activities,
+a new hybrid deterministic/MC VR technique will be proposed that adapts 
+GT-CADIS for dynamic systems by calculating a time-integrated adjoint
+neutron source.
 
 
 % adjoint photon transport to get adjoint photon flux
@@ -77,8 +88,8 @@ irradiation-photon emission that occurs in FES;
 specifically investigating how to optimize the SDR calculation when %changes as a function of time when
 activated system components are moved during maintenance activities.
 The Monte Carlo radiation transport code will
-be modified to implement rigid-body transformations on the CAD-based geometry.
-MS-CADIS, a VR method for coupled, multi-physics problems, will be adapted to
+be modified to implement rigid-body transformations on the CAD-based geometry
+and GT-CADIS will be adapted to
 incorporate dynamics.  An experiment will be contrived to demonstrate the
 limitations of existing VR methods as they apply to dynamic problems and verify
 the efficacy of this new method.  Given these objectives, Chapter \ref{ch:litrev}

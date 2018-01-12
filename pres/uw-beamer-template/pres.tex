@@ -1,6 +1,7 @@
 \documentclass{beamer}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
+\usetikzlibrary{shapes.multipart}
 \usepackage{animate}
 \usepackage{xmpmulti}
 
@@ -32,16 +33,15 @@
 
 %%Background
 \begin{frame}
-\frametitle{Shutdown Dose Rate Analysis}
+	\frametitle{Shutdown Dose Rate (SDR) Analysis}
 
 \begin{columns}
-
 \column{0.5\textwidth}
 \begin{itemize}
 	\item{Fusion Energy Systems (FES)}
 		\begin{itemize}
 			\item{Burning plasma, D-T fusion}
-			\item{$^{2}H + ^{3}H \rightarrow ^{4}_{2}He + n$}
+			\item{$^{2}_{1}H + ^{3}_{1}H \rightarrow ^{4}_{2}He + ^{1}_{0} n$}
 		\end{itemize}
 	\item{Neutrons penetrate deeply into system components,
 				causing activation}
@@ -79,36 +79,73 @@
 	\end{center}
 \end{frame}
 
+\begin{frame}{Goal}
+	\textbf{Optimize the MC radiation transport used to calculate the
+	dose
+	rate at a particular location as activated components are being
+	transported around the facility.}
+\end{frame}
+
+
 \begin{frame}
-\frametitle{SDR Solution Method}
+\frametitle{SDR Solution Methods}
+
+\begin{minipage}{0.49\textwidth}
 \begin{itemize}
-\item{Rigorous 2-Step Method (R2S)}
-%\begin{itemize}
-%\item{Monte Carlo neutron transport}
-%\item{Activation analysis}
-%\item{Monte Carlo photon transport}
-%\end{itemize}
+\item{Direct 1-Step Method (D1S)}
 	\vspace{1cm}
 	\begin{figure}
         \centering
 
-        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
-        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
-        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
+		node distance=3.0cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
+		distance=3.0cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3.0cm]
         \tikzstyle{line} = [draw, -latex]
         \tikzstyle{arrow} = [thick, ->, >=stealth]
         
-	\resizebox{!}{4cm}{
-        \begin{tikzpicture}[node distance = 2 cm, auto]
+	\resizebox{5cm}{4cm}{
+        \begin{tikzpicture}[every text node part/.style={align=center}]
 		% Optimized neutron transport
-		\node [code] (nmc) {Monte Carlo neutron transport};
-                \node [file, left of = nmc, yshift=-0.9 cm, xshift=-1.8cm] (nflux) {Neutron flux};
-		\node [file, right of = nmc, yshift=-0.9cm, xshift=1.9cm]
-		(irrdec) {Irradiation and decay scenario};
+		\node [code] (mc) {Monte Carlo \\ neutron/photon transport};
+                \node [file, above of = mc, yshift=-0.3cm] (mod) {Modified\\ cross sections};
+                \node [file, below of = mc, yshift=0.3cm] (sdr) {Shutdown dose rate};
+		\path [line] (mod) -- (mc);
+		\path [line] (mc) -- (sdr);
+
+	\end{tikzpicture}
+		}
+        \end{figure}
+\end{itemize}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\textwidth}
+\begin{itemize}
+\item{Rigorous 2-Step Method (R2S)}
+	\vspace{1cm}
+	\begin{figure}
+        \centering
+
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
+		node distance=3.0cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
+		distance=3.0cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3.0cm]
+        \tikzstyle{line} = [draw, -latex]
+        \tikzstyle{arrow} = [thick, ->, >=stealth]
+        
+	\resizebox{5cm}{4cm}{
+        \begin{tikzpicture}[every text node part/.style={align=center}]
+		% Optimized neutron transport
+		\node [code] (nmc) {Monte Carlo \\ neutron transport};
+                \node [file, left of = nmc, yshift=-0.9 cm, xshift=-1.0cm] (nflux) {Neutron flux};
+		\node [file, right of = nmc, yshift=-0.9cm, xshift=1.0cm]
+		(irrdec) {Irradiation and \\ decay scenario};
 		\node [script, below of = nmc, yshift=1.2cm] (act) {Activation analysis};
-                \node [file, left of = act, yshift=-0.9cm, xshift=-1.8cm] (psrc) {Photon source};
-		\node [code, below of = act, yshift=1.2cm] (pmc) {Monte Carlo photon transport};
-                \node [file, below of = pmc, yshift=1.4cm] (sdr) {Shutdown dose rate};
+                \node [file, left of = act, yshift=-0.9cm, xshift=-1.0cm] (psrc) {Photon source};
+		\node [code, below of = act, yshift=1.2cm] (pmc) {Monte Carlo\\ photon transport};
+                \node [file, below of = pmc, yshift=1.2cm] (sdr) {Shutdown dose rate};
 		\path [line] (nmc) -- (nflux);
                 \path [line] (nflux) -- (act);
                 \path [line] (irrdec) -- (act);
@@ -120,15 +157,20 @@
         }
 %	\caption{R2S workflow \label{fig:r2s_flow}}
 \end{figure}
-
 \end{itemize}
+\end{minipage}
+
 \end{frame}
 
-%!!!!! Should add in pic of ITER flux
+\begin{frame}{Pros/cons of D1S and R2S}
+\end{frame}
+
+\begin{frame}{Why MC over Deterministic}
+\end{frame}
+
 \begin{frame}
 \frametitle{Monte Carlo Radiation Transport}
 \begin{columns}
-
 \column{0.7\textwidth}
 \begin{itemize}
 	\item{Monte Carlo (MC) analysis of fusion energy systems is:}
@@ -154,6 +196,9 @@
 \end{figure}
 
 \end{columns}
+\end{frame}
+
+\begin{frame}{Stat error in MC and intro VR}
 \end{frame}
 
 \begin{frame}
@@ -363,10 +408,10 @@
 \centering
 
         \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
-	node distance=1.4cm]
+	node distance=0.9cm]
         \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
-	distance=1.4cm]
-        \tikzstyle{file} = [rectangle, draw, text centered, node distance=1.4cm]
+	distance=0.9cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=0.9cm]
         \tikzstyle{line} = [draw, -latex]
         \tikzstyle{arrow} = [thick, ->, >=stealth]
        
@@ -407,7 +452,7 @@
 		%\vspace{1cm}
 		\hspace{-1cm}
 	\includegraphics[scale=0.27, xshift=-3cm]{config-0.jpg}
-		\vspace{-1.4cm}
+		\vspace{-0.9cm}
 	\caption{Demo model. Steel chamber, walls are 2 m thick.  14 MeV
 		neutron source in center.  Chamber surrounded by air.}
         \end{figure}
@@ -528,7 +573,7 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
                 \node [file, left of = act, yshift=-0.9cm, xshift=-1.8cm] (psrc) {Photon source};
 		\node [code, below of = act, yshift=1.2cm] (pmc) {Monte Carlo
 		photon transport at each time step};
-                \node [file, below of = pmc, yshift=1.4cm] (sdr) {Shutdown dose
+                \node [file, below of = pmc, yshift=0.1cm] (sdr) {Shutdown dose
 		rate at each time step};
 		\path [line] (nmc) -- (nflux);
                 \path [line] (nflux) -- (act);

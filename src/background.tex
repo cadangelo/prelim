@@ -5,7 +5,7 @@ coupled, multi-physics process occurring in a system that has moving components.
 important application of this work is the quantification of the shutdown dose
 rate (SDR) during maintenance operations in fusion energy systems (FES).
 
-During the operation of a fusion device, the nuclear reactions (e.g. D-T
+During the operation of a fusion energy device, the nuclear reactions (e.g. D-T
 fusion) occurring in the plasma result in the production of high energy (~14 MeV) neutrons
 that penetrate deeply into the system components.  Some of the neutron reaction
 pathways result in the production of radioisotopes that persist long after
@@ -15,9 +15,10 @@ can cause grave health effects, therefore it is necessary to
 quantify the dose rate in order to ensure the safety of personnel working in
 fusion facilities.  This is not only important for the time during operation
 and immediately after shutdown when the device is in a static configuration,
-but also during a maintenance activity when activated
-components are moving around the facility and the dose rate is changing over
-time.
+but also during a maintenance activity 
+%when activated components are moving around the facility and 
+when the dose rate at a point changes over
+time as a function of the position of the activated components.
 
 Performing computational simulations of the radiation transport in these
 devices and calculating quantities of interest, such as flux and dose rate, are
@@ -51,15 +52,20 @@ handled in systems with moving geometries and sources.
 \section{Analog Monte Carlo Calculations} \label{sec:analog_mc}
 Computational analysis of nuclear systems is most often performed by either
 deterministic or stochastic codes.  Deterministic codes discretize the problem
-in space, energy, and direction in order to obtain an approximate solution to the Boltzmann transport equation.  Obtaining detailed solutions in every region of phase space is memory intensive for large problems.
+in space, energy, and direction in order to obtain an approximate solution to
+the Boltzmann transport equation.  Obtaining high fidelity solutions in every
+region of phase space requires increasing the discretization which can
+become very memory intensive for large problems. 
 The Monte Carlo (MC) method is a stochastic solution to the transport equation \cite{l_m}
 that involves the simulation of random particle
-walks through phase space.  
+walks through phase space.  Achieving high fidelity results with the MC method
+does not have the same, prohibitively high memory requirements for large,
+complex problems; therefore,
 %The quantification of the SDR requires a detailed distribution of the
 %neutron and photon flux throughout all regions of phase space (space, energy,
 %and direction). 
-Due to the size and complexity of FES, the most optimal way to 
-obtain accurate particle distributions is through MC radiation transport.
+the most optimal way to 
+obtain accurate particle distributions in FES is through MC radiation transport.
 %rather than deterministic methods.
 %\todo{Add paragraph to compare/contrast deterministic and MC}
 
@@ -69,8 +75,8 @@ obtain accurate particle distributions is through MC radiation transport.
 %We need to know what the neutron flux looks like in every region of phase
 %space.
 
-In general, MC calculations rely on repeated random sampling to solve
-mathematical problems.  
+%In general, MC calculations rely on repeated random sampling to solve
+%mathematical problems.  
 When the analog operation mode (i.e. no variance reduction) of MC analysis is 
 used to solve radiation transport calculations, 
 the source particle's position, energy, direction,
