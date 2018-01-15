@@ -23,7 +23,7 @@ A planar view of the geometry is shown in Fig. \ref{fig:ex.geom}.
 It is composed of a chamber of Stainless Steel 316 (SS-316) with a central cavity measuring
 2m x 2m x 2 m.  The walls are 2 m thick.  The chamber is surrounded by air and
 there is helium in the central cavity.  A CAD model of this geometry was built and 
-the componets tagged with material names using
+the components tagged with material names using
 Trelis \cite{trelis}.  
 A neutron source was placed in the central cavity; it was sampled uniformly in
 space and within the energy interval of 13.8-14.2 MeV.
@@ -49,7 +49,6 @@ to optimize the neutron transport step.
 	The central cavity is filled with helium and chamber is surrounded by air.
 	A SDR detector is located 2 m in the x-direction from the chamber.\label{fig:ex.geom}}
 \end{figure}
-\todo{Need to label this figure}
 
 %\subsection{Results}
 \subsection{Analog R2S}\label{sec:analog}
@@ -69,7 +68,7 @@ neutron flux.  A 175 group VITAMIN-J energy structure
 in order to achieve both a spatial and energy-wise distribution of the neutron
 flux.  The resulting
 neutron flux and relative error for the 13.8-14.2 MeV energy group are shown in
-Fig. \ref{fig:ex.nflux}.
+Fig. \ref{fig:ex.ana_nflux}.
 \begin{figure} 
 	\includegraphics[scale=0.4] {figs/analog_tot_n_f.png}
 	\includegraphics[scale=0.4] {figs/analog_tot_n_err.png}
@@ -125,18 +124,18 @@ obtain the photon source in each photon energy group as a function of the
 neutron flux in each neutron energy group.  T was then calculated using 
 Eq. \ref{eq:Tdef}.
 
-This T was combined with the adjoint photon flux to generate the GT-CADIS
-adjoint neutron source via Eq. \ref{eq:gt_adj_nsrc}. 
-PARTISN was run again using this adjoint neutron source and the resulting
-adjoint neutron flux for the 13.8-14.2 MeV energy group is shown in Fig.
-\ref{fig:ex.adj_n_flux}.
-
 \begin{figure}
 	\includegraphics[scale=0.4]{figs/gtcadis_adj_n_g216.png}
 	\caption [GT-CADIS adjoint neutron flux] 
 	{Adjoint neutron flux used to generate the biased source and weight
-	windows according to the GT-CADIS method.\label{fig:ex.adj_n_flux} }
+	windows according to the GT-CADIS method.\label{fig:ex.gt_adj_n_flux}}
 \end{figure}
+This T was combined with the adjoint photon flux to generate the GT-CADIS
+adjoint neutron source via Eq. \ref{eq:gt_adj_nsrc}. 
+PARTISN was run again using this adjoint neutron source and the resulting
+adjoint neutron flux for the 13.8-14.2 MeV energy group is shown in Fig.
+\ref{fig:ex.gt_adj_n_flux}.
+
 
 This adjoint neutron flux functions as an importance map of neutrons to the
 final SDR.  In the region of the steel chamber near the detector, there is a 
@@ -203,8 +202,8 @@ method in Fig.
 histories, the GT-CADIS method not only reduces the error in regions of the
 steel chamber that are important to the SDR, but allows a solution to be
 calculated in the detector region.
-\todo{Show these figures on the same page so they are easily compared. Probably
-regenerate them so they have the same limits on the color bar}
+%\todo{Show these figures on the same page so they are easily compared. Probably
+%regenerate them so they have the same limits on the color bar}
 
 
 Now, consider if the steel
@@ -226,8 +225,6 @@ in photon emission.
 	{Path of activated component moving from the far side of the SDR
 	detector to position next to it.\label{fig:path}}
 \end{figure}
-\todo{Label orig location, final location, detector. Make central cavity white
-to indicate there is no longer a neutron source here}
 
 Highlighting the region of the moving component in the  adjoint neutron flux
 map produced by GT-CADIS, Fig. \ref{fig:highlight}, it can be seen that this 
@@ -238,8 +235,8 @@ near the detector.  Because this adjoint neutron flux is used to generate
 source and transport biasing parameters, neutrons will be steered away from 
 interactions in this component, increasing the uncertainty in a region that will
 ultimately be important to the SDR. 
-\todo{Are these two statements strong enough? This is the whole point of the
-work.}
+%\todo{Are these two statements strong enough? This is the whole point of the
+%work.}
 
 \begin{figure} 
 	\includegraphics[scale=0.6]{figs/adj_n_highlight.png}
@@ -256,4 +253,3 @@ work.}
 %			close to detector
 %\end{itemize}
 
-\todo{Arrange figures so they appear closer to text describing them.}

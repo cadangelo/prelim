@@ -11,11 +11,11 @@ radiation transport calculations.
 Then, an updated R2S workflow that accounts for the movement of
 activated geometry components after shutdown will be introduced.
 Next, the implementation details of the time-integrated TGT-CADIS adjoint
-neutron source derived in chapter \ref{ch:tgt} are discussed.
+neutron source derived in Chapter \ref{ch:tgt} are discussed.
 The propagation of error
 in SDR analysis and some practical considerations for
 using these methods will also be addressed. 
-Finally, a demonstration of these methods and a
+Finally, a proposed demonstration of these methods and a
 summary of goals to accomplish will be given.
 
 \section{Progress: DAGMC Simulations with Geometry Transformations}\label{sec:dagmc_trans}
@@ -26,27 +26,30 @@ during a radiation transport simulation.  One example is the movement of
 activated components of a fusion energy device during a maintenance operation.
 This section will discuss the progress of 1) a tool to generate different 
 geometry positions based on an original configuration and
-2) an update to DAGMCNP that transforms the geometr based on values given in 
+2) an update to DAGMCNP that transforms the geometry based on values given in 
 the MCNP input file.  Both have application to this thesis work but are also 
 general purpose tools for any calculation in which the geometry configuration 
 needs to be changed.
 
 \subsection{Production of Stepwise Geometry Files}\label{sec:timestep_geoms}
 A tool has be developed to generate CAD geometry files that capture the 
-movement of components over time based on user-suppplied motion vectors or 
+movement of components over time based on user-supplied motion vectors or 
 relocation values.  
 
 First, a geometry file of the model in its 
 original configuration is created. The geometry components are tagged with 
 transformation numbers that correspond to a motion vector or relocation transform.
+\todo{Discuss motion separate from invocation? MOAB details?}
+
 %that are also given as input to this tool.  
 The tool loads the original geometry and a file containing the transformations.
-If a motion vector is supplied, a total lenth of time and a desired number of 
+If a motion vector is supplied, a total length of time and a desired number of 
 time steps must also be given. The motion can then be divided into step-wise 
 transformations. The position of the components 
 is updated according to these transformations and a new geometry file is 
 produced for each time step.  This tool only handles rigid-body
-transformations; no geometric deformations or scaling.  It also does not handle kinetics, 
+transformations; no geometric deformations or scaling.  It also does not handle
+objects kinetics, 
 so the user must be cautious to not cause any overlap of components during the
 geometry movement.
 
@@ -97,8 +100,9 @@ first two steps of the R2S workflow remain unchanged.
 The only difference is that multiple photon transport calculations need
 to be performed; one in the geometry's original configuration and then
 one for each of N time steps of geometry movement.
-N photon transport calculations need to be performed at each
-time step of geometry movement.  The main steps of time-integrated (T)R2S
+%N photon transport calculations need to be performed at each
+%time step of geometry movement. 
+The main steps of time-integrated (T)R2S
 are listed below and a full implementation flowchart is given in Fig. \ref{fig:tr2s_flow}.
 \begin{enumerate}
 	\item{MC neutron transport simulation on geometry at time step $t_{mov}=0$}
@@ -119,7 +123,7 @@ converted to tetrahedral mesh based sources by another PyNE R2S script.
 Because all
 source mesh files generated will reflect the original position of the geometry,
 they, along with the DAGMC geometry files, need to be transformed to the 
-correct locations for each $t_{mov}$ with the DAGMC transform tool.  The
+correct locations for each time step, $t_{mov}$, with the DAGMC transform tool.  The
 transformed sources and geometries can then be used as input for the MC photon
 transport simulations to calculate the SDR at each time step during geometry movement.
 
@@ -246,11 +250,11 @@ transformations as the CAD geometry so that a mesh file is also
 generated for each time step. 
 
 The geometry file at each time step along with the adjoint photon source (the
-flux-to-dose conversion factors) are given as input into a script that
-generates a Partisn input file.  Deterministic adjoint photon transport is
-carried out and a Partisn output of the resulting adjoint photon flux in each
+flux-to-dose rate conversion factors) are given as input into a script that
+generates a PARTISN input file.  Deterministic adjoint photon transport is
+carried out and a PARTISN output of the resulting adjoint photon flux in each
 photon energy group, h, is
-returned.  This Partisn output is converted to an HDF5 Cartesian (voxel) mesh file
+returned.  This PARTISN output is converted to an HDF5 Cartesian (voxel) mesh file
 through a PyNE conversion method.  
 
 Because we ultimately need to combine the contribution from each time step in each
@@ -259,30 +263,29 @@ tetrahedral mesh of the geometry at that same time step.  Each tetrahedral
 mesh element has an ID associated with it.  Those IDs are constant across the
 tetrahedral mesh files at each time step.  This allows the contribution of the adjoint photon 
 flux from each time step to be summed in each tetrahedral mesh element.
-\todo{This might need to be explained better. Maybe a picture showing showing mapping of voxel to tet mesh}
+%\todo{This might need to be explained better. Maybe a picture showing showing mapping of voxel to tet mesh}
 %The time integration is approximated by the following discrete sum over all
 %time steps
-
 \begin{equation}\label{eq:sum}
-	\phi_{\gamma,v, h}^{+} = \sum_{t_{mov}}{\phi_{\gamma,v,h,t_{mov}}^{+}}
+	\phi_{\gamma,v, h}^{+} =
+	\frac{\sum_{t_{mov}}{\phi_{\gamma,v,h,t_{mov}}^{+}}\Delta{t_{mov}}}
+	{t_{tot}}
 \end{equation}
-
 %After the contributions from each time step are summed, 
 The time-integrated 
 adjoint photon flux tetrahedral mesh is then converted back to a voxel mesh
-to use as input for the PyNE GT-CADIS script. 
+to use as input for the GT-CADIS tools. 
+
 %This script uses the 
 %adjoint photon flux along with the T matrix to generate an
 %adjoint neutron source for deterministic transport.
 %If the SNILB criteria are met, 
-
 %\begin{equation}\label{eq:T}
 %	T_{g,h} = \dfrac{q_{\gamma, h}(\phi_{n,g})}{\phi_{n,g}}
 %\end{equation}
 Next, the T value for each voxel, $T_{v,g,h}$,
-\todo{should I use separate subscript for voxel?}
- is found with Eq.
-\ref{eq:T}.
+%\todo{should I use separate subscript for voxel?}
+ is found with Eq. \ref{eq:T}.
 To obtain the source of photons in each photon energy group, h, 
 single pulse irradiations are performed with ALARA.
 Each material in the problem is irradiated with a single energy group of
@@ -318,21 +321,23 @@ yields the TGT-CADIS adjoint neutron source given by Eq.
                 \node [file] (pgeom_0) {DAGMC geom at $t_{mov}=0$};
 		\node [script, below = 0.4 of pgeom_0] (dagtrans) {DAGMC
 		transform tool};
-                \node [script, below = 0.4 of dagtrans] (partgen) {Prepare Partisn};
+                \node [script, below = 0.4 of dagtrans] (partgen) {Prepare
+		PARTISN};
                 \node [file, left = 0.9 of partgen] (pgeom_i) {DAGMC geom
 		at $t_{mov}$};
                 \node [file, right=0.9 of partgen] (f2d) {Flux-to-dose conversion factors};
-                \node [file, below =0.4 of partgen] (ppartinp) {Partisn input file};
+                \node [file, below =0.4 of partgen] (ppartinp) {PARTISN input file};
                 \path [line] (pgeom_0) -- (dagtrans);
 		\path [line] (dagtrans) -- (pgeom_i);
                 \path [line] (pgeom_i) -- (partgen);
                 \path [line] (f2d) -- (partgen);
         	\path [line] (partgen) -- (ppartinp);
         	% Partisn adj gamma transport
-                \node [code, below =0.4 of ppartinp] (partadjp) {Partisn adjoint $\gamma$ transport};
+                \node [code, below =0.4 of ppartinp] (partadjp) {PARTISN adjoint $\gamma$ transport};
         	\node [file, below =0.4 of partadjp] (padjf)
-		{Partisn$\phi_{\gamma, t_{mov}}^{+}$ file};
-        	\node [script, below =0.4 of padjf] (pf2mesh) {PyNE.R2S \\ convert Partisn to voxel mesh};
+		{PARTISN$\phi_{\gamma, t_{mov}}^{+}$ file};
+        	\node [script, below =0.4 of padjf] (pf2mesh) {PyNE.R2S \\
+		convert PARTISN to voxel mesh};
         	\node [file, below =0.4 of pf2mesh] (padjfvmesh)
 		{$\phi_{\gamma,t_{mov}}^{+}$ voxel mesh};
         	\node [script, below =0.4 of padjfvmesh] (conv_v_t){Convert voxel to tet};
@@ -375,7 +380,7 @@ yields the TGT-CADIS adjoint neutron source given by Eq.
 
 
 Once the TGT-CADIS adjoint neutron source has been calculated, deterministic
-adjoint transport is carried out and an adjoint neutron flux Partisn file is
+adjoint transport is carried out and an adjoint neutron flux PARTISN file is
 returned.  This file is then converted to a voxel mesh.
 This functions as an importance map for the forward neutron transport.
 %Areas that have a high adjoint neutron flux will have high importance and those with
@@ -396,18 +401,19 @@ weight window mesh via the CADIS method.
         
         \begin{tikzpicture}[every text node part/.style={align=center}]
         	%Generate adj neutron Partisn input
-                \node [script] (partgen) {part.py};
+                \node [script] (partgen) {Prepare PARTISN};
 		\node [file, left =0.9 of partgen] (ngeom) {DAGMC geom at
 		$t_{mov}=0$};
                 \node [file, right=0.9 of partgen] (nadjs) {$q_{n}^{+}$ voxel mesh};
-                \node [file, below =0.4 of partgen] (npartinp) {Partisn input file};
+                \node [file, below =0.4 of partgen] (npartinp) {PARTISN input file};
                 \path [line] (ngeom) -- (partgen);
                 \path [line] (nadjs) -- (partgen);
         	\path [line] (partgen) -- (npartinp);
         	% Partisn adj neutron transport
-                \node [code, below =0.4 of npartinp] (partadjn) {Partisn adjoint neutron transport};
-        	\node [file, below =0.4 of partadjn] (nadjf) {Partisn $\phi_{n}^{+}$ file};
-        	\node [script, below =0.4 of nadjf] (pf2mesh) {atflux\_to\_mesh.py};
+                \node [code, below =0.4 of npartinp] (partadjn) {PARTISN adjoint neutron transport};
+        	\node [file, below =0.4 of partadjn] (nadjf) {PARTISN $\phi_{n}^{+}$ file};
+        	\node [script, below =0.4 of nadjf] (pf2mesh) {PyNE.R2S \\
+		convert PARTISN to voxel mesh};
         	\node [file, below =0.4 of pf2mesh] (nadjfmesh) {$\phi_{n}^{+}$
 		voxel mesh};
         	\path [line] (npartinp) -- (partadjn);
@@ -503,7 +509,8 @@ transport step.  The fully optimized TR2S implementation is shown in Fig.
 		\node [file, below =0.4 of alara] (psrc) {ALARA photon
 		source};
 		\node [script, below =0.4 of psrc] (step2) {PyNE.R2S \\ Prepare source};
-		\node [file, below =0.4 of step2] (psrcmesh) {$q_{\gamma,t_{dec}}$
+		%\node [file, below =0.4 of step2] (psrcmesh) {$q_{\gamma,t_{dec}}$
+		\node [file, below =0.4 of step2] (psrcmesh) {$q_{\gamma}$
 		tet mesh};
 		\path [line] (nflux) -- (step1);
 		\path [line] (step1) -- (alarainp);
@@ -520,7 +527,8 @@ transport step.  The fully optimized TR2S implementation is shown in Fig.
 		transform tool};
 		\node [file, left = 0.9 of psrcmesh] (tr) {Transformation
 		file};
-		\node [file, below =0.4 of trtool] (psrcmoved) {$q_{\gamma,t_{dec},t_{mov}}$ tet mesh};
+		%\node [file, below =0.4 of trtool] (psrcmoved) {$q_{\gamma,t_{dec},t_{mov}}$ tet mesh};
+		\node [file, below =0.4 of trtool] (psrcmoved) {$q_{\gamma,t_{mov}}$ tet mesh};
 		\path [line] (psrcmesh) -- (trtool);
 		\path [line] (tr) -- (trtool);
 		\path [line] (trtool) -- (psrcmoved);
@@ -568,7 +576,6 @@ transport step.  The fully optimized TR2S implementation is shown in Fig.
 	blue ovals, physics codes in green ovals, and files in white
 	rectangles.\label{fig:otr2s_flow}}
 \end{figure}
-\todo{Is $q_{\gamma,t_{dec},t_{mov}}$ defined properly in text?} 
 
 
 \subsection{Error Propagation}\label{sec:error}
@@ -581,14 +588,14 @@ The uncertainty in the SDR due to the uncertainty in the photon transport can
 be calculated during MC transport. However, the 
 uncertainty in the SDR due to the uncertainty in the neutron MC
 calculation is more complicated and an area of research currently under investigation by Harb et.
-al \cite{harb}.  This work aims to produce a methodology for propagating the error from the
+al \cite{harb} \todo{cite Moataz's prelim}.  This work aims to produce a methodology for propagating the error from the
 neutron transport to the photon source and then from the photon source to the
 SDR.
 %This work explores the degree to which the neutron flux calculated in
 %each point in space are correlated.
 
 If a full R2S simulation is carried out, the final SDR has an error associated
-with the MC neutron and photon transport steps.  Introducing error from the photon transport
+with the MC neutron and photon transport steps.  As an approximation, the error from the photon transport
 step can be avoided by not performing MC photon transport and calculating the
 SDR using a form of Eq. \ref{eq:resp_adjf}
 \begin{equation}\label{eq:resp_v}
@@ -610,8 +617,8 @@ SDR, $\Re_{SDR}$ is then expressed as
 
 This error in the SDR can then be used to calculate the neutron transport
 FOM \cite{eb_prelim}
-\todo{This is shown in Elliott's prelim, but not thesis.  Is this still 
-an appropriate way to calculate the FOM?}
+%\todo{This is shown in Elliott's prelim, but not thesis.  Is this still 
+%an appropriate way to calculate the FOM?}
 which is important to quantifying the efficiency of TGT-CADIS.
 \begin{equation}\label{eq:fom}
 	FOM = \frac{SDR^2}{t_{proc}\sum_v{(SDR_v \Re_{SDR_v})^2}}
@@ -623,8 +630,8 @@ which is important to quantifying the efficiency of TGT-CADIS.
 \subsection{Assumptions and Practical Considerations}
 There are three very different time scales at play in the SDR analysis of 
 moving systems: photon transport,
-geometry movement, and decay involved in the full SDR analysis of a moving
-system.  Photon transport happens on a much
+geometry movement, and radioactive decay.
+Photon transport happens on a much
 faster time scale than the geometry movement, therefore it is reasonable to
 perform radiation transport on static step changes of the geometry
 configuration.  It is also assumed that the
@@ -646,10 +653,11 @@ In the case that the source strength is changing appreciably during geometry
 movement, a  series of photon sources that capture these changes over time
 will need to be used.  This will also require the calculation of different T
 values for each of these time steps.
-It is also assumed that the geometry is moving at a constant acceleration
-and therefore the components are located at each position for an equal amount of time.  If
-this was not true, the sum of adjoint photon fluxes would need to be weighted
-by time. 
+
+%It is also assumed that the geometry is moving at a constant acceleration
+%and therefore the components are located at each position for an equal amount of time.  If
+%this was not true, the sum of adjoint photon fluxes would need to be weighted
+%by time. 
 
 The exact degree to which these assumptions about time constants hold true
 needs to be explored. A set of recommendations %or a metric to establish 
@@ -660,7 +668,7 @@ be established.
 
 \subsubsection{Data management}
 The fully-optimized TR2S workflow involves the generation of many large
-CAD geometry and volume mesh files to use for deterministic and MC transport.
+CAD geometry and volume mesh files for deterministic and MC transport.
 The decision to store or delete and regenerate all or a subset of these data files needs to
 be investigated.
 %Will be generating a geometry file at each time step, 3-D flux maps for every adjoint
@@ -677,15 +685,16 @@ time-intensive for large geometries.  Because there is a DAGMC simulation for
 %step of geometry movement, 
 each configuration of the geometry, a new OBB tree will be built each time.  This could
 become rather cumbersome unless the OBB tree building is more efficient.
-Instead of building a new OBB tree for each geometry configuration, the OBB
-tree built for the original configuration could be stored and then the geometry
-transformation tool could be used to update the position of the boxes for each 
-new configuration.
+One possibility involves storing the OBB
+tree built for the original configuration and then using the geometry
+transformation tool to update the position of the boxes for each 
+new configuration instead of building a completely new tree every time.
 
 Depending on the level of discretization in time of the motion after shutdown,
 there could potentially be a large number of adjoint photon transport
 simulations to perform.  This may require the use of High Throughput Computing
-sources.
+sources and the production of supporting tools to run simulations and aggregate
+results.
 
 \section{Demonstration} \label{sec:demo}
 This section will outline the experiments proposed to demonstrate the utility
@@ -695,18 +704,19 @@ of TGT-CADIS.
 The same geometry used in the GT-CADIS experiment shown in Chapter \ref{ch:experiment}
 will be used to demonstrate the efficacy of TGT-CADIS.  The only difference
 is that a modular component of the chamber located on the far side of the
-detector will be moved to a location close to the detector.  
+detector will be moved to a location close to the detector as shown in Fig.
+\ref{fig:path}.  
 
-\begin{figure} \label{fig:mov_geom}
-    \caption [Geometry for TGT-CADIS Demonstration]
-	{Geometry to be used in TGT-CADIS Demonstration.}
-\end{figure}
+%\begin{figure} \label{fig:mov_geom}
+%    \caption [Geometry for TGT-CADIS Demonstration]
+%	{Geometry to be used in TGT-CADIS Demonstration.}
+%\end{figure}
 %\missingfigure
-\todo{Missing demo figure}
+%\todo{Missing demo figure}
 
 First, the TR2S process without any MC VR for the neutron or photon transport
-steps will be applied to this problem.  This will ultimately result in
-time-integrated SDR maps.
+steps will be applied to this problem.  This will result in an SDR map for each
+time step after shutdown.
 Next, the photon transport steps will be optimized via the CADIS method.  This
 will require deterministic adjoint photon simulations at each time step to
 produce VR parameters for the forward MC photon transport runs.
@@ -738,4 +748,13 @@ FES.
 
 
 \section{Summary}\label{sec:summary}
-
+Accurately quantifying the SDR is crucial step in the design and operation of
+FES in order to ensure that the facility is built and maintenance activities
+are planned in a manner that ensures the safety of plant personnel.
+Currently, tools and methods have been developed to calculate the SDR in static
+geometries.
+TGT-CADIS aims to provide the capabilities necessary to efficiently calculate
+the SDR at various time points during operations that involve activated
+components moving around the facility.
+%when activated components are moving around the facility.
+\todo{add more }

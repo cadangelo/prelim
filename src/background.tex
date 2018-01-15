@@ -97,9 +97,9 @@ statistical uncertainty than regions with high flux that are sampled very
 often.
 
 This uncertainty can be represented by the relative error, $\Re$,
-which is defined as the statistical precision, $sigma_{\overline{x}}$ (the average of
-the tally scores), divided by the mean, $\overline{x}$ (the standard
-deviation of the tally scores).  
+which is defined as the statistical precision, $\sigma_{\overline{x}}$ 
+(the standard deviation of the tally scores)
+divided by the mean, $\overline{x}$ (the average of the tally scores).
 \begin{equation} \label{eq:1.2}
 		\Re = \frac{\sigma_{\overline{x}}}{{\overline{x}}}
 \end{equation}
@@ -119,8 +119,7 @@ quadruple.
 
 The efficiency of MC calculations is measured by a quantity known as the figure of merit
 (FOM).  The FOM is a function of relative error, $\Re$, and computer processing
-time, $t_{proc}$, 
-as given by
+time, $t_{proc}$.
 \begin{equation} \label{eq:1.3}
 	FOM = \frac{1}{{{{\Re}^2}t_{proc}}}
 \end{equation}
@@ -135,8 +134,8 @@ analysis to calculate the SDR.
 
 \subsection{D1S}
 As its name implies, the D1S method performs coupled neutron-photon transport
-in a single simulation.  It relies upon a version of the MC code,
-MCNP5 \cite{mcnp_manual}, that has slight modifications as well as special 
+in a single simulation.  It relies upon a version of the Monte Carlo N-
+Particle (MCNP) transport code \cite{mcnp_manual}, that has slight modifications as well as special 
 cross-section data that replaces prompt gammas with decay gammas.
 %The nuclear data available in the standard MCNP code includes prompt photon 
 %production cross sections, $\sigma_{n,\gamma}$.
@@ -147,8 +146,10 @@ The version of MCNP5 used by D1S
 %includes a set of modified cross sections that
 %approximate the transmutation process.  This 
 allows the delayed 
-photons to be emitted as if they were prompt so they can be transported in the same simulations
-as neutrons. A time correction factor calculated with FISPACT \cite{fispact} is later applied.
+photons to be emitted as if they were prompt so they can be transported in the
+same simulation
+as the neutrons. A time correction factor calculated with FISPACT \cite{fispact} is later applied.
+
 The Advanced D1S \cite{adv-d1s} includes improvements to allow for the
 calculation of dose rate on a 3D mesh.
 Because both neutron and photon transport occur in the same simulation,
@@ -188,7 +189,7 @@ scored on a 3D mesh.
 Then, the geometry used for MC
 transport is discretized onto a mesh, a requirement of activation codes.  Using
 the mesh-based geometry/material description,
-multi-group neutron fluxes, and irradiation and decay scenario, the inventory code
+multi-group neutron fluxes, and an irradiation and decay scenario, the inventory code
 calculates the photon emission density in each mesh element for each decay time
 \cite{mcr2s}.  These photon emission density distributions are then used as
 sources for MC photon transport simulations.  
@@ -222,10 +223,10 @@ contribute to the tallies of interest.
 
 One way this is accomplished is by sampling from biased PDFs instead of the
 standard PDFs used in analog calculations that describe actual particle behavior.
-\todo{Wording: want to clearly make distinction btwn PDFs of actual, physical particle
-behavior and biased PDFs that modify real behavior}
+%\todo{Wording: want to clearly make distinction btwn PDFs of actual, physical particle
+%behavior and biased PDFs that modify real behavior}
 In order to compensate for this biased sampling, the particle statistical weight
-is adjusted as follows \cite{cadis}
+is adjusted \cite{cadis}.
 %The relationship between the particle statistical weight, $w$, and the PDF that
 %governs particle behavior is as follows
 \begin{equation} \label{eq:2.1}
@@ -233,11 +234,11 @@ is adjusted as follows \cite{cadis}
 \end{equation}
 If the biased sampling results in an event occurring more frequently than it
 does in reality,
-the particle weight is decreased and vice verse.  Sampling from biased PDFs 
+the particle weight is decreased and vice verse.  Using biased PDFs 
 to preferentially sample events that will result in an increased number of histories that
 contribute to the tally of interest 
 can decrease the standard deviation, and
-therfore relative error, $\Re$, which will increase the FOM.
+therefore relative error, $\Re$, which will increase the FOM.
 
 Another method of VR is particle splitting
 and rouletting.  
@@ -269,7 +270,8 @@ This is particularly useful in calculating results in heavily attenuated
 regions, like in FES.  Importances can be assigned in a way that will force
 particle flow towards the region of interest.
 
-The weight window method in the Monte Carlo N-Particle (MCNP) code utilizes both
+The weight window method in the Monte Carlo N-Particle (MCNP) code is a flow
+control method that utilizes particle
 splitting and rouletting.  A weight window is a region of phase-space that is 
 assigned an upper and lower bound.  The windows can be assigned to cells in the
 geometry, on a superimposed mesh, and to energy bins.  When a particle enters
@@ -277,10 +279,10 @@ a weight window, its weight is assessed; if its weight is above the upper bound,
 it is split and if it is below the lower bound, it is rouletted.  
 
 The manual generation of weight window bounds requires a priori knowledge of the problem physics and becomes increasingly difficult with the complexity of the geometry. 
-Historically, this process has required a considerable amount of time and effort of a skilled analystbut there are now various
-methods to produce these weight window bounds automatically which drastically reduces the
-effort required by the analyst.  Some of these methods will 
-be discussed in the following section.
+Historically, this process has required a considerable amount of time and
+effort of a skilled analyst, but there are now various
+methods to produce these weight window bounds automatically.
+Some of these methods will be discussed in the following section.
 
 
 \section{Automated Variance Reduction}\label{sec:auto_vr}
@@ -370,7 +372,8 @@ and substituted into Eq. \ref{eq:3.4}
 \begin{equation}\label{eq:resp_adjq}
 		R = \langle \Psi, q^{+} \rangle %= \langle \Psi^{+}, q \rangle
 \end{equation}
-the response has the same form as the right side of Eq. \ref{eq:3.2b}, therefore
+the response has the same form as the right side of Eq. \ref{eq:3.2b}.
+Therefore, 
 the response can also be written as a function of the adjoint solution
 \begin{equation}\label{eq:resp_adjf}
 		R = \langle \Psi^{+}, q \rangle
@@ -410,7 +413,7 @@ represented in terms of the adjoint flux by Eq. \ref{eq:resp_adjf}.
 %The MC solution of the response relies upon the sampling of the particle source
 %distribution, $q(\overrightarrow{r}, E, \widehat{\Omega})$, represented by a PDF.
 To decrease the variance, the CADIS method formulates a biased
-source distribution that represents the contribution of particles from phase space
+source distribution, $\widehat{q}$,  that represents the contribution of particles from phase space
 $(\overrightarrow{r}, E, \widehat{\Omega})$ 
 to the total detector response, R.
 \begin{equation} \label{eq:3.8}
@@ -501,7 +504,7 @@ the total forward response
 which means that in regions with low forward flux, the adjoint flux, and therefore
 importance, will be high and vice verse.  This will result in the overall goal of
 nearly equal statistical uncertainty in regions of interest.  
-\todo{mention that the formula for ww is same as cadis}
+%\todo{mention that the formula for ww is same as cadis}
 
 \section{Automated Variance Reduction for Multi-physics Analysis}\label{sec:auto_vr_sdr}
 
@@ -532,11 +535,11 @@ straightforward.
 %Because the response function depends on the subsequent
 %computational steps of activation and decay photon transport \cite{mscadis}.
 The Multi-Step CADIS method described in the next section 
-provides an explanation for this challenge and a method for solving it.
+provides an explanation for this challenge and a method for solving it.  
 
 \subsection{MS-CADIS}\label{sec:mscadis}
 The Multi-Step (MS)-CADIS method of VR was developed to optimize the primary
-radiation transport in a coupled, multi-step process.
+radiation transport in a coupled, multi-step process.  
 %The first implementation of this method 
 %was applied to the coupled neutron activation-photon decay process that occurs
 %in FES.  Specifically, it
@@ -549,16 +552,18 @@ final response of interest, not the response of that individual step \cite{mscad
 This is challenging because the the final response of interest depends on the subsequent 
 steps of the multi-step process.
 
-MS-CADIS can be applied to any coupled, multi-step process, but when applied to
+MS-CADIS can be applied to any coupled, multi-step process.  This will be discussed
+in more detail in Section \ref{sec:gen_mscadis}.  When it is applied to
 SDR calculations, it aims to increase the efficiency of the neutron transport step
 using an importance function that captures both the potential of regions to become 
-activated and their potential to produce decay photons that contribute tto the final SDR \cite{mscadis}.
+activated and their potential to produce decay photons that contribute to the final SDR \cite{mscadis}.
 
 %As shown before in Eq. *need eqn number*, //don't think this was mentioned
 The importance function represents the expected contribution from a particle 
 at some point in phase space to the detector response.
-In the theoretical scenario that every source particle contributes the exact 
-expected value, the detector response can be
+%In the theoretical scenario that every source particle contributes the exact 
+%expected value, 
+The detector response can be
 expressed as the inner product of the importance function, $I$, and the source
 distribution, $q$.
 \begin{equation} \label{eq:4.1}
@@ -599,7 +604,7 @@ From the adjoint identity, Eq. \ref{eq:3.2b}, the SDR can also be written as
   \phi_{\gamma}^{+}(\overrightarrow{r}, E_{\gamma}) \rangle 
 \end{equation}
 which has the same form as Eq. \ref{eq:4.1}.  Therefore, it can be seen that 
-the adjoint flux, $\phi_{\gamma}^+$, is the importance function.
+the adjoint flux, $\phi_{\gamma}^+$, is an importance function.
 %If the adjoint photon
 %source is chosen to be $\sigma_d$, the importance function, I,
 %is defined as the adjoint solution, $\phi_{\gamma}^{+}$
@@ -622,7 +627,7 @@ neutron response is set equal to the photon response.
 \end{equation}
 It can be seen that the far right side of Eq. \ref{eq:4.4} also has the same 
 form as Eq. \ref{eq:4.1} which means that the adjoint neutron flux, $\phi_n^+$, 
-serves as the importance function.
+serves as an importance function.
 
 Combining equations \ref{eq:4.3} and \ref{eq:4.4}, 
 gives the relationship between the neutron and photon responses.
@@ -656,7 +661,7 @@ source \cite{gtcadis}.
 
 Neutron activation is the cause of the photon decay source so the photon 
 source at a single point can be
-expressed as a non-linear function of $\phi_n$ 
+expressed as a non-linear function of $\phi_n$. 
 \begin{equation} \label{eq:4.8}
 	q_{\gamma}(E_{\gamma}) = \int_{E_n} f(\phi_{n}) dE_{n}
 \end{equation}
@@ -677,8 +682,8 @@ Eq. \ref{eq:Tdef} can then be substituted into Eq. \ref{eq:4.5} in order to
 solve for the adjoint neutron source as shown below
 \begin{equation} \label{eq:gt_adj_nsrc}
 	q_{n}^{+}(\overrightarrow{r},E_{n})
-        = \int_{E_p}T(\overrightarrow{r}, E_{n}, E_{p})
-	\phi_{p}^{+}(\overrightarrow{r}, E_{p}) dE_{p}
+	= \int_{E_{\gamma}}T(\overrightarrow{r}, E_{n}, E_{\gamma})
+	\phi_{\gamma}^{+}(\overrightarrow{r}, E_{\gamma}) dE_{\gamma}
 \end{equation}
 
 To calculate T, a series of single energy group neutron irradiations is 
@@ -703,7 +708,7 @@ transport for SDR analysis of FES.
 %currently modeled.
 
 \subsection{MCNP6 Moving Objects Capability} \label{sec:mcnp_move}
-Historically, Monte Carlo analysis of moving systems was performed using a 
+Historically, MC analysis of moving systems was performed using a 
 series of separate simulations with different input files that contained 
 step-wise changes of the geometry configuration. 
 The new moving object capability that will be available in a future version
@@ -757,7 +762,7 @@ different locations prior to the photon transport step.
 These geometry translations occur by creating a copy of the
 components that will move.  Transform cards are applied to the copies. 
 The original components remain in their original locations and their material
-is changed to vacuum.  Any source particle that starts in one of the
+is changed to vacuum.  Any photon source particle that starts in one of the
 components that moves after shutdown is automatically translated to the correct
 location. %according to the same transformation.
 
@@ -766,4 +771,16 @@ transformed copy are present during the photon transport step means that there
 can be no overlap between the parts which could be problematic for small
 transformations.
 
-\todo{add section: what hole is my work filling?}
+\section{The Gap}
+Given the current state of codes that perform MC radiation transport
+simulations and
+the methods of VR to make them more efficient, this work aims to fill in some
+of the gap that exists in tools and methods for the efficient analysis of dynamic, CAD-based
+geometries undergoing coupled, multi-physics processes.  More specifically, 1)
+functionality that updates the position of mesh-based geometries 
+%based on user-supplied motion vectors 
+has been created to allow for MCNP simulations of
+dynamic systems represented by CAD geometry and 2) the GT-CADIS method will be
+updated through the derivation of a time-integrated adjoint
+neutron source that has the ultimate purpose of optimizing the neutron
+transport step in the SDR analysis of a system that moves after shutdown.
