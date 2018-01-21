@@ -57,7 +57,7 @@ where L operates
 on some function $\Psi$ and b is a source term, will be used
 to describe a generic secondary physics.
 Because this is a coupled system, the source of secondary physics, is a function
-of the primary particle flux.
+of the primary particle flux, $b = f(\phi)$.
 %, $b(\phi)$.
 
 The adjoint identity for the neutral particle transport
@@ -88,127 +88,102 @@ form
 where $\langle \cdot \rangle$ signifies the integration over all phase space.
 \todo{Haven't found anything that states one variable can not be a function of
 the other variable in the inner product notation }
-For simplicity, a one-dimensional form of both primary and secondary physics
-will be used going forward.
 
-Assume this is a two-step system and the ultimate quantity of interest is the 
-response of the secondary physics
-which takes the form
-\begin{equation}\label{eq:response}
-%	R_{final} = \langle \sigma_b , \Psi \rangle
-	R_{final} = \int_s \omega_R(s)  \Psi(s) ds 
+In order to complete the generalized MS-CADIS derivation, it is necessary to
+assume that all responses of interest for both the primary physics and the
+secondary physics can be expressed as inner products of their solutions with
+some specific response functions.  Considering primary physics response $R_x$
+and secondary physics response $R_y$, there should be response functions,
+$\sigma_x$ and $\omega_y$, respectively, such that:
+\begin{eqnarray}
+   R_x(\phi) &=& \langle \sigma_x , \phi \rangle\\
+   R_y(\psi) &=& \langle \omega_y , \psi \rangle,
+\end{eqnarray}
+This is not strictly true in all cases.  However, since the
+MS-CADIS method is used only to derive variance reduction parameters, it is
+only necessary that an approximation exist that is sufficienctly accurate to
+provide benefit from such parameters.  This benefit would need to be
+demonstrated in any particular application of MS-CADIS.
+
+In particular, MS-CADIS requires this requirement to be true of the
+relationship between the source term for the secondary physics and the
+solution to the primary phyics,
+\begin{equation}\label{eq:coupling}
+  b = \langle \sigma_b, \phi \rangle,
 \end{equation}
-where $\omega_R$ is a detector response function and $s$ is the single independent
-variable.
-Defining the adjoint source to be equal to the detector response
-function results in the adjoint solution having physical meaning as the
-importance function for that detector. 
-%\todo{Not sure if this is clear.}
-Therefore, $b^{+}$ is substituted into Eq. \ref{eq:response}.
-%the left side of the identity in Eq. \ref{eq:adj_2_identity} has the same
-%form as Eq. \ref{eq:response}
-%if a detector response function is chosen as the adjoint source.
- \begin{equation}\label{eq:response_2}
-%	 R_{final} = \langle \phi_{2}(\overrightarrow{r},E), q_{2}^{+}(\overrightarrow{r},E) \rangle =
-%		\langle \phi_{2}^{+}(\overrightarrow{r},E) , q_{2}(\overrightarrow{r},E) \rangle
-	 %R_{final} = \langle \Psi, b^{+} \rangle 
-	 R_{final} = \int_s \Psi(s) b^{+}(s) ds 
-%		=\langle \Psi^{+} , b \rangle
- \end{equation}
-Combining Eq. \ref{eq:response_2} with the adjoint identity yields
- \begin{equation}\label{eq:adj_2}
-%	 R_{final} = \langle \phi_{2}(\overrightarrow{r},E), q_{2}^{+}(\overrightarrow{r},E) \rangle =
-%		\langle \phi_{2}^{+}(\overrightarrow{r},E) , q_{2}(\overrightarrow{r},E) \rangle
-	 %R_{final}=\langle \Psi^{+} , b \rangle
-	 R_{final}= \int_s \Psi^{+}(s) b(s) ds
- \end{equation}
+and of the relationship between the ultimate response of interest and the
+solution to the secondary physics,
+\begin{equation} \label{eq:response}
+  R_{final} = \langle \omega_R, \psi \rangle.
+\end{equation}
 
-For a coupled, multi-step process, the MS-CADIS method 
-sets the primary adjoint response equal to  
-the final response of the system.  This results in the adjoint solution
-representing
-the importance of the primary physics to the final response of the system.
-%(i.e. the response of the secondary physics)
- \begin{equation}\label{eq:adj_1}
-%	 R_{final} = \langle \phi_{1}(\overrightarrow{r},E), q_{1}^{+}(\overrightarrow{r},E) \rangle =
-%		\langle \phi_{1}^{+}(\overrightarrow{r},E) , q_{1}(\overrightarrow{r},E) \rangle
-	 R_{final} = \int_r \phi(r) q^{+}(r)  dr
-	 =\int_r \phi^{+}(r) q(r) dr
- \end{equation}
+For either physics, when the adjoint source is defined to be equal to a
+particular response function, the adjoint solution can be interpretted as the
+importance function for that particular response.  Therefore, for an adjoint source,
+$b^{+}$, that is defined as the response function, $\omega_R$, applying the
+adjoint identity to equation \ref{eq:response} results in
+\begin{equation}
+  R_{final} = \langle \omega_R, \psi \rangle = \langle b, \psi_R^{+}\rangle,
+\end{equation}
+where the subscript $R$ denotes that the adjoint solution, $\psi_R^{+}$, is an
+importance function for response $R$.
 
-	 
- 
-% \todo{Unsure about symbols chosen for secondary physics and not listing
-% explicit depedent variables here}
+Substituting equation \ref{eq:coupling} then gives:
+\begin{equation}
+  R_{final} = \left \langle \langle \sigma_b , \phi \rangle, \psi_R^{+} \right\rangle.
+\end{equation}
+By changing the order of integration between the phase space of the primary
+physics and that of the secondary physics, this can be rewritten as:
+\begin{equation}\label{eq:pseudo-response}
+  R_{final} = \left \langle \langle \sigma_b , \psi_R^{+} \rangle, \phi \right\rangle.
+\end{equation}
+Once again invoking the adjoint identity gives
+\begin{equation}
+  R_{final} = \left \langle \langle \sigma_b , \psi_R^{+} \rangle, \phi \right\rangle = \langle q, \phi_R^{+} \rangle,
+\end{equation}
+if
+\begin{equation}
+  q^{+} \equiv \langle \sigma_b , \psi_R^{+} \rangle.
+\end{equation}
+This implies that $\phi_R^{+}$ describes the importance function of the
+primary physics to the response of the secondary physics, and can be used in
+the CADIS methodology to find weight window parameters for the first physics
+that will ultimately accelerate the statistical convergence of the secondary
+physics.
 
-Ultimately, the goal is to find a solution to the adjoint
-primary radiation transport to use as an importance
-function for the forward calculation. Therefore, a
-source for the adjoint radiation transport is needed.
-Because this is a coupled, multi-step process, $q^{+}$ is a function of the
-secondary physics and therefore can not be uniquely defined.   
-MS-CADIS posits that there exists a way to represent an approximation of
-$q^{+}$ that can be used to speed up the forward calculation. 
+For a specific implementation in which the ultimate response is the prompt
+photon dose response, the secondary physics is photon transport, and the
+coupling term, $\sigma_b$, is the prompt photon production cross-section,
+$\sigma(E_n,E_p)$.  This is generally implemented as a single physics problem
+since the transport equations for neutrons and photons are identical, and this
+coupling term can appear as a scattering-like between neutrons and photons.
 
-Begin by equating the adjoint
-response equations in Eq. \ref{eq:adj_1} and \ref{eq:adj_2}, yields the
-following expression.
- \begin{equation}\label{eq:adj_src}
-%	 \langle \phi_{1}(\overrightarrow{r},E), q_{1}^{+}(\overrightarrow{r},E) \rangle =
-%	 \langle \phi_{2}^{+}(\overrightarrow{r},E) , q_{2}(\overrightarrow{r},E) \rangle
-	 \int_r \phi(r) q^{+}(r) dr =
-	 \int_s \Psi^{+}(s) b(s) ds
- \end{equation}
-In a practical scenario, the forward source of radiation (e.g. neutron
-source resulting from D-T fusion) will be known.  
-The adjoint source of secondary physics is chosen to be the response function for the
-detector of interest (e.g. flux-to-dose conversion factors).
-Given that these sources are known, both solutions, $ \phi $ and
-$\Psi^{+} $, can be found through transport operations.
-The source of the forward secondary, $b$,  and adjoint primary physics,
-$q^{+}$, are both unknown; therefore, a second equation is needed.  
-The source of the secondary physics is
-a response of the primary radiation transport therefore the two processes can be related
-by the following definition% \ref{eq:fwd_2src}
+For a specific implementation in which the ultimate response is the delayed
+photon dose response, the secondary physics is also photon transport, but the
+coupling term does not exist exactly.  
 
- \begin{equation}\label{eq:fwd_2src}
-%	 q_{2}(\overrightarrow{r},E_{2}) =
-%	 \langle \sigma_{1,2}, \phi_{1}(\overrightarrow{r},E_{1}) \rangle
-	 b(s) = \int_r \sigma_b(r,s) \phi(r) dr
- \end{equation}
-where $\sigma_b(r,s)$ is a function that couples the primary
-radiation transport to the secondary physics.
 
 Consider the process of neutron-induced prompt photon production.
 In this case, the function $\sigma_b$ is the neutron-gamma production
-cross section, $\sigma_{n,\gamma}$.  The primary focus of SDR analysis
+cross section, $\sigma_{n,\gamma}(E_n,E_\gamma)$.  Because the transport
+equations for neutrons and photons are identical, this is generally
+implemented as a single-physics problem, in which the coupling term
+$\sigma_{n,\gamma}$ appears as a scattering-like term between neutrons
+and photons.
+
+The primary focus of SDR analysis
 is the process of neutron-induced delayed gamma production. 
 GT-CADIS provides a method for calculating $\sigma_b$ when
 certain conditions (known as SNILB) hold true. In this case, $\sigma_b$ is the
-coupling term $T$, an approximation of the transmutation
+coupling term $T(E_n,E_\gamma)$, an approximation of the transmutation
 process \cite{gtcadis}.  
 
-As long as there is a solution for $\sigma_b$, the
-function that couples the primary and secondary physics together,
-there also exists a solution for the adjoint radiation transport source.
-This can be discovered by substituting Eq. \ref{eq:fwd_2src} into Eq. 
-\ref{eq:adj_src} 
-\begin{equation}\label{eq:sub_b}
-	\int_r q^{+}(r) \phi(r) dr 
-	= \int_s \bigg[ \int_r \sigma_b(r,s) \phi(r) dr \bigg] \Psi^{+}(s) ds
-\end{equation}
-and switching the order of integration
-\begin{equation}\label{eq:switch}
-	\int_r q^{+}(r) \phi(r) dr 
-	= \int_r \bigg[ \int_s \sigma_b(r,s) \Psi^{+}(s) ds \bigg] \phi(r) dr
-\end{equation}
-to solve for $q^{+}$.
-
- \begin{equation}\label{eq:adj_1src}
-%	 q_{1}^{+}(\overrightarrow{r},E_{1}) = 
-%	 \langle \sigma_{1,2}, \phi_{2}^{+}(\overrightarrow{r},E_{2}) \rangle
-	 q^{+} = \int_s \sigma_b(r,s) \Psi^{+}(s) ds
- \end{equation}
+An additional implication of this derivation is that there exists a response
+function that allows the direct calculation of the secondary physics response
+from the primary physics solution, as expressed in
+equation \ref{eq:pseudo-response}.  This is exact for prompt photons generated
+by a neutron source.  For delayed photons, this provides the underpinnings of
+the D1S methodology and the more recent NASCA implementation\cite{kit-nasca}.
 
 
 %\section{Time-integrated Solution of Adjoint Secondary Transport}
