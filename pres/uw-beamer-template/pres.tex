@@ -24,9 +24,9 @@
 %% Title
 \title{Variance Reduction for Multi-physics Analysis \\ of Moving Systems}
 %\subtitle{Graduate Student Seminar}
-\date{ Dec. 8, 2017}
+\date{ Feb. 2, 2018}
 \author{Chelsea D'Angelo}
-%\institute{University of Wisconsin}
+\institute{Preliminary Exam}
 \begin{frame}
 	\titlepage
 \end{frame}
@@ -60,9 +60,28 @@
 \end{frame}
 
 \begin{frame}
-\frametitle{SDR Analysis: Maintenance Operations}
+\frametitle{SDR Analysis: Movement After Shutdown}
 	\begin{itemize}
-		\item{During a maintenance procedure:}
+		\item{Example: maintenance procedure}
+			\begin{itemize}
+				\item{Need to move component(s) around facility}
+				\item{Interested in SDR at a particular
+					location}
+				\item{SDR will change as a function of the
+					activated component's position over
+					time}
+			\end{itemize}
+	\end{itemize}
+        \begin{figure}
+        	\centering
+        	\includegraphics[scale=0.3]{config-0.jpg}
+        \end{figure}
+
+\end{frame}
+\begin{frame}
+\frametitle{SDR Analysis: Movement After Shutdown}
+	\begin{itemize}
+		\item{Example: maintenance procedure}
 			\begin{itemize}
 				\item{Need to move component(s) around facility}
 				\item{Interested in SDR at a particular
@@ -80,12 +99,16 @@
 \end{frame}
 
 \begin{frame}{Goal}
-	\textbf{Optimize the MC radiation transport used to calculate the
-	dose
-	rate at a particular location as activated components are being
-	transported around the facility.}
+	\textbf{Optimize} the \textbf{radiation transport} 
+	simulation used to
+	calculate the \textbf{shutdown dose rate}
+	at a particular location as activated components are
+	\textbf{moving} around the facility.
 \end{frame}
 
+\begin{frame}{Computational Radiation Transport}
+Deterministic vs. MC
+\end{frame}
 
 \begin{frame}
 \frametitle{SDR Solution Methods}
@@ -159,14 +182,9 @@
 \end{figure}
 \end{itemize}
 \end{minipage}
-
+Add pros/cons of D1S, R2S
 \end{frame}
 
-\begin{frame}{Pros/cons of D1S and R2S}
-\end{frame}
-
-\begin{frame}{Why MC over Deterministic}
-\end{frame}
 
 \begin{frame}
 \frametitle{Monte Carlo Radiation Transport}
@@ -206,7 +224,7 @@
 \begin{itemize}
 \item{Techniques to modify particle behavior}
 \begin{itemize}
-	\item{\textbf{Goal}: preferentially sample events that will contribute to results of interest}
+	\item{\textbf{Goal:} preferentially sample events that will contribute to results of interest}
 \end{itemize}
 \item{Statistical weight of particles is adjusted to keep playing a fair game}
 \end{itemize}
@@ -214,11 +232,17 @@
 
 \begin{frame}
 \frametitle{Hybrid Deterministic/MC VR Methods: CADIS}
+	\begin{block}{\textbf{C}onsistent \textbf{A}djoint \textbf{D}riven
+	\textbf{I}mportance \textbf{S}ampling (CADIS)}
 \begin{itemize}
-\item{Consistent Adjoint Driven Importance Sampling (CADIS)}
-\item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to
-	generate \textbf{Monte Carlo} VR parameters}
 \item{Adjoint flux can define the importance of regions of phase space to the detector response}
+\item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to
+	generate \textbf{Monte Carlo} VR parameters in a \textbf{consistent}
+		manner}
+    \begin{itemize}
+    %\item{Adjoint transport $\sim$ "backwards" transport}
+    \item{Define detector response function to be the adjoint source}
+    \end{itemize}
 \end{itemize}
 
 
@@ -235,54 +259,51 @@
 		\rightarrow E', \widehat{\Omega} 
 		\rightarrow \widehat{\Omega}' )
        \end{equation}
-\begin{itemize}
-\item{Adjoint transport $\sim$ "backwards" transport}
-\item{Detector response function is the adjoint source}
-\end{itemize}
+\end{block}
 \end{frame}
 
 \begin{frame}
 \frametitle{Hybrid Deterministic/MC VR Methods: CADIS}
   \begin{itemize}
-  \item{Use the adjoint flux to generate MC source and transport biasing parameters in a consistent manner}
-    \begin{itemize}
-    \item{Source: sample from biased PDF}
-    \item{Transport: weight windows to control particle flow}
+  \item{Use the adjoint flux to generate MC source and transport biasing
+	  parameters}
 %    \item{Particles are born within weight windows}
-    \end{itemize}
   \end{itemize}
 	\begin{columns}
-        \column{0.5\textwidth}
-		\begin{itemize}
-			\item{Uniform vs. biased source distribution}
-		\end{itemize}
+        \column{0.45\textwidth}
+			\begin{block}%{Uniform vs. biased source distribution}
+                                     {Source: sample from biased PDF}
                 \begin{figure}
 		\centering
 		\includegraphics[scale=0.32]{bsrc_ex.jpg}
 		\end{figure}
-        \column{0.5\textwidth}
-		\begin{itemize}
-			\item{Splitting/rouletting with weight windows}
-		\end{itemize}
+			\end{block}
+        \column{0.45\textwidth}
+                \begin{block}{Transport: weight windows}
+			\vspace{0.1cm}
                 \begin{figure}
 		\centering
 		\includegraphics[scale=0.51]{ww_ex2.png}
 		\end{figure}
+                \end{block}
 	\end{columns}
 \end{frame}
 
 \begin{frame}
 \frametitle{Variance Reduction for SDR Analysis}
-\begin{itemize}
-	\item{VR for \textbf{photon} transport step is \textbf{straightforward}}
+%\begin{itemize}
+		\begin{block}{VR for \textbf{photon} transport}
   \begin{itemize}
+  \item{\textbf{Straightforward}}
   \item{Can use CADIS method to direct photons towards detector}
     \begin{itemize}
     \item{Flux-to-dose-rate conversion factors define adjoint source}
     \end{itemize}
   \end{itemize}
-\item{VR for \textbf{neutron} transport step is more \textbf{complicated}}
+	\end{block}
+		\begin{block}{VR for \textbf{neutron} transport}
     \begin{itemize}
+    \item{More \textbf{complicated}}
     \item{Biasing function needs to capture}
       \begin{enumerate}
         \item{Potential of regions to become activated}
@@ -291,75 +312,82 @@
     \item{Can use CADIS if we can construct adjoint source that will fulfill
 	    these criteria}
     \end{itemize}
-\end{itemize}
+\end{block}
+%\end{itemize}
 \end{frame}
 
 
 \begin{frame}
 \frametitle{Variance Reduction for SDR Analysis: MS-CADIS}
-\begin{itemize}
-\item{Multi-Step (MS)-CADIS}
+	\begin{block}{\textbf{M}ulti-\textbf{S}tep (MS)-CADIS}
   \begin{itemize}
-  \item {VR method to optimize the initial radiation transport step of a coupled, multi-step process}
+  \item {VR method to optimize the initial radiation transport step of a
+	  coupled, multi-step process}
+		  \begin{itemize}
+			  \item{Relies upon function that represents importance
+				  of particles to final response of
+				  interest}
+		  \end{itemize}
   \item{When applied to SDR analysis, MS-CADIS will optimize the neutron transport}
     \begin{itemize}
-    \item{Use a function that represents the   importance of the neutrons to
+    \item{Use function that represents the   importance of the neutrons to
 	    the final dose rate}
     \end{itemize}
   \end{itemize}
-\end{itemize}
- \centering
-	\begin{equation}
-	\int_{\overrightarrow{r}} \int_{E_n} \phi_n(\overrightarrow{r}, E_n)
-	q_n^+(\overrightarrow{r}, E_n) d\overrightarrow{r} dE_n = SDR
-	\end{equation}
-% \vspace{0.03 cm}
-
- \centering
-	\begin{equation}
-		SDR = \int_{\overrightarrow{r}} \int_{E_{\gamma}} 
-		\phi_{\gamma}^+(\overrightarrow{r}, E_{\gamma})
-		q_{\gamma}(\overrightarrow{r}, E_{\gamma})
-		dr dE_{\gamma} 
-	\end{equation}
+%\end{itemize}
+\end{block}
+% \centering
+%	\begin{equation}
+%	\int_{\overrightarrow{r}} \int_{E_n} \phi_n(\overrightarrow{r}, E_n)
+%	q_n^+(\overrightarrow{r}, E_n) d\overrightarrow{r} dE_n = SDR
+%	\end{equation}
+%% \vspace{0.03 cm}
+%
+% \centering
+%	\begin{equation}
+%		SDR = \int_{\overrightarrow{r}} \int_{E_{\gamma}} 
+%		\phi_{\gamma}^+(\overrightarrow{r}, E_{\gamma})
+%		q_{\gamma}(\overrightarrow{r}, E_{\gamma})
+%		dr dE_{\gamma} 
+%	\end{equation}
 \end{frame}
 
-\begin{frame}
-\frametitle{Variance Reduction for SDR Analysis: MS-CADIS}
-	\begin{itemize}
-		\item{Combining these equations:}
-	\end{itemize}
-	\begin{centering}
-	\begin{equation}
-	\int_{\overrightarrow{r}} \int_{E_n} \phi_n(\overrightarrow{r}, E_n)
-	q_n^+(\overrightarrow{r}, E_n) d\overrightarrow{r} dE_n =
-		\int_{\overrightarrow{r}} \int_{E_{\gamma}} 
-		\phi_{\gamma}^+(\overrightarrow{r}, E_{\gamma})
-		q_{\gamma}(\overrightarrow{r}, E_{\gamma})
-		d\overrightarrow{r} dE_{\gamma} 
-	\end{equation}
-	\end{centering}
-	\begin{itemize}
-		\item{To solve for the adjoint neutron source, $q_n^+$, a
-			relationship between $q_{\gamma}$
-			and $\phi_n$ is required}
-	\end{itemize}
-\centering
-\begin{equation}
-	q_{\gamma}(E_{\gamma}) = \int_{E_n} T(E_n, E_{\gamma}) \phi_n(E_n) dE_n
-\end{equation}
-
-
-\end{frame}
+%\begin{frame}
+%\frametitle{Variance Reduction for SDR Analysis: MS-CADIS}
+%	\begin{itemize}
+%		\item{Combining these equations:}
+%	\end{itemize}
+%	\begin{centering}
+%	\begin{equation}
+%	\int_{\overrightarrow{r}} \int_{E_n} \phi_n(\overrightarrow{r}, E_n)
+%	q_n^+(\overrightarrow{r}, E_n) d\overrightarrow{r} dE_n =
+%		\int_{\overrightarrow{r}} \int_{E_{\gamma}} 
+%		\phi_{\gamma}^+(\overrightarrow{r}, E_{\gamma})
+%		q_{\gamma}(\overrightarrow{r}, E_{\gamma})
+%		d\overrightarrow{r} dE_{\gamma} 
+%	\end{equation}
+%	\end{centering}
+%	\begin{itemize}
+%		\item{To solve for the adjoint neutron source, $q_n^+$, a
+%			relationship between $q_{\gamma}$
+%			and $\phi_n$ is required}
+%	\end{itemize}
+%\centering
+%\begin{equation}
+%	q_{\gamma}(E_{\gamma}) = \int_{E_n} T(E_n, E_{\gamma}) \phi_n(E_n) dE_n
+%\end{equation}
+%
+%\end{frame}
 		
 \begin{frame}
 \frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
 \begin{itemize}
-\item{Groupwise Transmutation (GT)-CADIS}
+	\item{\textbf{G}roupwise \textbf{T}ransmutation (GT)-CADIS}
   \begin{itemize}
   \item{Implementation of MS-CADIS specifically for SDR analysis}
   \item{Provides method to calculate optimal adjoint neutron source, $q_n^+$,
-	  by first calculating, T}
+	  by first calculating, T, a term that relates the neutron flux to
+		  photon source}
   \item{Calculate T:}
 	  \begin{enumerate}
 		  \item{Irradiate each material with neutrons from a single
@@ -397,9 +425,26 @@
 
 \end{frame}
 
+\begin{frame}{Moving Geometries}
+	\begin{itemize}
+		\item{MCNP6 Moving Objects}
+		\item{MCR2S}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{The Gap}
+	\begin{itemize}
+		\item{MCNP simulation of moving CAD-based geometries }
+		\item{VR technique to optimize initial radiation transport of
+			coupled, multi-physics processes in moving systems}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Intro GT Demo}
+\end{frame}
+
 \begin{frame}
 \frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
-
 \begin{itemize}
 \item{GT-CADIS workflow}
 \end{itemize}
@@ -495,6 +540,12 @@
 	\end{figure}
 	\end{columns}
 
+\end{frame}
+
+\begin{frame}{Need to derive new adj neutron source}
+\end{frame}
+\begin{frame}{Gen MS-CADIS}
+Back up a bit and look at MS-CADIS in generic fashion
 \end{frame}
 
 \begin{frame}
