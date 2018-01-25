@@ -44,20 +44,22 @@ MS-CADIS in a more generalized manner.
 To describe the system of coupled, multi-physics,
 the operator notation of the Boltzmann transport equation
 \begin{equation}
-	H\phi = q
+	H\phi(u) = q(u)
 \end{equation}
 where H operates on the particle flux $\phi$ and q is a source of particles, 
-will be used to represent the initial radiation transport.
+will be used to represent the initial radiation transport, defined over a
+phase space, $u$.
 An equation of the same form 
 \begin{equation}
-	L\Psi = b
+	L\Psi(v) = b(v)
 \end{equation}
 where L operates
 \todo{requirements for operator?-- not exactly sure what this means}
 on some function $\Psi$ and b is a source term, will be used
-to describe a generic secondary physics.
+to describe a generic secondary physics, defined on a potentially
+different phase space, $v$.
 Because this is a coupled system, the source of secondary physics, is a function
-of the primary particle flux, $b = f(\phi)$.
+of the primary particle flux, $b(v) = f(\phi(u))$.
 %, $b(\phi)$.
 
 The adjoint identity for the neutral particle transport
@@ -92,12 +94,12 @@ the other variable in the inner product notation }
 In order to complete the generalized MS-CADIS derivation, it is necessary to
 assume that all responses of interest for both the primary physics and the
 secondary physics can be expressed as inner products of their solutions with
-some specific response functions.  Considering primary physics response $R_x$
-and secondary physics response $R_y$, there should be response functions,
-$\sigma_x$ and $\omega_y$, respectively, such that:
+some specific response functions.  Considering primary physics response $M$
+and secondary physics response $N$, there should be response functions,
+$\sigma_M$ and $\omega_N$, respectively, such that:
 \begin{eqnarray}
-   R_x(\phi) &=& \langle \sigma_x , \phi \rangle\\
-   R_y(\psi) &=& \langle \omega_y , \psi \rangle,
+   M(\phi) &=& \langle \sigma_M , \phi \rangle\\
+   N(\psi) &=& \langle \omega_N , \psi \rangle,
 \end{eqnarray}
 This is not strictly true in all cases.  However, since the
 MS-CADIS method is used only to derive variance reduction parameters, it is
@@ -109,12 +111,12 @@ In particular, MS-CADIS requires this requirement to be true of the
 relationship between the source term for the secondary physics and the
 solution to the primary phyics,
 \begin{equation}\label{eq:coupling}
-  b = \langle \sigma_b, \phi \rangle,
+  b(v) = \langle \sigma_b(u,v), \phi(u) \rangle,
 \end{equation}
 and of the relationship between the ultimate response of interest and the
 solution to the secondary physics,
 \begin{equation} \label{eq:response}
-  R_{final} = \langle \omega_R, \psi \rangle.
+  R_{final} = \langle \omega_R(v), \psi(v) \rangle.
 \end{equation}
 
 For either physics, when the adjoint source is defined to be equal to a
@@ -130,20 +132,20 @@ importance function for response $R$.
 
 Substituting equation \ref{eq:coupling} then gives:
 \begin{equation}
-  R_{final} = \left \langle \langle \sigma_b , \phi \rangle, \psi_R^{+} \right\rangle.
+  R_{final} = \left \langle\  \langle \sigma_b(u,v) , \phi(u) \rangle,\  \psi_R^{+}(v) \right\rangle.
 \end{equation}
 By changing the order of integration between the phase space of the primary
 physics and that of the secondary physics, this can be rewritten as:
 \begin{equation}\label{eq:pseudo-response}
-  R_{final} = \left \langle \langle \sigma_b , \psi_R^{+} \rangle, \phi \right\rangle.
+  R_{final} = \left \langle \ \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle,\  \phi(u) \right\rangle.
 \end{equation}
 Once again invoking the adjoint identity gives
 \begin{equation}
-  R_{final} = \left \langle \langle \sigma_b , \psi_R^{+} \rangle, \phi \right\rangle = \langle q, \phi_R^{+} \rangle,
+  R_{final} = \left \langle \ \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle,\  \phi(u) \right\rangle = \langle q(u), \phi_R^{+}(u) \rangle,
 \end{equation}
 if
 \begin{equation}
-  q^{+} \equiv \langle \sigma_b , \psi_R^{+} \rangle.
+  q^{+}(u) \equiv \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle.
 \end{equation}
 This implies that $\phi_R^{+}$ describes the importance function of the
 primary physics to the response of the secondary physics, and can be used in
