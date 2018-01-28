@@ -619,31 +619,114 @@ Add pros/cons of D1S, R2S
 	\begin{itemize}
 		\item{MS-CADIS optimizes initial radiation transport step in a coupled, multi-step
 			process}
-		\item{}
+		\item{Need to derive new adj neutron source}
 	\end{itemize}
 
 \end{frame}
 
+\begin{frame}{Generalized MS-CADIS}
+%Back up a bit and look at MS-CADIS in generic fashion
+\begin{itemize}
+  \item{System of coupled, multi-physics:}
 
-\begin{frame}{Need to derive new adj neutron source}
-\end{frame}
-\begin{frame}{Gen MS-CADIS}
-Back up a bit and look at MS-CADIS in generic fashion
+	\begin{center}
+          \begin{equation}
+          	Primary:	H\phi(u) = q(u)
+          \end{equation}
+		\vspace{-0.4cm}          
+          \begin{equation}
+          	Secondary:	L\Psi(v) = b(v)
+          \end{equation}
+	\end{center}
+
+  \item{Adjoint identities:}
+	\begin{center}
+          \begin{equation}
+          	\langle \phi^{+}, q \rangle =
+          	\langle \phi, q^{+} \rangle 
+          \end{equation}
+		\vspace{-0.4cm}          
+          \begin{equation}
+          	\langle \Psi^{+}, b \rangle =
+          	\langle \Psi, b^{+} \rangle 
+          \end{equation}
+	\end{center}
+  \item{MS-CADIS requires a representation of the relationship between primary
+	  and secondary physics:}
+	\begin{center}
+          \begin{equation}\label{eq:coupling}
+            b(v) = \langle \sigma_b(u,v), \phi(u) \rangle,
+          \end{equation}
+        \end{center}
+\end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{Derive New Adjoint Neutron Source}
+\begin{frame}{Solving for the Adjoint Primary Source}
+\begin{itemize}
+\item{Response to secondary physics:}
+\begin{equation} \label{eq:response}
+  R_{final} = \langle \omega_R(v), \psi(v) \rangle
+\end{equation}
+\item{Set $\omega_R$ as adjoint source and invoke adjoint identity:}
+\begin{equation}
+  R_{final} = \langle \omega_R, \psi \rangle = \langle b, \psi_R^{+}\rangle
+\end{equation}
+\item{Substitute Eq. \ref{eq:coupling} :}
+\begin{equation}
+  R_{final} = \left \langle\  \langle \sigma_b(u,v) , \phi(u) \rangle,\
+	\psi_R^{+}(v) \ \right\rangle
+\end{equation}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Solving for the Adjoint Primary Source}
+\begin{itemize}
+	\item{Switch the order of integration}
+\begin{equation}\label{eq:pseudo-response}
+  R_{final} = \left \langle \ \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle,\
+	\phi(u) \ \right\rangle
+\end{equation}
+\item{Set response of primary physics equal to final response of the system and
+	invoke the adjoint identity to solve for $q^+$:}
+\begin{equation}
+  R_{final} = \left \langle \ \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle,\
+	\phi(u) \ \right\rangle = \langle q(u), \phi_R^{+}(u) \rangle,
+\end{equation}
+\begin{equation}
+  q^{+}(u) \equiv \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle.
+\end{equation}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Time-integrated Adjoint Neutron Source}
 	\begin{itemize}
-		\item{Geometry movement during photon transport effects the
+		\item{Geometry movement during secondary physics effects the
 			construction of the adjoint neutron source}
-		\item{Need to:}
+ \begin{equation}\label{eq:adj_src_1_avg}
+	 q_{v}^{+} =
+	 \int_{t}  \Psi^{+}(\overrightarrow{r}_{v}(t), t)
+	 \sigma_{c,v}(t)\, dt
+ \end{equation}
+	\end{itemize}
+	\begin{itemize}
+	\item	{Adjoint flux in volume element v at time t: 
+		$\Psi^{+}(\overrightarrow{r}_{v}(t), t)$ }
+	\item  {Position of volume element v at time t:
+		$\overrightarrow{r}_{v}(t)$ }
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}{Time-integrated GT-CADIS}
+	\begin{itemize}
+		\item{To apply time-integration to GT-CADIS:}
 			\begin{enumerate}
 				\item{Perform adjoint photon transport at each
 					time step of geometry movement}
 				\item{Integrate over time}
 			\end{enumerate}
 	\end{itemize}
-
   \begin{equation}\label{eq:adj_src_1_avg}
 	 q_{n,v}^{+}(E_{n}) =
 	 \int_{t}  \int_{E_{\gamma}}
@@ -659,6 +742,8 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 		element v, at decay time t}
 \end{itemize}
 \end{frame}
+
+
 
 \begin{frame}
 	\frametitle{Time-integrated GT-CADIS}
@@ -682,7 +767,42 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Time-integrated R2S}
+	\frametitle{Time-integrated GT-CADIS}
+	\begin{itemize}
+		\item{Discrete form:}
+\begin{equation}\label{eq:T}
+	T_{v,g,h} = \dfrac{q_{\gamma,v,h}(\phi_{n,v,g})}{\phi_{n,v,g}}
+\end{equation}
+\begin{equation}\label{eq:tgt_n_src}
+	q_{n,v,g}^{+} = \frac
+	{\sum_{t_{mov}}\big(\sum_{h} T_{v,g,h}
+	\phi_{\gamma,v,h,t_{mov}}^{+}\big) \Delta t_{mov}}
+	{t_{tot}}
+\end{equation}
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Progress: MC Moving Geometry Simulations}
+	\begin{itemize}
+		\item{Tools to update position of geometry based on
+			user-defined motion data}
+			\begin{enumerate}
+				\item{Tool to produce step-wise geometry files}
+				\item{DAGMC update to facilitate on-the-fly
+					geometry transformations} 
+			\end{enumerate}
+		\item{Common functionality:}
+			\begin{itemize}
+				\item{}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Implementation plan}
+\end{frame}
+
+\begin{frame}{Time-integrated R2S: Analog}
 	\begin{itemize}
 		\item{R2S workflow for geometry movement after shutdown}
 	\end{itemize}
@@ -690,24 +810,26 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 	\begin{figure}
         \centering
 
-        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
-        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
-        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
+		node distance=2.8cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
+		distance=2.8cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=2.8cm]
         \tikzstyle{line} = [draw, -latex]
         \tikzstyle{arrow} = [thick, ->, >=stealth]
         
-	\resizebox{!}{4cm}{
-        \begin{tikzpicture}[node distance = 2 cm, auto]
+	\resizebox{!}{3.9cm}{
+        \begin{tikzpicture}[node distance = 1 cm, auto]
 		% Optimized neutron transport
 		\node [code] (nmc) {Monte Carlo neutron transport};
-                \node [file, left of = nmc, yshift=-0.9 cm, xshift=-1.8cm] (nflux) {Neutron flux};
-		\node [file, right of = nmc, yshift=-0.9cm, xshift=1.9cm]
+                \node [file, left of = nmc, yshift=-0.9 cm, xshift=-2.1cm] (nflux) {Neutron flux};
+		\node [file, right of = nmc, yshift=-0.9cm, xshift=2.1cm]
 		(irrdec) {Irradiation and decay scenario};
 		\node [script, below of = nmc, yshift=1.2cm] (act) {Activation analysis};
-                \node [file, left of = act, yshift=-0.9cm, xshift=-1.8cm] (psrc) {Photon source};
+                \node [file, left of = act, yshift=-0.8cm, xshift=-2.1cm] (psrc) {Photon source};
 		\node [code, below of = act, yshift=1.2cm] (pmc) {Monte Carlo
 		photon transport at each time step};
-                \node [file, below of = pmc, yshift=0.1cm] (sdr) {Shutdown dose
+                \node [file, below of = pmc, yshift=1.2cm] (sdr) {Shutdown dose
 		rate at each time step};
 		\path [line] (nmc) -- (nflux);
                 \path [line] (nflux) -- (act);
@@ -721,6 +843,16 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 %	\caption{R2S workflow \label{fig:r2s_flow}}
 \end{figure}
 \end{frame}
+
+\begin{frame}{TGT-CADIS: Generate VR Parameters}
+	\begin{itemize}
+		\item{
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Time-integrated R2S: Neutron and Photon VR}
+\end{frame}
+
 \begin{frame}
 	\frametitle{Time-integrated GT-CADIS}
 	\begin{itemize}
@@ -747,6 +879,9 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 			\end{itemize}
 	\end{itemize}
 	
+\end{frame}
+
+\begin{frame}{Summary}
 \end{frame}
 
 \begin{frame}[c]
