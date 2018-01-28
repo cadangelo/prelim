@@ -717,6 +717,15 @@ Add pros/cons of D1S, R2S
 	\end{itemize}
 \end{frame}
 
+\begin{frame}
+
+%	\includegraphics[scale=0.27, xshift=-3cm]{mesh_config-5.jpg}
+	\begin{center}
+	%\animategraphics[loop,controls,width=\textwidth]{5}{config-}{0}{5}
+	\transduration<0-5>{0}
+	\multiinclude[<+->][format=jpg, graphics={ scale=0.3}]{mesh_config}
+	\end{center}
+\end{frame}
 
 \begin{frame}{Time-integrated GT-CADIS}
 	\begin{itemize}
@@ -743,7 +752,41 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 \end{itemize}
 \end{frame}
 
+\begin{frame}{Time-integrated Adjoint Neutron Source}
+	\begin{itemize}
+		\item{Average the adjoint photon flux calculated at each time step}
+	\end{itemize}
+\begin{equation}\label{eq:sum}
+	\phi_{\gamma,v, h}^{+} =
+	\frac{\sum_{t_{mov}}{\phi_{\gamma,v,h,t_{mov}}^{+}}\Delta{t_{mov}}}
+	{t_{tot}}
+\end{equation}
+        \begin{figure}
+	\centering
+		\hspace{1.6cm}
+	\includegraphics[scale=0.30]{mesh_total.jpg}
+	\end{figure}
 
+\end{frame}
+
+\begin{frame}{Time-integrated Adjoint Neutron Source}
+	\begin{itemize}
+          \item{Calculate T for each voxel}
+
+	    \begin{equation}\label{eq:T}
+	  	T_{v,g,h} = \dfrac{q_{\gamma,v,h}(\phi_{n,v,g})}{\phi_{n,v,g}}
+	    \end{equation}
+
+	  \item{Combine with adjoint photon flux in each voxel}
+
+	    \begin{equation}\label{eq:tgt_n_src}
+	    	q_{n,v,g}^{+} = \frac
+	    	{\sum_{t_{mov}}\big(\sum_{h} T_{v,g,h}
+	    	\phi_{\gamma,v,h,t_{mov}}^{+}\big) \Delta t_{mov}}
+	    	{t_{tot}}
+	    \end{equation}
+	\end{itemize}
+\end{frame}
 
 \begin{frame}
 	\frametitle{Time-integrated GT-CADIS}
@@ -766,22 +809,6 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Time-integrated GT-CADIS}
-	\begin{itemize}
-		\item{Discrete form:}
-\begin{equation}\label{eq:T}
-	T_{v,g,h} = \dfrac{q_{\gamma,v,h}(\phi_{n,v,g})}{\phi_{n,v,g}}
-\end{equation}
-\begin{equation}\label{eq:tgt_n_src}
-	q_{n,v,g}^{+} = \frac
-	{\sum_{t_{mov}}\big(\sum_{h} T_{v,g,h}
-	\phi_{\gamma,v,h,t_{mov}}^{+}\big) \Delta t_{mov}}
-	{t_{tot}}
-\end{equation}
-
-	\end{itemize}
-\end{frame}
 
 \begin{frame}{Progress: MC Moving Geometry Simulations}
 	\begin{itemize}
@@ -846,7 +873,7 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 
 \begin{frame}{TGT-CADIS: Generate VR Parameters}
 	\begin{itemize}
-		\item{
+		\item{}
 	\end{itemize}
 \end{frame}
 
