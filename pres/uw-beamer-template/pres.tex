@@ -2,6 +2,7 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows}
 \usetikzlibrary{shapes.multipart}
+\usetikzlibrary{automata,positioning}
 \usepackage{animate}
 \usepackage{xmpmulti}
 
@@ -655,7 +656,7 @@ Add pros/cons of D1S, R2S
 	  and secondary physics:}
 	\begin{center}
           \begin{equation}\label{eq:coupling}
-            b(v) = \langle \sigma_b(u,v), \phi(u) \rangle,
+            b(v) = \langle \sigma_b(u,v), \phi(u) \rangle
           \end{equation}
         \end{center}
 \end{itemize}
@@ -691,33 +692,33 @@ Add pros/cons of D1S, R2S
 	invoke the adjoint identity to solve for $q^+$:}
 \begin{equation}
   R_{final} = \left \langle \ \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle,\
-	\phi(u) \ \right\rangle = \langle q(u), \phi_R^{+}(u) \rangle,
+	\phi(u) \ \right\rangle = \langle q(u), \phi_R^{+}(u) \rangle
 \end{equation}
 \begin{equation}
-  q^{+}(u) \equiv \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle.
+  q^{+}(u) \equiv \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle
 \end{equation}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Time-integrated Adjoint Neutron Source}
+\begin{frame}{Time-integrated Adjoint Primary Source}
 	\begin{itemize}
-		\item{Geometry movement during secondary physics effects the
+	\item{Geometry movement during secondary physics effects the
 			construction of the adjoint neutron source}
- \begin{equation}\label{eq:adj_src_1_avg}
-	 q_{v}^{+} =
-	 \int_{t}  \Psi^{+}(\overrightarrow{r}_{v}(t), t)
-	 \sigma_{c,v}(t)\, dt
- \end{equation}
+	   \begin{itemize}
+	   \item	{Adjoint flux in volume element v at time t: 
+	   	$\Psi^{+}(\overrightarrow{r}_{v}(t), t)$ }
+	   \item  {Position of volume element v at time t:
+	   	$\overrightarrow{r}_{v}(t)$ }
+	   \end{itemize}
+        \begin{equation}\label{eq:adj_src_1_avg}
+       	 q_{v}^{+} =
+       	 \int_{t}  \Psi^{+}(\overrightarrow{r}_{v}(t), t)
+       	 \sigma_{b,v}(t)\, dt
+        \end{equation}
 	\end{itemize}
-	\begin{itemize}
-	\item	{Adjoint flux in volume element v at time t: 
-		$\Psi^{+}(\overrightarrow{r}_{v}(t), t)$ }
-	\item  {Position of volume element v at time t:
-		$\overrightarrow{r}_{v}(t)$ }
-	\end{itemize}
-\end{frame}
+%\end{frame}
 
-\begin{frame}
+%\begin{frame}
 
 %	\includegraphics[scale=0.27, xshift=-3cm]{mesh_config-5.jpg}
 	\begin{center}
@@ -826,8 +827,8 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Implementation plan}
-\end{frame}
+%\begin{frame}{Implementation plan}
+%\end{frame}
 
 \begin{frame}{Time-integrated R2S: Analog}
 	\begin{itemize}
@@ -871,10 +872,277 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 \end{figure}
 \end{frame}
 
+\begin{frame}{Time-integrated R2S: VR  for Neutron Transport }
+	\begin{itemize}
+		\item{R2S workflow for geometry movement after shutdown}
+	\end{itemize}
+	\vspace{1cm}
+	\begin{figure}
+        \centering
+
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
+		node distance=2.8cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
+		distance=2.8cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=2.8cm]
+        \tikzstyle{line} = [draw, -latex]
+        \tikzstyle{arrow} = [thick, ->, >=stealth]
+        
+	\resizebox{!}{3.9cm}{
+        \begin{tikzpicture}[node distance = 1 cm, auto]
+		% Optimized neutron transport
+		\node [code] (nmc) {Monte Carlo neutron transport};
+                \node [file, left of = nmc, yshift=-0.9 cm, xshift=-2.1cm] (nflux) {Neutron flux};
+		\node [file, right of = nmc, yshift=-0.9cm, xshift=2.1cm]
+		(irrdec) {Irradiation and decay scenario};
+		\node [script, below of = nmc, yshift=1.2cm] (act) {Activation analysis};
+                \node [file, left of = act, yshift=-0.8cm, xshift=-2.1cm] (psrc) {Photon source};
+		\node [code, below of = act, yshift=1.2cm] (pmc) {Monte Carlo
+		photon transport at each time step};
+                \node [file, below of = pmc, yshift=1.2cm] (sdr) {Shutdown dose
+		rate at each time step};
+		\path [line] (nmc) -- (nflux);
+                \path [line] (nflux) -- (act);
+                \path [line] (irrdec) -- (act);
+                \path [line] (act) -- (psrc);
+                \path [line] (psrc) -- (pmc);
+		\path [line] (pmc) -- (sdr);
+
+	\end{tikzpicture}
+        }
+%	\caption{R2S workflow \label{fig:r2s_flow}}
+\end{figure}
+\end{frame}
+
+%%%%% 1. Prepare geometries
+\begin{frame}{TGT-CADIS: Generate VR Parameters}
+\begin{columns}
+\column{0.5\textwidth}
+	\begin{itemize}
+		\item{}
+	\end{itemize}
+		
+\column{0.5\textwidth}
+\begin{figure}
+\centering
+
+	\resizebox{!}{9cm}{
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{line} = [draw, -latex']
+        
+        %\begin{tikzpicture}[node distance = 2 cm, auto]
+        \begin{tikzpicture}[every text node part/.style={align=center}]
+        	%Generate adj gamma Partisn input
+                \node [file] (pgeom0) {DAGMC geom at $t_{mov}=0$};
+		\node [script, below = 0.4 of pgeom0] (dagtrans) {DAGMC
+		transform tool};
+		\phantom{ \node [script, below = 0.4 of dagtrans] (partgen) {Prepare
+		PARTISN};}
+                \node [file, left = 0.9 of partgen] (pgeomi) {DAGMC geom
+		at $t_{mov}$};
+		\phantom{                \node [file, right=0.9 of partgen] (f2d) {Flux-to-dose conversion factors};
+                \node [file, below =0.4 of partgen] (ppartinp) {PARTISN input
+		file};}
+                \path [line] (pgeom0) -- (dagtrans);
+		\path [line] (dagtrans) -- (pgeomi);
+		\phantom{                \path [line] (pgeomi) -- (partgen);
+                \path [line] (f2d) -- (partgen);
+		\path [line] (partgen) -- (ppartinp);}
+\phantom{        	% Partisn adj gamma transport
+                \node [code, below =0.4 of ppartinp] (partadjp) {PARTISN adjoint $\gamma$ transport};
+        	\node [file, below =0.4 of partadjp] (padjf)
+		{PARTISN$\phi_{\gamma, t_{mov}}^{+}$ file};
+        	\node [script, below =0.4 of padjf] (pf2mesh) {PyNE.R2S \\
+		convert PARTISN to voxel mesh};
+		\node [file, below =0.4 of pf2mesh] (padjfvmesh)
+		{$\phi_{\gamma,t_{mov}}^{+}$ voxel mesh};
+        	\node [script, below =0.4 of padjfvmesh] (conv_v_t){Convert voxel to tet};
+        	\node [file, below =0.4 of
+		conv_v_t](padjftmesh){$\phi_{\gamma,t_{mov}}^{+}$ tet mesh};
+		\node [script, below =0.4 of padjftmesh](sum){Sum
+		$\phi_{\gamma,t_{mov}}^{+}$over all time steps};
+		\node [file, below =0.4 of sum](avgadjft){$\phi_{\gamma}^{+}$ tet mesh};
+        	\node [script, below =0.4 of avgadjft] (conv_t_v){Convert tet to voxel};
+		\node [file, below =0.4 of conv_t_v](avgadjfv){${\phi_{\gamma}^{+}}$ voxel mesh};
+        	\path [line] (ppartinp) -- (partadjp);
+        	\path [line] (partadjp) -- (padjf);
+        	\path [line] (padjf) -- (pf2mesh);
+        	\path [line] (pf2mesh) -- (padjfvmesh);
+		\path [line] (padjfvmesh) -- (conv_v_t);
+		\path [line] (conv_v_t) -- (padjftmesh);
+		\path [line] (padjftmesh) -- (sum);
+		\path [line] (sum) -- (avgadjft);
+		\path [line] (avgadjft) -- (conv_t_v);
+		\path [line] (conv_t_v) -- (avgadjfv);
+	    	% Generate adj n source
+        	\node [script, below =0.4 of avgadjfv] (gtcadis) {gtcadis.py}; 
+		\node [file, left =0.9 of gtcadis] (ngeom) {DAGMC geom at
+		$t_{mov}$};
+        	\node [file, right =0.9 of gtcadis] (matlib) {ALARA material library};
+        	\node [file, below =0.4 of gtcadis] (nadjs) {$q_{n}^{+}$ voxel mesh};
+        	\path [line] (ngeom) -- (gtcadis);
+        	\path [line] (avgadjfv) -- (gtcadis);
+        	\path [line] (matlib) -- (gtcadis);
+        	\path [line] (gtcadis) -- (nadjs);
+}%phantom		
+        \end{tikzpicture}
+	}%resizebox
+	\end{figure}
+\end{columns}
+\end{frame}
+
+%%%% 2. Adjoint Photon Transport
+\begin{frame}{TGT-CADIS: Generate VR Parameters}
+\begin{columns}
+\column{0.45\textwidth}
+	\begin{itemize}
+		\item{}
+	\end{itemize}
+		
+\column{0.55\textwidth}
+\begin{figure}
+\centering
+
+	\resizebox{!}{9cm}{
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{line} = [draw, -latex']
+        
+        %\begin{tikzpicture}[node distance = 2 cm, auto]
+        \begin{tikzpicture}[every text node part/.style={align=center}]
+        	%Generate adj gamma Partisn input
+                \node [file] (pgeom0) {DAGMC geom at $t_{mov}=0$};
+		\node [script, below = 0.4 of pgeom0] (dagtrans) {DAGMC
+		transform tool};
+		\node [script, below = 0.4 of dagtrans] (partgen) {Prepare
+		PARTISN};
+                \node [file, left = 0.9 of partgen] (pgeomi) {DAGMC geom
+		at $t_{mov}$};
+		\node [file, right=0.9 of partgen] (f2d) {Flux-to-dose \\ 
+		conversion factors};
+                \node [file, below =0.4 of partgen] (ppartinp) {PARTISN input
+		file};
+                \path [line] (pgeom0) -- (dagtrans);
+		\path [line] (dagtrans) -- (pgeomi);
+		\path [line] (pgeomi) -- (partgen);
+                \path [line] (f2d) -- (partgen);
+		\path [line] (partgen) -- (ppartinp);
+        	% Partisn adj gamma transport
+                \node [code, below =0.4 of ppartinp] (partadjp) {PARTISN adjoint $\gamma$ transport};
+        	\node [file, below =0.4 of partadjp] (padjf)
+		{PARTISN$\phi_{\gamma, t_{mov}}^{+}$ file};
+        	\node [script, below =0.4 of padjf] (pf2mesh) {PyNE.R2S \\
+		convert PARTISN to voxel mesh};
+		\node [file, below =0.4 of pf2mesh] (padjfvmesh)
+		{$\phi_{\gamma,t_{mov}}^{+}$ voxel mesh};
+        	\path [line] (ppartinp) -- (partadjp);
+        	\path [line] (partadjp) -- (padjf);
+        	\path [line] (padjf) -- (pf2mesh);
+        	\path [line] (pf2mesh) -- (padjfvmesh);
+\phantom{	\node [script, below =0.4 of padjfvmesh] (conv_v_t){Convert voxel to tet};
+        	\node [file, below =0.4 of
+		conv_v_t](padjftmesh){$\phi_{\gamma,t_{mov}}^{+}$ tet mesh};
+		\node [script, below =0.4 of padjftmesh](sum){Sum
+		$\phi_{\gamma,t_{mov}}^{+}$over all time steps};
+		\node [file, below =0.4 of sum](avgadjft){$\phi_{\gamma}^{+}$ tet mesh};
+        	\node [script, below =0.4 of avgadjft] (conv_t_v){Convert tet to voxel};
+		\node [file, below =0.4 of conv_t_v](avgadjfv){${\phi_{\gamma}^{+}}$ voxel mesh};
+		\path [line] (padjfvmesh) -- (conv_v_t);
+		\path [line] (conv_v_t) -- (padjftmesh);
+		\path [line] (padjftmesh) -- (sum);
+		\path [line] (sum) -- (avgadjft);
+		\path [line] (avgadjft) -- (conv_t_v);
+		\path [line] (conv_t_v) -- (avgadjfv);
+	    	% Generate adj n source
+        	\node [script, below =0.4 of avgadjfv] (gtcadis) {gtcadis.py}; 
+		\node [file, left =0.9 of gtcadis] (ngeom) {DAGMC geom at
+		$t_{mov}$};
+        	\node [file, right =0.9 of gtcadis] (matlib) {ALARA material library};
+        	\node [file, below =0.4 of gtcadis] (nadjs) {$q_{n}^{+}$ voxel mesh};
+        	\path [line] (ngeom) -- (gtcadis);
+        	\path [line] (avgadjfv) -- (gtcadis);
+        	\path [line] (matlib) -- (gtcadis);
+        	\path [line] (gtcadis) -- (nadjs);
+}%phantom		
+        \end{tikzpicture}
+	}%resizebox
+	\end{figure}
+\end{columns}
+\end{frame}
+
 \begin{frame}{TGT-CADIS: Generate VR Parameters}
 	\begin{itemize}
 		\item{}
 	\end{itemize}
+\begin{figure}
+\centering
+
+	\resizebox{!}{9cm}{
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{line} = [draw, -latex']
+        
+        %\begin{tikzpicture}[node distance = 2 cm, auto]
+        \begin{tikzpicture}[every text node part/.style={align=center}]
+        	%Generate adj gamma Partisn input
+                \node [file] (pgeom0) {DAGMC geom at $t_{mov}=0$};
+		\node [script, below = 0.4 of pgeom0] (dagtrans) {DAGMC
+		transform tool};
+                \node [script, below = 0.4 of dagtrans] (partgen) {Prepare
+		PARTISN};
+                \node [file, left = 0.9 of partgen] (pgeomi) {DAGMC geom
+		at $t_{mov}$};
+                \node [file, right=0.9 of partgen] (f2d) {Flux-to-dose conversion factors};
+                \node [file, below =0.4 of partgen] (ppartinp) {PARTISN input file};
+                \path [line] (pgeom0) -- (dagtrans);
+		\path [line] (dagtrans) -- (pgeomi);
+                \path [line] (pgeomi) -- (partgen);
+                \path [line] (f2d) -- (partgen);
+        	\path [line] (partgen) -- (ppartinp);
+        	% Partisn adj gamma transport
+                \node [code, below =0.4 of ppartinp] (partadjp) {PARTISN adjoint $\gamma$ transport};
+        	\node [file, below =0.4 of partadjp] (padjf)
+		{PARTISN$\phi_{\gamma, t_{mov}}^{+}$ file};
+        	\node [script, below =0.4 of padjf] (pf2mesh) {PyNE.R2S \\
+		convert PARTISN to voxel mesh};
+		\node [file, below =0.4 of pf2mesh] (padjfvmesh)
+		{$\phi_{\gamma,t_{mov}}^{+}$ voxel mesh};
+        	\node [script, below =0.4 of padjfvmesh] (conv_v_t){Convert voxel to tet};
+        	\node [file, below =0.4 of
+		conv_v_t](padjftmesh){$\phi_{\gamma,t_{mov}}^{+}$ tet mesh};
+		\node [script, below =0.4 of padjftmesh](sum){Sum
+		$\phi_{\gamma,t_{mov}}^{+}$over all time steps};
+		\node [file, below =0.4 of sum](avgadjft){$\phi_{\gamma}^{+}$ tet mesh};
+        	\node [script, below =0.4 of avgadjft] (conv_t_v){Convert tet to voxel};
+		\node [file, below =0.4 of conv_t_v](avgadjfv){${\phi_{\gamma}^{+}}$ voxel mesh};
+        	\path [line] (ppartinp) -- (partadjp);
+        	\path [line] (partadjp) -- (padjf);
+        	\path [line] (padjf) -- (pf2mesh);
+        	\path [line] (pf2mesh) -- (padjfvmesh);
+		\path [line] (padjfvmesh) -- (conv_v_t);
+		\path [line] (conv_v_t) -- (padjftmesh);
+		\path [line] (padjftmesh) -- (sum);
+		\path [line] (sum) -- (avgadjft);
+		\path [line] (avgadjft) -- (conv_t_v);
+		\path [line] (conv_t_v) -- (avgadjfv);
+	    	% Generate adj n source
+        	\node [script, below =0.4 of avgadjfv] (gtcadis) {gtcadis.py}; 
+		\node [file, left =0.9 of gtcadis] (ngeom) {DAGMC geom at
+		$t_{mov}$};
+        	\node [file, right =0.9 of gtcadis] (matlib) {ALARA material library};
+        	\node [file, below =0.4 of gtcadis] (nadjs) {$q_{n}^{+}$ voxel mesh};
+        	\path [line] (ngeom) -- (gtcadis);
+        	\path [line] (avgadjfv) -- (gtcadis);
+        	\path [line] (matlib) -- (gtcadis);
+        	\path [line] (gtcadis) -- (nadjs);
+		
+        \end{tikzpicture}
+	}
+	\end{figure}
 \end{frame}
 
 \begin{frame}{Time-integrated R2S: Neutron and Photon VR}
