@@ -19,6 +19,19 @@
 \addtolength{\highlightheight}{\highlightdepth}
 \newcommand*{\Highlight}{\rlap{\textcolor{HighlightBackground}{\rule[-\highlightdepth]{\linewidth}{\highlightheight}}}}
 
+
+\AtBeginSection[]{
+  \begin{frame}
+  \vfill
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+    \usebeamerfont{title}\insertsectionhead\par%
+  \end{beamercolorbox}
+  \vfill
+  \end{frame}
+}
+
+%\graphicspath{../../src/figs}
 %% Slides
 
 %% Title
@@ -28,9 +41,11 @@
 \author{Chelsea D'Angelo}
 \institute{Preliminary Exam}
 \begin{frame}
-	\titlepage
+%	\titlepage
+	\maketitle
 \end{frame}
 
+\section{Introduction}
 %%Background
 \begin{frame}
 	\frametitle{Shutdown Dose Rate (SDR) Analysis}
@@ -388,7 +403,7 @@ Add pros/cons of D1S, R2S
   \item{Provides method to calculate optimal adjoint neutron source, $q_n^+$,
 	  by first calculating, T, a term that relates the neutron flux to
 		  photon source}
-  \item{Calculate T:}
+	  \item{Calculate T: (move this to later slide)}
 	  \begin{enumerate}
 		  \item{Irradiate each material with neutrons from a single
 			  energy group, g}
@@ -410,7 +425,7 @@ Add pros/cons of D1S, R2S
 \frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
 
 \begin{itemize}
-	\item{Use T to solve for adjoint neutron source:}
+	\item{MOVE:Use T to solve for adjoint neutron source:}
 \end{itemize}
 \centering
 \begin{equation}
@@ -425,22 +440,74 @@ Add pros/cons of D1S, R2S
 
 \end{frame}
 
-\begin{frame}{Moving Geometries}
+\begin{frame}{Moving Geometries and Sources}
+	\begin{block}{MCNP6 Moving Objects}
 	\begin{itemize}
-		\item{MCNP6 Moving Objects}
-		\item{MCR2S}
+		\item{Update in future version of MCNP6}
+		\item{Allows movement of objects, sources, delayed particles
+			during single simulation}
+		\item{Available for native MCNP geometry descriptions (not
+			mesh)}
 	\end{itemize}
+	\end{block}
+		\begin{block}{Mesh Coupled implementation of R2S (MCR2S)}
+	\begin{itemize}
+		\item{Capability that allows components to move before photon
+			transport step}
+		\item{Transformations are applied to copies of moving
+			components}
+		\item{Original component still in original location, set to void material}
+	\end{itemize}
+		\end{block}
 \end{frame}
 
-\begin{frame}{The Gap}
+\begin{frame}{Review}
 	\begin{itemize}
-		\item{MCNP simulation of moving CAD-based geometries }
-		\item{VR technique to optimize initial radiation transport of
-			coupled, multi-physics processes in moving systems}
+		\item{MC method is most accurate way to obtain detailed
+			particle flux distributions}
+			\begin{itemize}
+          	  	  \item{Use MC codes for both neutron and photon transport steps
+          	  	  	of R2S}
+          	  	  \item{Need to use VR methods to optimize the transport
+          	  	  	calculations}
+          		\end{itemize}
+		\item{GT-CADIS, an implementation of MS-CADIS,  has proven to optimize the neutron transport
+			step of R2S}
+		\item{MCNP6 and MCR2S have developed some capabilities for
+			performing transport on moving geometries}
 	\end{itemize}
+
+%	\begin{itemize}
+%		\item{This work aims to combine and advance these efforts
+%			by...}
+%		\item{MCNP simulation of moving CAD-based geometries }
+%		\item{VR technique to optimize initial radiation transport of
+%			coupled, multi-physics processes in moving systems}
+%	\end{itemize}
 \end{frame}
 
-\begin{frame}{Intro GT Demo}
+\section{Demonstration}
+\begin{frame}{GT-CADIS Demonstration}
+	\begin{columns}
+        \column{0.48\textwidth}
+           \begin{itemize}
+		   \item{Geometry}
+			   \begin{itemize}
+				   \item{Steel chamber}
+				   \item{2m x 2m x 2m central cavity}
+			   \end{itemize}
+		   \item{Source}
+			   \begin{itemize}
+				   \item{Volume source in central cavity}
+				   \item{13.8-14.2 MeV neutrons}
+			   \end{itemize}
+	   \end{itemize}
+        \column{0.48\textwidth}
+		\begin{figure}
+		\centering
+		\includegraphics[scale=0.40]{../../src/figs/orig_geom.png}
+                \end{figure}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
@@ -453,15 +520,15 @@ Add pros/cons of D1S, R2S
 \centering
 
         \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
-	node distance=0.9cm]
+	node distance=1.3cm]
         \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
-	distance=0.9cm]
-        \tikzstyle{file} = [rectangle, draw, text centered, node distance=0.9cm]
+	distance=1.3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=1.3cm]
         \tikzstyle{line} = [draw, -latex]
         \tikzstyle{arrow} = [thick, ->, >=stealth]
        
-	\resizebox{!}{4cm}{
-        \begin{tikzpicture}[node distance = 0.5 cm, auto]
+	\resizebox{!}{4.5cm}{
+        \begin{tikzpicture}[node distance = 0.9 cm, auto]
 		% Optimized neutron transport
 		\node [script] (adjnsrc) {Calculate adjoint
 		neutron source};
@@ -490,29 +557,32 @@ Add pros/cons of D1S, R2S
 \begin{frame}
 \frametitle{GT-CADIS Demonstration}
 
-	\begin{columns}
-        \column{0.5\textwidth}
-        \begin{figure}
+%	\begin{columns}
+%        \column{0.5\textwidth}
+%        \begin{figure}
 %	\centering
-		%\vspace{1cm}
-		\hspace{-1cm}
-	\includegraphics[scale=0.27, xshift=-3cm]{config-0.jpg}
-		\vspace{-0.9cm}
-	\caption{Demo model. Steel chamber, walls are 2 m thick.  14 MeV
-		neutron source in center.  Chamber surrounded by air.}
-        \end{figure}
-
-        \column{0.5\textwidth}
+%		\vspace{0.11cm}
+%		\hspace{0.5cm}
+%	%\includegraphics[scale=0.27, xshift=-3cm]{config-0.jpg}
+%	\includegraphics[scale=0.27]{../../src/figs/orig_geom.png}
+%		\vspace{0.4cm}
+%		\caption{Demo model.}
+%		%Steel chamber, walls are 2 m thick.  14 MeV
+%		%neutron source in center.  Chamber surrounded by air.}
+%        \end{figure}
+%
+%        \column{0.5\textwidth}
         \begin{figure}
 	\centering
-	\includegraphics[scale=0.20]{gtcadis_adjn.jpg}
+	%\includegraphics[scale=0.20]{gtcadis_adjn.jpg}
+	\includegraphics[scale=0.290]{gtcadis_adjn.jpg}
 		\caption{GT-CADIS adjoint neutron flux. Functions as importance
 		map.}
 	\end{figure}
-	\end{columns}
+%	\end{columns}
 
 \end{frame}
-
+ 
 \begin{frame}
 \frametitle{GT-CADIS Demonstration}
 	GT-CADIS importance map is \textbf{insufficient} for moving systems.
@@ -541,6 +611,19 @@ Add pros/cons of D1S, R2S
 	\end{columns}
 
 \end{frame}
+
+
+\section{Proposal}
+
+\begin{frame}{VR for Time-integrated Multi-physics Analysis}
+	\begin{itemize}
+		\item{MS-CADIS optimizes initial radiation transport step in a coupled, multi-step
+			process}
+		\item{}
+	\end{itemize}
+
+\end{frame}
+
 
 \begin{frame}{Need to derive new adj neutron source}
 \end{frame}
