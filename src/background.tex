@@ -6,7 +6,7 @@ important application of this work is the quantification of the shutdown dose
 rate (SDR) during maintenance operations in fusion energy systems (FES).
 
 During the operation of a fusion energy device, the nuclear reactions (e.g. D-T
-fusion) occurring in the plasma result in the production of high energy (~14 MeV) neutrons
+fusion) occurring in the plasma result in the production of high energy (14 MeV) neutrons
 that penetrate deeply into the system components.  Some of the neutron reaction
 pathways result in the production of radioisotopes that persist long after
 device shutdown.  The activated components emit high energy photons as they
@@ -574,7 +574,7 @@ R = %\int_{V}\int_{E}
 \end{equation}
 MS-CADIS provides a method to calculate an
  approximation 
-\todo{why is this not always an approx?}
+%\todo{why is this not always an approx?}
 of this importance function
 where the response is the final response of the multi-step process.  In the case
 of an R2S calculation, the final response is the SDR caused by the decay
@@ -771,16 +771,35 @@ transformed copy are present during the photon transport step means that there
 can be no overlap between the parts which could be problematic for small
 transformations.
 
-\section{The Gap}
-Given the current state of codes that perform MC radiation transport
-simulations and
-the methods of VR to make them more efficient, this work aims to fill in some
-of the gap that exists in tools and methods for the efficient analysis of dynamic, CAD-based
-geometries undergoing coupled, multi-physics processes.  More specifically, 1)
-functionality that updates the position of mesh-based geometries 
-%based on user-supplied motion vectors 
-has been created to allow for MCNP simulations of
-dynamic systems represented by CAD geometry and 2) the GT-CADIS method will be
-updated through the derivation of a time-integrated adjoint
-neutron source that has the ultimate purpose of optimizing the neutron
-transport step in the SDR analysis of a system that moves after shutdown.
+\section{Summary}
+%Given the current state of codes that perform MC radiation transport
+%simulations and
+%the methods of VR to make them more efficient, this work aims to fill in some
+%of the gap that exists in tools and methods for the efficient analysis of dynamic, CAD-based
+%geometries undergoing coupled, multi-physics processes.  More specifically, 1)
+%functionality that updates the position of mesh-based geometries 
+%%based on user-supplied motion vectors 
+%has been created to allow for MCNP simulations of
+%dynamic systems represented by CAD geometry and 2) the GT-CADIS method will be
+%updated through the derivation of a time-integrated adjoint
+%neutron source that has the ultimate purpose of optimizing the neutron
+%transport step in the SDR analysis of a system that moves after shutdown.
+
+The MC method is the most accurate way to obtain detailed distributions of the
+neutron and photon fluxes in FES, but it is necessary to use VR methods in
+order to efficiently calculate these results.
+This section has reviewed some of the most recent work in the fields of VR for SDR analysis 
+and MC analysis of moving systems.
+GT-CADIS, the implementation of MS-CADIS specifically for SDR analysis has been
+proven to effectively optimize the neutron transport step of R2S.
+Developments in MCNP6 and MCR2S that provide some capability for updating the
+position of geometry have also been discussed.
+Given the current state of these fields, this work aims to advance and combine
+these efforts through the derivation of a
+time-integrated adjoint 
+neutron source term that will ultimately optimize the neutron
+transport step in systems that undergo movement after shutdown.  
+Several computational tools will be developed to support this work. The most
+fundamental are the functionality to update the
+position of CAD geometries based on time-dependent motion data and aggregate
+the transport results calculated at each position over time. 

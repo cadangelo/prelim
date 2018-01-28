@@ -31,18 +31,24 @@ the MCNP input file.  Both have application to this thesis work but are also
 general purpose tools for any calculation in which the geometry configuration 
 needs to be changed.
 
+These tools rely on common functionality to update the position of the mesh
+geometry.  They are built upon the Mesh-Oriented datABase (MOAB) \cite{moab} which has 
+has the ability to store and manipulate mesh data.
+First, a CAD geometry file of the model in its 
+original configuration is created. The geometry components are tagged with 
+transformation numbers that correspond to motion data; either a
+time-dependent motion vector or a simple relocation transform.   
+Upon loading the geometry and motion data, MOAB functions are used
+to read each component's tag data that specifies the type of transformation, 
+identify the starting position of each mesh vertex,  
+then update the position accordingly.
+
 \subsection{Production of Stepwise Geometry Files}\label{sec:timestep_geoms}
 A tool has be developed to generate CAD geometry files that capture the 
-movement of components over time based on user-supplied motion vectors or 
-relocation values.  
-
-First, a geometry file of the model in its 
-original configuration is created. The geometry components are tagged with 
-transformation numbers that correspond to a motion vector or relocation transform.
-\todo{Discuss motion separate from invocation? MOAB details?}
-
+movement of components over time based on user-supplied motion vectors or relocation values.  
 %that are also given as input to this tool.  
-The tool loads the original geometry and a file containing the transformations.
+First, the original geometry and a file containing the transformations are
+loaded.
 If a motion vector is supplied, a total length of time and a desired number of 
 time steps must also be given. The motion can then be divided into step-wise 
 transformations. The position of the components 
@@ -52,7 +58,6 @@ transformations; no geometric deformations or scaling.  It also does not handle
 objects kinetics, 
 so the user must be cautious to not cause any overlap of components during the
 geometry movement.
-
 The new geometry files that contain stepwise changes of the geometry 
 configuration can be used as input for
 transport calculations to determine the response at each time step.
@@ -61,8 +66,9 @@ transport calculations to determine the response at each time step.
 \subsection{DAGMCNP Geometry Transformations}\label{sec:mcnp_tr}
 The ability to read transformation (TRn) cards from the MCNP input file and 
 update the position of the CAD geometry accordingly has been added to DAGMCNP.  
-This capability relies upon the same tagging of components in the CAD geometry 
-file discussed in the previous section.  The transformation found in the MCNP 
+%This capability relies upon the same tagging of components in the CAD geometry 
+%file discussed in the previous section.
+The transformation found in the MCNP 
 input file will be applied to any geometry component that is tagged with the 
 number on the TR card. 
 
@@ -77,10 +83,10 @@ updated, and then transport is performed.
 
 This section introduces a plan to generate fully optimized, time-integrated
 SDR maps.
-\todo{Change to time-dependent? Time-integrated gives the impression that
-the SDR at each time step will be averaged together to give a total dose
-during the movement.  What is more useful? Separate SDR
-map at each time step or a single, averaged dose?}
+%\todo{Change to time-dependent? Time-integrated gives the impression that
+%the SDR at each time step will be averaged together to give a total dose
+%during the movement.  What is more useful? Separate SDR
+%map at each time step or a single, averaged dose?}
 %\subsection{Optimized R2S Workflow for Dynamic Systems}
 %This section will walk through the implementation of a
 %time-integrated R2S workflow with optimized neutron transport via
@@ -588,7 +594,7 @@ The uncertainty in the SDR due to the uncertainty in the photon transport can
 be calculated during MC transport. However, the 
 uncertainty in the SDR due to the uncertainty in the neutron MC
 calculation is more complicated and an area of research currently under investigation by Harb et.
-al \cite{harb} \todo{cite Moataz's prelim}.  This work aims to produce a methodology for propagating the error from the
+al \cite{harb_prelim}.  This work aims to produce a methodology for propagating the error from the
 neutron transport to the photon source and then from the photon source to the
 SDR.
 %This work explores the degree to which the neutron flux calculated in
@@ -757,4 +763,4 @@ TGT-CADIS aims to provide the capabilities necessary to efficiently calculate
 the SDR at various time points during operations that involve activated
 components moving around the facility.
 %when activated components are moving around the facility.
-\todo{add more }
+%\todo{add more }

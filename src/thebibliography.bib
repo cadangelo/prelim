@@ -1,22 +1,8 @@
-@article{cadis, 
-		title="{Monte Carlo Variance Reduction with Deterministic
-			Importance Functions}",
-		volume="42",
-		DOI="10.1016/s0149-1970(02)00002-1",
-	    number="1",
-		journal="{Progress in Nuclear Energy}",
-		author="Haghighat, Alireza and Wagner, John C.",
-		year="2003",
-	    pages="25-53"
-}
-@book{Carter_Cashwell_1975, 
-	  title="{Particle-transport Simulation with the Monte Carlo Method}",
-	  place="United States",
-      url="http://www.osti.gov/scitech/servlets/purl/4167844", 
-      DOI="10.2172/4167844",
-	  author="Carter, L.L. and Cashwell, E.D.", 
-	  year="1975",
-      month="Jan"
+@book{l_m,
+	title="Computational Methods of Neutron Transport",
+	author = "Elmer Lewis and Warren Miller",
+	year = "1993",
+	publisher = "American Nuclear Society, Inc."
 }
 @book{mcnp_manual,
 	  title="MCNP- A General Monte Carlo N-Particle Transport Code, Version 5",
@@ -97,6 +83,26 @@ url = "http://www.sciencedirect.com/science/article/pii/S0920379616302009",
 author = "Elliott D. Biondo and Andrew Davis and Paul P.H. Wilson",
 keywords = "Shutdown dose rate, CAD, Tetrahedral mesh, Variance reduction"
 }
+@article{cadis, 
+		title="{Monte Carlo Variance Reduction with Deterministic
+			Importance Functions}",
+		volume="42",
+		DOI="10.1016/s0149-1970(02)00002-1",
+	    number="1",
+		journal="{Progress in Nuclear Energy}",
+		author="Haghighat, Alireza and Wagner, John C.",
+		year="2003",
+	    pages="25-53"
+}
+@book{Carter_Cashwell_1975, 
+	  title="{Particle-transport Simulation with the Monte Carlo Method}",
+	  place="United States",
+      url="http://www.osti.gov/scitech/servlets/purl/4167844", 
+      DOI="10.2172/4167844",
+	  author="Carter, L.L. and Cashwell, E.D.", 
+	  year="1975",
+      month="Jan"
+}
 @article{fwcadis,
 author = {John C. Wagner and Douglas E. Peplow and Scott W. Mosher},
 title = {{FW-CADIS} Method for Global and Regional Variance Reduction of {Monte} {Carlo} Radiation Transport Calculations},
@@ -114,6 +120,16 @@ publisher = {Taylor & Francis},
       pages = "286 - 298",
       year = "2015",
       author = "Ahmad M. Ibrahim and Douglas E. Peplow and Robert E. Grove and Joshua L. Peterson and Seth R. Johnson"
+}
+@article{gtcadis,
+author = {Elliott D. Biondo and Paul P. H. Wilson},
+title = {Transmutation Approximations for the Application of Hybrid {Monte Carlo}/Deterministic Neutron Transport to Shutdown Dose Rate Analysis},
+journal = {Nuclear Science and Engineering},
+volume = {187},
+number = {1},
+pages = {27-48},
+year  = {2017},
+URL = " http://dx.doi.org/10.1080/00295639.2016.1275848"
 }
 
 @article{mcnp_moving_1,
@@ -143,22 +159,6 @@ author = "Joe W. Durkee and Russell C. Johns and Laurie S. Waters",
 keywords = "MCNP6, Moving objects, Fission, HEU, Pu, Beddingfield, SDEF, Radiation transport, Delayed neutrons, Delayed gammas, Rigid-body kinematics, Translation, Rotation"
 }
 
-@article{gtcadis,
-author = {Elliott D. Biondo and Paul P. H. Wilson},
-title = {Transmutation Approximations for the Application of Hybrid {Monte Carlo}/Deterministic Neutron Transport to Shutdown Dose Rate Analysis},
-journal = {Nuclear Science and Engineering},
-volume = {187},
-number = {1},
-pages = {27-48},
-year  = {2017},
-URL = " http://dx.doi.org/10.1080/00295639.2016.1275848"
-}
-@book{l_m,
-	title="Computational Methods of Neutron Transport",
-	author = "Elmer Lewis and Warren Miller",
-	year = "1993",
-	publisher = "American Nuclear Society, Inc."
-}
 @article{mcr2s_move,
 title = "Movement of active components in the shutdown dose rate analysis of the {ITER} neutral beam injectors",
 journal = "Fusion Engineering and Design",
@@ -172,6 +172,12 @@ doi = "https://doi.org/10.1016/j.fusengdes.2014.12.022",
 url = "http://www.sciencedirect.com/science/article/pii/S0920379614006668",
 author = "Tim Eade and Steven Lilley and Zamir Ghani and Etienne Delmas",
 keywords = "Nuclear analysis, MCNP, MCR2S, ITER, Neutral beam, Shutdown dose rate"
+}
+@misc{moab, 
+	Author = {Timothy J. Tautges and R. Meyers and K. Merkley and C. Stimpson and C. Ernst},
+	Institution = {{Sandia National Laboratories}},
+	Title = {{MOAB: A Mesh-Oriented Database}},
+	Year = {2004}
 }
 @article{partisn,
 	title= "{PARTISN}: A Time-Dependent, Parallel Neutral Particle Transport
@@ -234,6 +240,24 @@ title = {{PyNE} Progress Report}
 @article{eb_prelim,
 	author = {Biondo, Elliott},
 	title = {{Hybrid Monte Carlo/Deterministic Neutron Transport for Shutdown Dose Rate Analysis of Fusion Energy Systems}},
+	journal = {Preliminary Exam},
 	month = {July},
 	year = {2015}
 }
+@article{harb_prelim,
+	author = {Harb, Moataz},
+	title = {{Propagation of Statistical Uncertainty in Mesh-Based Shutdown Dose Rate Calculations}},
+	journal = {Preliminary Exam},
+	month = {December},
+	year = {2017}
+}
+
+@conference{kit-nasca,
+	author = {Lu, Peng and Fischer, Ulrich and Pereslavtsev, Pavel and Li,
+		Jiangang and Song, Yunato},
+	title = {{Hybrid Monte Carlo approach for accurate and efficient
+		shutdown dose rate calculation}},
+	year = {2017},
+	booktitle = {13th International Symposium on Fusion Nuclear Technology}
+}
+	
