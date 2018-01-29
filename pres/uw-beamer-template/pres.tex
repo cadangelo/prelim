@@ -75,63 +75,62 @@
 		
 \end{frame}
 
-\begin{frame}
-\frametitle{SDR Analysis: Movement After Shutdown}
-	\begin{itemize}
-		\item{Example: maintenance procedure}
-			\begin{itemize}
-				\item{Need to move component(s) around facility}
-				\item{Interested in SDR at a particular
-					location}
-				\item{SDR will change as a function of the
-					activated component's position over
-					time}
-			\end{itemize}
-	\end{itemize}
-        \begin{figure}
-        	\centering
-        	\includegraphics[scale=0.3]{config-0.jpg}
-        \end{figure}
+%\begin{frame}
+%\frametitle{SDR Analysis: Movement After Shutdown}
+%	\begin{itemize}
+%		\item{FES are designed with modular components}
+%	\begin{itemize}
+%		\item{Can move during maintenance procedure}
+%	\end{itemize}
+%		\item{Interested in SDR at a particular
+%					location}
+%		\item{SDR will change as a function of the
+%					activated component's position over
+%					time}
+%	\end{itemize}
+%        \begin{figure}
+%        	\centering
+%        	\includegraphics[scale=0.3]{config-0.jpg}
+%        \end{figure}
+%
+%\end{frame}
 
-\end{frame}
 \begin{frame}
 \frametitle{SDR Analysis: Movement After Shutdown}
 	\begin{itemize}
-		\item{Example: maintenance procedure}
-			\begin{itemize}
-				\item{Need to move component(s) around facility}
-				\item{Interested in SDR at a particular
+		\item{FES are designed with modular components}
+	\begin{itemize}
+		\item{Can move during maintenance procedure}
+	\end{itemize}
+		\item{Interested in SDR at a particular
 					location}
-				\item{SDR will change as a function of the
+		\item{SDR will change as a function of the
 					activated component's position over
 					time}
-			\end{itemize}
 	\end{itemize}
 	\begin{center}
 	%\animategraphics[loop,controls,width=\textwidth]{5}{config-}{0}{5}
-	\transduration<0-5>{0}
+%	\transduration<0-5>{0}
 	\multiinclude[<+->][format=jpg, graphics={ scale=0.3}]{config}
 	\end{center}
 \end{frame}
 
 \begin{frame}{Goal}
-	\textbf{Optimize} the \textbf{radiation transport} 
-	simulation used to
-	calculate the \textbf{shutdown dose rate}
+	\textbf{Optimize} the %\textbf{radiation transport} simulation used to
+	calculation of the \textbf{shutdown dose rate}
 	at a particular location as activated components are
 	\textbf{moving} around the facility.
 \end{frame}
 
-\begin{frame}{Computational Radiation Transport}
-Deterministic vs. MC
-\end{frame}
+%\begin{frame}{Computational Radiation Transport}
+%Deterministic vs. MC
+%\end{frame}
 
 \begin{frame}
 \frametitle{SDR Solution Methods}
 
-\begin{minipage}{0.49\textwidth}
-\begin{itemize}
-\item{Direct 1-Step Method (D1S)}
+\begin{minipage}{0.47\textwidth}
+\begin{block}{Direct 1-Step Method (D1S)}
 	\vspace{1cm}
 	\begin{figure}
         \centering
@@ -148,20 +147,19 @@ Deterministic vs. MC
         \begin{tikzpicture}[every text node part/.style={align=center}]
 		% Optimized neutron transport
 		\node [code] (mc) {Monte Carlo \\ neutron/photon transport};
-                \node [file, above of = mc, yshift=-0.3cm] (mod) {Modified\\ cross sections};
-                \node [file, below of = mc, yshift=0.3cm] (sdr) {Shutdown dose rate};
+                \node [file, above of = mc, yshift=-0.6cm] (mod) {Modified\\ cross sections};
+                \node [file, below of = mc, yshift=0.6cm] (sdr) {Shutdown dose rate};
 		\path [line] (mod) -- (mc);
 		\path [line] (mc) -- (sdr);
 
 	\end{tikzpicture}
 		}
         \end{figure}
-\end{itemize}
+\end{block}
 \end{minipage}
 \hfill
-\begin{minipage}{0.49\textwidth}
-\begin{itemize}
-\item{Rigorous 2-Step Method (R2S)}
+\begin{minipage}{0.47\textwidth}
+\begin{block}{Rigorous 2-Step Method (R2S)}
 	\vspace{1cm}
 	\begin{figure}
         \centering
@@ -196,9 +194,9 @@ Deterministic vs. MC
         }
 %	\caption{R2S workflow \label{fig:r2s_flow}}
 \end{figure}
-\end{itemize}
+\end{block}
 \end{minipage}
-Add pros/cons of D1S, R2S
+%Add pros/cons of D1S, R2S
 \end{frame}
 
 
@@ -207,7 +205,7 @@ Add pros/cons of D1S, R2S
 \begin{columns}
 \column{0.7\textwidth}
 \begin{itemize}
-	\item{Monte Carlo (MC) analysis of fusion energy systems is:}
+	\item{Monte Carlo (MC) analysis of FES is:}
 	\begin{itemize}
 		\item{Accurate for large, complex models}
 		\item{Challenging due to the highly attenuating structural materials}
@@ -215,11 +213,6 @@ Add pros/cons of D1S, R2S
                   \item{Results scored in regions that have low particle flux, have higher statistical uncertainty}
                   \end{itemize}
 	\end{itemize}
-\item{To decrease statistical uncertainty:}
-\begin{itemize}
-\item{Increase number of histories}
-\item{Use variance reduction (VR) techniques}
-\end{itemize}
 \end{itemize}
 
 \column{0.3\textwidth}
@@ -232,7 +225,20 @@ Add pros/cons of D1S, R2S
 \end{columns}
 \end{frame}
 
-\begin{frame}{Stat error in MC and intro VR}
+\begin{frame}{Error in MC Calculations}
+\begin{itemize}
+\item{Uncertainty in MC Calculations:}
+\begin{equation} \label{eq:1.2}
+		\Re = \frac{\sigma_{\overline{x}}}{{\overline{x}}}
+\end{equation}
+\item{$\sigma_{\overline{x}}$ is proportional
+	to $1/\sqrt{\# histories}$} %\cite{mcnp_manual}.
+\item{To decrease statistical uncertainty:}
+  \begin{itemize}
+  \item{Increase number of histories}
+  \item{Use variance reduction (VR) techniques}
+  \end{itemize}
+\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -253,28 +259,27 @@ Add pros/cons of D1S, R2S
 \begin{itemize}
 \item{Adjoint flux can define the importance of regions of phase space to the detector response}
 \item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to
-	generate \textbf{Monte Carlo} VR parameters in a \textbf{consistent}
-		manner}
-    \begin{itemize}
+	generate \textbf{Monte Carlo} VR parameters} %in a \textbf{consistent} manner}
+%    \begin{itemize}
     %\item{Adjoint transport $\sim$ "backwards" transport}
     \item{Define detector response function to be the adjoint source}
-    \end{itemize}
+%    \end{itemize}
 \end{itemize}
 
 
-\vspace{0.2cm}
-       \begin{equation}
-        H^+\Psi^+ = q^+
-       \end{equation} 
-       \begin{equation}
-	H^{+} = -\widehat{\Omega} \cdot \nabla +
-	    \sigma_{t}(\overrightarrow{r},E) - 
-		\int_{0}^{\infty} dE'
-		\int_{4\pi} d\Omega'
-		\sigma_{s}( \overrightarrow{r}, E 
-		\rightarrow E', \widehat{\Omega} 
-		\rightarrow \widehat{\Omega}' )
-       \end{equation}
+%\vspace{0.2cm}
+%       \begin{equation}
+%        H^+\Psi^+ = q^+
+%       \end{equation} 
+%       \begin{equation}
+%	H^{+} = -\widehat{\Omega} \cdot \nabla +
+%	    \sigma_{t}(\overrightarrow{r},E) - 
+%		\int_{0}^{\infty} dE'
+%		\int_{4\pi} d\Omega'
+%		\sigma_{s}( \overrightarrow{r}, E 
+%		\rightarrow E', \widehat{\Omega} 
+%		\rightarrow \widehat{\Omega}' )
+%       \end{equation}
 \end{block}
 \end{frame}
 
@@ -288,7 +293,7 @@ Add pros/cons of D1S, R2S
 	\begin{columns}
         \column{0.45\textwidth}
 			\begin{block}%{Uniform vs. biased source distribution}
-                                     {Source: sample from biased PDF}
+                                     {Source: biased PDF}
                 \begin{figure}
 		\centering
 		\includegraphics[scale=0.32]{bsrc_ex.jpg}
@@ -347,7 +352,7 @@ Add pros/cons of D1S, R2S
   \item{When applied to SDR analysis, MS-CADIS will optimize the neutron transport}
     \begin{itemize}
     \item{Use function that represents the   importance of the neutrons to
-	    the final dose rate}
+	    the final shutdown dose rate}
     \end{itemize}
   \end{itemize}
 %\end{itemize}
@@ -397,49 +402,49 @@ Add pros/cons of D1S, R2S
 		
 \begin{frame}
 \frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
-\begin{itemize}
-	\item{\textbf{G}roupwise \textbf{T}ransmutation (GT)-CADIS}
+\begin{block}{\textbf{G}roupwise \textbf{T}ransmutation (GT)-CADIS}
   \begin{itemize}
   \item{Implementation of MS-CADIS specifically for SDR analysis}
   \item{Provides method to calculate optimal adjoint neutron source, $q_n^+$,
 	  by first calculating, T, a term that relates the neutron flux to
 		  photon source}
-	  \item{Calculate T: (move this to later slide)}
-	  \begin{enumerate}
-		  \item{Irradiate each material with neutrons from a single
-			  energy group, g}
-		  \item{Record resulting photon emission in each energy group,
-			  h}
-	  \end{enumerate}
   \end{itemize}
-
-\end{itemize}
-\centering
-	\begin{equation}
-		T_{g,h} = \frac{q_{\gamma,h}(\phi_{n,g})}{\phi_{n,g}}
-	\end{equation}
-
+\end{block}
+%	  \item{Calculate T: (move this to later slide)}
+%	  \begin{enumerate}
+%		  \item{Irradiate each material with neutrons from a single
+%			  energy group, g}
+%		  \item{Record resulting photon emission in each energy group,
+%			  h}
+%	  \end{enumerate}
+%  \end{itemize}
+%
+%\end{itemize}
+%\centering
+%	\begin{equation}
+%		T_{g,h} = \frac{q_{\gamma,h}(\phi_{n,g})}{\phi_{n,g}}
+%	\end{equation}
+%
+		  
 \end{frame}
 
 
-\begin{frame}
-\frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
-
-\begin{itemize}
-	\item{MOVE:Use T to solve for adjoint neutron source:}
-\end{itemize}
-\centering
-\begin{equation}
-	q_n^+(E_n)=\int_{E_{\gamma}} T(E_n, E_{\gamma}) \phi_{\gamma}^+(E_{\gamma})
-	dE_{\gamma}
-\end{equation}
+%\begin{frame}
+%\frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
+%
+%\begin{itemize}
+%	\item{MOVE:Use T to solve for adjoint neutron source:}
+%\end{itemize}
+%\centering
+%\begin{equation}
+%	q_n^+(E_n)=\int_{E_{\gamma}} T(E_n, E_{\gamma}) \phi_{\gamma}^+(E_{\gamma})
+%	dE_{\gamma}
+%\end{equation}
 
 %\begin{itemize}
 %\item{This is used as the source in the deterministic calculation of the    adjoint neutron flux, $\phi_{n}^{+}$}
 %\end{itemize}
-
-
-\end{frame}
+%\end{frame}
 
 \begin{frame}{Moving Geometries and Sources}
 	\begin{block}{MCNP6 Moving Objects}
@@ -451,6 +456,9 @@ Add pros/cons of D1S, R2S
 			mesh)}
 	\end{itemize}
 	\end{block}
+\end{frame}
+
+\begin{frame}{Moving Geometries and Sources}
 		\begin{block}{Mesh Coupled implementation of R2S (MCR2S)}
 	\begin{itemize}
 		\item{Capability that allows components to move before photon
@@ -502,17 +510,20 @@ Add pros/cons of D1S, R2S
 				   \item{Volume source in central cavity}
 				   \item{13.8-14.2 MeV neutrons}
 			   \end{itemize}
+		   \item{Detector}
+			   \item{Calculate SDR}
+			   \item{2m away from chamber}
 	   \end{itemize}
         \column{0.48\textwidth}
 		\begin{figure}
 		\centering
-		\includegraphics[scale=0.40]{../../src/figs/orig_geom.png}
+		\includegraphics[scale=0.40]{orig_geom_pres.png}
                 \end{figure}
 	\end{columns}
 \end{frame}
 
 \begin{frame}
-\frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
+\frametitle{GT-CADIS Demonstration}
 \begin{itemize}
 \item{GT-CADIS workflow}
 \end{itemize}
@@ -592,14 +603,13 @@ Add pros/cons of D1S, R2S
         \column{0.5\textwidth}
         \begin{figure}
 %	\centering
-	\vspace{0.8cm}
+	\vspace{-0.9cm}
 		\hspace{-1cm}
 %	\includegraphics[scale=0.27, xshift=-3cm]{config-0.jpg}
 	\transduration<0-5>{0}
 	\multiinclude[<+->][format=jpg, graphics={ scale=0.22}]{config}
-		\vspace{-0.3cm}
-	\caption{Demo model. Steel chamber, walls are 2 m thick.  14 MeV
-		neutron source in center.  Chamber surrounded by air.}
+	%	\vspace{0.3cm}
+		\caption{Demo model.}
         \end{figure}
 
         \column{0.5\textwidth}
@@ -616,12 +626,16 @@ Add pros/cons of D1S, R2S
 
 \section{Proposal}
 
-\begin{frame}{VR for Time-integrated Multi-physics Analysis}
+\begin{frame}{VR for Multi-physics Analysis of Moving Systems}
 	\begin{itemize}
 		\item{MS-CADIS optimizes initial radiation transport step in a coupled, multi-step
 			process}
-		\item{Need to derive new adj neutron source}
+		\item{Movement during secondary step changes the construction
+			of the adjoint neutron source}
 	\end{itemize}
+	\vspace{1cm}
+	\centering
+		{\textbf{Need to derive new adjoint neutron source}}
 
 \end{frame}
 
@@ -662,7 +676,7 @@ Add pros/cons of D1S, R2S
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Solving for the Adjoint Primary Source}
+\begin{frame}{Generalized MS-CADIS}
 \begin{itemize}
 \item{Response to secondary physics:}
 \begin{equation} \label{eq:response}
@@ -681,7 +695,7 @@ Add pros/cons of D1S, R2S
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Solving for the Adjoint Primary Source}
+\begin{frame}{Generalized MS-CADIS}
 \begin{itemize}
 	\item{Switch the order of integration}
 \begin{equation}\label{eq:pseudo-response}
@@ -789,8 +803,7 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Time-integrated GT-CADIS}
+\begin{frame}{Time-integrated (T)GT-CADIS}
 	\begin{itemize}
 		\item{Perform deterministic adjoint neutron transport using the
 			time-integrated source}
@@ -806,72 +819,13 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 	\begin{itemize}
 		\item{Use this adjoint neutron flux to generate biasing
 			parameters that will optimize the MC neutron transport
-			step of R2S.}
+			step of R2S}
 	\end{itemize}
 \end{frame}
 
 
-\begin{frame}{Progress: MC Moving Geometry Simulations}
-	\begin{itemize}
-		\item{Tools to update position of geometry based on
-			user-defined motion data}
-			\begin{enumerate}
-				\item{Tool to produce step-wise geometry files}
-				\item{DAGMC update to facilitate on-the-fly
-					geometry transformations} 
-			\end{enumerate}
-		\item{Common functionality:}
-			\begin{itemize}
-				\item{}
-			\end{itemize}
-	\end{itemize}
-\end{frame}
 
-%\begin{frame}{Implementation plan}
-%\end{frame}
-
-
-\begin{frame}{Time-integrated R2S: VR  for Neutron Transport }
-	\begin{itemize}
-		\item{R2S workflow for geometry movement after shutdown}
-	\end{itemize}
-	\vspace{1cm}
-	\begin{figure}
-        \centering
-
-        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
-		node distance=2.8cm]
-        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
-		distance=2.8cm]
-        \tikzstyle{file} = [rectangle, draw, text centered, node distance=2.8cm]
-        \tikzstyle{line} = [draw, -latex]
-        \tikzstyle{arrow} = [thick, ->, >=stealth]
-        
-	\resizebox{!}{3.9cm}{
-        \begin{tikzpicture}[node distance = 1 cm, auto]
-		% Optimized neutron transport
-		\node [code] (nmc) {Monte Carlo neutron transport};
-                \node [file, left of = nmc, yshift=-0.9 cm, xshift=-1.91cm] (nflux) {Neutron flux};
-		\node [file, right of = nmc, yshift=-0.9cm, xshift=1.91cm]
-		(irrdec) {Irradiation and decay scenario};
-		\node [script, below of = nmc, yshift=1.2cm] (act) {Activation analysis};
-                \node [file, left of = act, yshift=-0.8cm, xshift=-1.91cm] (psrc) {Photon source};
-		\node [code, below of = act, yshift=1.2cm] (pmc) {Monte Carlo
-		photon transport at each time step};
-                \node [file, below of = pmc, yshift=1.2cm] (sdr) {Shutdown dose
-		rate at each time step};
-		\path [line] (nmc) -- (nflux);
-                \path [line] (nflux) -- (act);
-                \path [line] (irrdec) -- (act);
-                \path [line] (act) -- (psrc);
-                \path [line] (psrc) -- (pmc);
-		\path [line] (pmc) -- (sdr);
-
-	\end{tikzpicture}
-        }
-%	\caption{R2S workflow \label{fig:r2s_flow}}
-\end{figure}
-\end{frame}
+\section{Implementation Plan}
 
 %%%%% 1. Prepare geometries
 \begin{frame}{TGT-CADIS: Generate VR Parameters}
@@ -961,9 +915,10 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 \column{0.35\textwidth}
         \vspace{-3cm}
 	\begin{itemize}
-		\item{Perform adjoint photon transport at each time step 2}
+		\item{Perform adjoint photon transport at each time step}
 	\end{itemize}
-		\multiinclude[<+->][format=jpg, graphics={ scale=0.25}]{newconfig}
+	\multiinclude[<+->][format=jpg, graphics={ scale=0.25}]{newconfig}
+		
 \column{0.65\textwidth}
 \begin{figure}
 \centering
@@ -1312,14 +1267,17 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 %	\end{figure}
 %\end{frame}
 
+\section{Experiment}
 %\begin{frame}{Time-integrated R2S: Analog}
-\begin{frame}{Experimental Steps}
+%%% 1. No VR 
+\begin{frame}{Experiment: Toy Problem}
 	\begin{columns}
 		\column{0.3\textwidth}
+			Experimental Steps:
 	\begin{enumerate}
-	\item{Analog (No VR):}
-	\item{Photon VR:}
-	\item{Neutron and Photon VR:}
+	\item{No VR}
+%	\item{Photon VR}
+%	\item{Neutron and Photon VR}
 \end{enumerate}
 %\end{frame}
 \column{0.55\textwidth}
@@ -1345,7 +1303,7 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
                 \node [file, left of = act, yshift=-0.8cm, xshift=-1.91cm] (psrc) {Photon source};
 		\node [code, below of = act, yshift=0.91cm] (pmc) {Monte Carlo\\
 		photon transport\\ at each time step};
-                \node [file, below of = pmc, yshift=0.91cm] (sdr) {Shutdown dose
+                \node [file, below of = pmc, yshift=0.5cm] (sdr) {Shutdown dose
 		rate\\ at each time step};
 		\path [line] (nmc) -- (nflux);
                 \path [line] (nflux) -- (act);
@@ -1361,13 +1319,166 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Time-integrated R2S: Neutron and Photon VR}
+%%%% 2. Photon VR 
+\begin{frame}{Experiment: Toy Problem}
+	\begin{columns}
+		\column{0.3\textwidth}
+			Experimental Steps:
+	\begin{enumerate}
+	\item{No VR}
+	\item{Photon VR: CADIS}
+%	\item{Neutron and Photon VR}
+\end{enumerate}
+%\end{frame}
+\column{0.55\textwidth}
+	\begin{figure}
+        \centering
+
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
+		node distance=2.8cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
+		distance=2.8cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=2.8cm]
+        \tikzstyle{line} = [draw, -latex]
+        \tikzstyle{arrow} = [thick, ->, >=stealth]
+        
+	\resizebox{!}{4.5cm}{
+        \begin{tikzpicture}[every text node part/.style={align=center}]
+		% Optimized neutron transport
+		\node [code] (nmc) {Monte Carlo \\neutron transport};
+                \node [file, left of = nmc, yshift=-0.9 cm, xshift=-1.91cm] (nflux) {Neutron flux};
+		\node [file, right of = nmc, yshift=-0.9cm, xshift=1.91cm]
+		(irrdec) {Irradiation and\\ decay scenario};
+		\node [script, below of = nmc, yshift=0.91cm] (act) {Activation analysis};
+		\node [script, below of = act, yshift=0.91cm] (cadis) {CADIS};
+                \node [file, left of = cadis, yshift=-0.8cm, xshift=-1.91cm] (psrc) {Biased \\photon source};
+                \node [file, right of = cadis, yshift=-0.8cm, xshift=1.91cm] (wwinp) {Weight windows};
+		\node [code, below of = cadis, yshift=0.5cm] (pmc) {Monte Carlo\\
+		photon transport\\ at each time step};
+                \node [file, below of = pmc, yshift=0.5cm] (sdr) {Shutdown dose
+		rate\\ at each time step};
+		\path [line] (nmc) -- (nflux);
+                \path [line] (nflux) -- (act);
+                \path [line] (irrdec) -- (act);
+                \path [line] (act) -- (cadis);
+                \path [line] (cadis) -- (psrc);
+                \path [line] (cadis) -- (wwinp);
+                \path [line] (psrc) -- (pmc);
+                \path [line] (wwinp) -- (pmc);
+		\path [line] (pmc) -- (sdr);
+
+	\end{tikzpicture}
+        }
+%	\caption{R2S workflow \label{fig:r2s_flow}}
+\end{figure}
+\end{columns}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Time-integrated GT-CADIS}
+%%% 3. Photon and Neutron VR
+\begin{frame}{Experiment: Toy Problem}
+	\begin{columns}
+		\column{0.3\textwidth}
+		Experimental Steps:
+	\begin{enumerate}
+	\item{No VR}
+	\item{Photon VR: CADIS}
+	\item{Neutron and Photon VR: TGT-CADIS}
+\end{enumerate}
+%\end{frame}
+\column{0.55\textwidth}
+	\begin{figure}
+        \centering
+
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
+		node distance=2.8cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
+		distance=2.8cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=2.8cm]
+        \tikzstyle{line} = [draw, -latex]
+        \tikzstyle{arrow} = [thick, ->, >=stealth]
+        
+	\resizebox{!}{6cm}{
+        \begin{tikzpicture}[every text node part/.style={align=center}]
+		% Optimized neutron transport
+		\node [script, above of = nmc, yshift=-0.91cm] (gtcadis)
+		{TGT-CADIS};
+                \node [file, left of = gtcadis, yshift=-0.8cm, xshift=-1.91cm]
+		(nsrc) {Biased \\neutron source};
+                \node [file, right of = gtcadis, yshift=-0.8cm, xshift=1.91cm]
+		(nwwinp) {Weight windows};
+		\node [code] (nmc) {Monte Carlo \\neutron transport};
+                \node [file, left of = nmc, yshift=-0.9 cm, xshift=-1.91cm] (nflux) {Neutron flux};
+		\node [file, right of = nmc, yshift=-0.9cm, xshift=1.91cm]
+		(irrdec) {Irradiation and\\ decay scenario};
+		\node [script, below of = nmc, yshift=0.91cm] (act) {Activation analysis};
+		\node [script, below of = act, yshift=0.91cm] (cadis) {CADIS};
+                \node [file, left of = cadis, yshift=-0.8cm, xshift=-1.91cm] (psrc) {Biased \\photon source};
+                \node [file, right of = cadis, yshift=-0.8cm, xshift=1.91cm] (wwinp) {Weight windows};
+		\node [code, below of = cadis, yshift=0.5cm] (pmc) {Monte Carlo\\
+		photon transport\\ at each time step};
+                \node [file, below of = pmc, yshift=0.5cm] (sdr) {Shutdown dose
+		rate\\ at each time step};
+		\path [line] (gtcadis) -- (nsrc);
+		\path [line] (gtcadis) -- (nwwinp);
+		\path [line] (nsrc) -- (nmc);
+		\path [line] (nwwinp) -- (nmc);
+		\path [line] (nmc) -- (nflux);
+                \path [line] (nflux) -- (act);
+                \path [line] (irrdec) -- (act);
+                \path [line] (act) -- (cadis);
+                \path [line] (cadis) -- (psrc);
+                \path [line] (cadis) -- (wwinp);
+                \path [line] (psrc) -- (pmc);
+                \path [line] (wwinp) -- (pmc);
+		\path [line] (pmc) -- (sdr);
+
+	\end{tikzpicture}
+        }
+%	\caption{R2S workflow \label{fig:r2s_flow}}
+\end{figure}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Experiment: Toy Problem}
 	\begin{itemize}
-		\item{Assumptions}
+		\item{Incrementally add optimization}
+		\item{Calculate figure of merit (FOM) to assess utility of
+			TGT-CADIS method}
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}{Error Calculation}
+%\end{frame}
+\section{Progress}
+\begin{frame}{MC Moving Geometry Simulations}
+	\begin{itemize}
+		\item{Tools to update position of geometry based on
+			user-defined motion data}
+			\begin{enumerate}
+				\item{Production of step-wise geometry files}
+				\item{DAGMC update to facilitate on-the-fly
+					geometry transformations} 
+			\end{enumerate}
+		\item{Motion data:}
+			\begin{itemize}
+				\item{Time-dependent translation or rotation
+					vector, total length of time, number or desired time steps}
+				\item{Relocation transform}
+			\end{itemize}
+		\item{Common functionality:}
+			\begin{itemize}
+				\item{Read tag data that specifies type of
+					transformation}
+				\item{Identify starting position of each
+					component}
+				\item{Update position according to
+					transformation}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\section{Conclusions}
+\begin{frame}{Assumptions}
 			\begin{itemize}
 				\item{Photon transport occurs much faster than
 					geometry movement $\therefore$
@@ -1379,7 +1490,8 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 					same photon source for all MC
 					calculations}
 			\end{itemize}
-		\item{Challenges}
+	\end{frame}
+\begin{frame}{Challenges}
 			\begin{itemize}
 				\item{Depending on complexity of model and
 					fidelity of time resolution, can amass
@@ -1388,11 +1500,20 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 				\item{Need to optimize this workflow in order
 					to keep file storage at minimum}
 			\end{itemize}
-	\end{itemize}
-	
 \end{frame}
 
 \begin{frame}{Summary}
+	\begin{itemize}
+		\item{Accurate quantification of the SDR during maintenance
+			procedures is crucial to the design and operation of
+			FES}
+		\item{GT-CADIS has proven to accurately quantify the SDR in
+			static FES}
+		\item{TGT-CADIS aims to provide the capabilities necessary to
+			calculate the SDR at various time points during
+			operations that involve activated components moving
+			around the facility}
+	\end{itemize}
 \end{frame}
 
 \begin{frame}[c]
@@ -1400,5 +1521,14 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 	\begin{center}
 	{\Huge Questions?}
 	\end{center}
+\end{frame}
+
+\begin{frame}{TODO}
+	\begin{itemize}
+		\item{REFERENCES}
+		\item{labels on tet mesh time slices}
+		\item{Overall alignment/sizing/spacing}
+		\item{Add more on moving geom progress}
+	\end{itemize}
 \end{frame}
 \end{document}
