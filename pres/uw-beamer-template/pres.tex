@@ -631,11 +631,11 @@
 		\item{MS-CADIS optimizes initial radiation transport step in a coupled, multi-step
 			process}
 		\item{Movement during secondary step changes the construction
-			of the adjoint neutron source}
+			of the adjoint primary source}
 	\end{itemize}
 	\vspace{1cm}
 	\centering
-		{\textbf{Need to derive new adjoint neutron source}}
+		{\textbf{Need to derive new adjoint source}}
 
 \end{frame}
 
@@ -650,7 +650,7 @@
           \end{equation}
 		\vspace{-0.4cm}          
           \begin{equation}
-          	Secondary:	L\Psi(v) = b(v)
+          	Secondary:	L\psi(v) = b(v)
           \end{equation}
 	\end{center}
 
@@ -662,8 +662,8 @@
           \end{equation}
 		\vspace{-0.4cm}          
           \begin{equation}
-          	\langle \Psi^{+}, b \rangle =
-          	\langle \Psi, b^{+} \rangle 
+          	\langle \psi^{+}, b \rangle =
+          	\langle \psi, b^{+} \rangle 
           \end{equation}
 	\end{center}
   \item{MS-CADIS requires a representation of the relationship between primary
@@ -708,6 +708,7 @@
   R_{final} = \left \langle \ \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle,\
 	\phi(u) \ \right\rangle = \langle q(u), \phi_R^{+}(u) \rangle
 \end{equation}
+\item{MS-CADIS adjoint primary source:}
 \begin{equation}
   q^{+}(u) \equiv \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle
 \end{equation}
@@ -717,27 +718,30 @@
 \begin{frame}{Time-integrated Adjoint Primary Source}
 	\begin{itemize}
 	\item{Geometry movement during secondary physics effects the
-			construction of the adjoint neutron source}
+			construction of the adjoint primary source}
+		\item{Score adjoint secondary flux in discrete volume elements}
 	   \begin{itemize}
 	   \item	{Adjoint flux in volume element v at time t: 
-	   	$\Psi^{+}(\overrightarrow{r}_{v}(t), t)$ }
+	   	$\psi^{+}(\overrightarrow{r}_{v}(t), t)$ }
 	   \item  {Position of volume element v at time t:
 	   	$\overrightarrow{r}_{v}(t)$ }
 	   \end{itemize}
-        \begin{equation}\label{eq:adj_src_1_avg}
-       	 q_{v}^{+} =
-       	 \int_{t}  \Psi^{+}(\overrightarrow{r}_{v}(t), t)
-       	 \sigma_{b,v}(t)\, dt
-        \end{equation}
+   \item{Integrate over time}
+%        \begin{equation}\label{eq:adj_src_1_avg}
+%       	 q_{v}^{+} =
+%       	 \int_{t}  \psi^{+}(\overrightarrow{r}_{v}(t), t)
+%       	 \sigma_{b,v}(t)\, dt
+%        \end{equation}
 	\end{itemize}
 %\end{frame}
 
 %\begin{frame}
 
 %	\includegraphics[scale=0.27, xshift=-3cm]{mesh_config-5.jpg}
+%	\vspace{-1.9cm}
 	\begin{center}
 	%\animategraphics[loop,controls,width=\textwidth]{5}{config-}{0}{5}
-	\transduration<0-5>{0}
+	%\transduration<0-5>{0}
 	\multiinclude[<+->][format=jpg, graphics={ scale=0.3}]{mesh_config}
 	\end{center}
 \end{frame}
@@ -748,51 +752,45 @@
 			\begin{enumerate}
 				\item{Perform adjoint photon transport at each
 					time step of geometry movement}
+				\item{Score adjoint photon flux in each volume
+					element, v}
 				\item{Integrate over time}
 			\end{enumerate}
 	\end{itemize}
-  \begin{equation}\label{eq:adj_src_1_avg}
-	 q_{n,v}^{+}(E_{n}) =
-	 \int_{t}  \int_{E_{\gamma}}
-	 T_{v}(E_n, E_{\gamma}, t) 
-	 \phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t)
-	 \, dE_{\gamma} \, dt
-  \end{equation}
+%\begin{equation}\label{eq:adj_src_1_avg}
+%	 q_{n,v}^{+}(E_{n}) =\frac
+%	 {\int_{t}  \int_{E_{\gamma}}
+%	 T_{v}(E_n, E_{\gamma}, t) 
+%	 \phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t)
+%	 \, dE_{\gamma} \, dt}
+%	 {\int_t dt}
+% \end{equation}
 
-\begin{itemize}
-\item{$\phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t) $ is the 
-adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
-\item{$T_{v}(E_n, E_{\gamma}, t) $ is the T value of the material in volume
-		element v, at decay time t}
-\end{itemize}
+%\begin{itemize}
+%\item{$\phi_{\gamma}^{+}(\overrightarrow{r}_{v}(t), E_{\gamma},t) $ is the 
+%adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
+%\item{$T_{v}(E_n, E_{\gamma}, t) $ is the T value of the material in volume
+%		element v, at decay time t}
+%\end{itemize}
 \end{frame}
 
 \begin{frame}{Time-integrated Adjoint Neutron Source}
+%	\begin{itemize}
+%		\item{Average the adjoint photon flux calculated at each time step}
+%	\end{itemize}
+%\begin{equation}\label{eq:sum}
+%	\phi_{\gamma,v, h}^{+} =
+%	\frac{\sum_{t_{mov}}{\phi_{\gamma,v,h,t_{mov}}^{+}}\Delta{t_{mov}}}
+%	{t_{tot}}
+%\end{equation}
 	\begin{itemize}
-		\item{Average the adjoint photon flux calculated at each time step}
-	\end{itemize}
-\begin{equation}\label{eq:sum}
-	\phi_{\gamma,v, h}^{+} =
-	\frac{\sum_{t_{mov}}{\phi_{\gamma,v,h,t_{mov}}^{+}}\Delta{t_{mov}}}
-	{t_{tot}}
-\end{equation}
-        \begin{figure}
-	\centering
-		\hspace{1.6cm}
-	\includegraphics[scale=0.30]{mesh_total.jpg}
-	\end{figure}
-
-\end{frame}
-
-\begin{frame}{Time-integrated Adjoint Neutron Source}
-	\begin{itemize}
-          \item{Calculate T for each voxel}
+          \item{Calculate coupling term, T, for each volume element}
 
 	    \begin{equation}\label{eq:T}
 	  	T_{v,g,h} = \dfrac{q_{\gamma,v,h}(\phi_{n,v,g})}{\phi_{n,v,g}}
 	    \end{equation}
 
-	  \item{Combine with adjoint photon flux in each voxel}
+	  \item{Combine with adjoint photon flux in each volume element}
 
 	    \begin{equation}\label{eq:tgt_n_src}
 	    	q_{n,v,g}^{+} = \frac
@@ -801,7 +799,17 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 	    	{t_{tot}}
 	    \end{equation}
 	\end{itemize}
+        \begin{figure}
+	\centering
+		\hspace{1.6cm}
+		\vspace{1.8cm}
+	\includegraphics[scale=0.260]{mesh_total.jpg}
+	\end{figure}
+
 \end{frame}
+
+%\begin{frame}{Time-integrated Adjoint Neutron Source}
+%\end{frame}
 
 \begin{frame}{Time-integrated (T)GT-CADIS}
 	\begin{itemize}
@@ -1268,6 +1276,18 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 %\end{frame}
 
 \section{Experiment}
+\begin{frame}{Experiment}
+	\begin{itemize}
+		\item{Toy problem}
+	\begin{itemize}
+		\item{Steel chamber with moving component}
+		\item{Incrementally add optimization}
+		\item{Calculate figure of merit (FOM) to assess utility of
+			TGT-CADIS method}
+	\end{itemize}
+\item{Full-scale FES demonstration}
+	\end{itemize}
+\end{frame}
 %\begin{frame}{Time-integrated R2S: Analog}
 %%% 1. No VR 
 \begin{frame}{Experiment: Toy Problem}
@@ -1439,13 +1459,6 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 \end{columns}
 \end{frame}
 
-\begin{frame}{Experiment: Toy Problem}
-	\begin{itemize}
-		\item{Incrementally add optimization}
-		\item{Calculate figure of merit (FOM) to assess utility of
-			TGT-CADIS method}
-	\end{itemize}
-\end{frame}
 
 %\begin{frame}{Error Calculation}
 %\end{frame}
@@ -1526,9 +1539,14 @@ adjoint flux of photons of energy $E_{\gamma}$, in volume element v, at time t}
 \begin{frame}{TODO}
 	\begin{itemize}
 		\item{REFERENCES}
+		\item{FW-CADIS}
+		\item{Pros/cons deterministic/MC}
+		\item{Intro DAGMC, MOAB}
+		\item{Too much detail in Gen. MS-CADIS?}
 		\item{labels on tet mesh time slices}
 		\item{Overall alignment/sizing/spacing}
-		\item{Add more on moving geom progress}
+		\item{Add more on moving geom progress, movie}
+		\item{OBB tree optimization}
 	\end{itemize}
 \end{frame}
 \end{document}
