@@ -219,7 +219,7 @@
 \begin{figure}
 	\centering
 	\includegraphics[scale=0.5]{iter_pflux.jpg}
-	\caption{Photon flux in ITER tokamak building.}
+	\caption{Photon source in ITER tokamak building.}
 \end{figure}
 
 \end{columns}
@@ -227,15 +227,16 @@
 
 \begin{frame}{Error in MC Calculations}
 \begin{itemize}
-\item{Uncertainty in MC Calculations:}
+\item{Uncertainty in MC calculations:}
 \begin{equation} \label{eq:1.2}
 		\Re = \frac{\sigma_{\overline{x}}}{{\overline{x}}}
 \end{equation}
-\item{$\sigma_{\overline{x}}$ is proportional
-	to $1/\sqrt{\# histories}$} %\cite{mcnp_manual}.
+		\begin{center}
+		{$\sigma_{\overline{x}} \propto \frac{1}{\sqrt{N}}$}%, N is number of histories} %\cite{mcnp_manual}.
+		\end{center}
 \item{To decrease statistical uncertainty:}
   \begin{itemize}
-  \item{Increase number of histories}
+  \item{Increase number of histories, N}
   \item{Use variance reduction (VR) techniques}
   \end{itemize}
 \end{itemize}
@@ -245,69 +246,126 @@
 \frametitle{MC Variance Reduction Techniques}
 \begin{itemize}
 \item{Techniques to modify particle behavior}
-\begin{itemize}
+   \begin{itemize}
 	\item{\textbf{Goal:} preferentially sample events that will contribute to results of interest}
-\end{itemize}
+   \end{itemize}
 \item{Statistical weight of particles is adjusted to keep playing a fair game}
+\item{Types}
+	\begin{itemize}
+		\item{\textbf{Modified Sampling:} source direction and energy biasing}
+		\item{\textbf{Population Control:} geometry and energy
+			splitting/rouletting}
+	\end{itemize}
+                \begin{figure}
+		%\centering
+			\vspace{0.5cm}
+			\hspace{-1cm}
+		\includegraphics[scale=0.44]{vr_types.jpg}
+		\end{figure}
 \end{itemize}
 \end{frame}
+
+%\begin{frame}{Hybrid Deterministic/MC VR Methods: CADIS}
+\begin{frame}{Hybrid Deterministic/MC VR Methods}
+%    \begin{itemize}
+%\end{itemize}
+\begin{itemize}
+\item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to
+		generate \textbf{Monte Carlo} VR parameters} %in a \textbf{consistent} manner}
+\item{Adjoint flux can define the importance of regions of phase space to the detector response}
+\item{Define detector response function to be the adjoint source}
+\end{itemize}
+\vspace{0.7cm}
+%Forward particle transport
+\textbf{Forward:}
+\begin{equation} \label{eq:3.1a}
+	 H\Psi(\overrightarrow{r}, E,\widehat{\Omega})  = q(\overrightarrow{r}, E,\widehat{\Omega})
+\end{equation}
+%\begin{equation} \label{eq:3.1b}
+	\begin{center}
+		$H = \widehat{\Omega} \cdot \nabla +
+		    \sigma_{t}(\overrightarrow{r},E) - 
+			\int_{0}^{\infty} dE'
+			\int_{4\pi} d\Omega'
+			\sigma_{s}( \overrightarrow{r}, E' 
+			\rightarrow E, \widehat{\Omega}' 
+			\rightarrow \widehat{\Omega} )$
+	\end{center}
+%\end{equation}
+	\vspace{0.7cm}
+%Adjoint particle transport
+\textbf{Adjoint:}
+       \begin{equation}
+	 %       H^+\Psi^+ = q^+
+	 H^+ \Psi^+(\overrightarrow{r}, E,\widehat{\Omega})  = q^+(\overrightarrow{r}, E,\widehat{\Omega})
+       \end{equation} 
+       %\begin{equation}
+	\begin{center}
+	$H^{+} = -\widehat{\Omega} \cdot \nabla +
+	    \sigma_{t}(\overrightarrow{r},E) - 
+		\int_{0}^{\infty} dE'
+		\int_{4\pi} d\Omega'
+		\sigma_{s}( \overrightarrow{r}, E 
+		\rightarrow E', \widehat{\Omega} 
+		\rightarrow \widehat{\Omega}' )$
+       \end{center}
+%       \end{equation}
+%    \begin{itemize}
+    %\item{Adjoint transport $\sim$ "backwards" transport}
+%    \end{itemize}
+
+
+\end{frame}
+
+%\begin{frame}{Hybrid Deterministic/MC VR Methods}
+%  \begin{itemize}
+%  \item{Use the adjoint flux, $\phi^+$, to generate MC source and transport biasing
+%	  parameters}
+%  \end{itemize}
+%	\begin{columns}
+%        \column{0.45\textwidth}
+%			\begin{block}%{Uniform vs. biased source distribution}
+%                                     {Source: biased PDF}
+%               \begin{figure}
+%		\centering
+%		\includegraphics[scale=0.5]{uni_bias_src.jpg}
+%		\end{figure}
+%			\end{block}
+%        \column{0.45\textwidth}
+%                \begin{block}{Transport: weight windows}
+%			\vspace{0.8cm}
+%                \begin{figure}
+%		\centering
+%		\includegraphics[scale=0.51]{ww_ex2.png}
+%		\end{figure}
+%			\vspace{0.56cm}
+%                \end{block}
+%	\end{columns}
+%\end{frame}
 
 \begin{frame}
 \frametitle{Hybrid Deterministic/MC VR Methods: CADIS}
 	\begin{block}{\textbf{C}onsistent \textbf{A}djoint \textbf{D}riven
 	\textbf{I}mportance \textbf{S}ampling (CADIS)}
-\begin{itemize}
-\item{Adjoint flux can define the importance of regions of phase space to the detector response}
-\item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to
-	generate \textbf{Monte Carlo} VR parameters} %in a \textbf{consistent} manner}
-%    \begin{itemize}
-    %\item{Adjoint transport $\sim$ "backwards" transport}
-    \item{Define detector response function to be the adjoint source}
-%    \end{itemize}
-\end{itemize}
-
-
-%\vspace{0.2cm}
-%       \begin{equation}
-%        H^+\Psi^+ = q^+
-%       \end{equation} 
-%       \begin{equation}
-%	H^{+} = -\widehat{\Omega} \cdot \nabla +
-%	    \sigma_{t}(\overrightarrow{r},E) - 
-%		\int_{0}^{\infty} dE'
-%		\int_{4\pi} d\Omega'
-%		\sigma_{s}( \overrightarrow{r}, E 
-%		\rightarrow E', \widehat{\Omega} 
-%		\rightarrow \widehat{\Omega}' )
-%       \end{equation}
-\end{block}
-\end{frame}
-
-\begin{frame}
-\frametitle{Hybrid Deterministic/MC VR Methods: CADIS}
   \begin{itemize}
-  \item{Use the adjoint flux to generate MC source and transport biasing
+  \item{Use the adjoint flux, $\Psi^+$, to generate MC source and transport biasing
 	  parameters}
 %    \item{Particles are born within weight windows}
+  \item{Biased source:}
+\begin{equation} \label{eq:3.8}
+	\widehat{q}(\overrightarrow{r}, E, \widehat{\Omega}) =
+	\frac{\Psi^{+}(\overrightarrow{r}, E,\widehat{\Omega})
+	q(\overrightarrow{r}, E, \widehat{\Omega})}{R}
+\end{equation}
+
+  \item{Weight window lower bounds:}
+\begin{equation} \label{eq:3.12}
+	w_{l}(\overrightarrow{r}, E, \widehat{\Omega}) = 
+	\frac{R}{\Psi^{+}(\overrightarrow{r}, E, \widehat{\Omega})
+	(\frac{\alpha + 1}{2})}
+\end{equation}
   \end{itemize}
-	\begin{columns}
-        \column{0.45\textwidth}
-			\begin{block}%{Uniform vs. biased source distribution}
-                                     {Source: biased PDF}
-                \begin{figure}
-		\centering
-		\includegraphics[scale=0.32]{bsrc_ex.jpg}
-		\end{figure}
-			\end{block}
-        \column{0.45\textwidth}
-                \begin{block}{Transport: weight windows}
-			\vspace{0.1cm}
-                \begin{figure}
-		\centering
-		\includegraphics[scale=0.51]{ww_ex2.png}
-		\end{figure}
-                \end{block}
-	\end{columns}
+\end{block}
 \end{frame}
 
 \begin{frame}
@@ -345,17 +403,17 @@
   \item {VR method to optimize the initial radiation transport step of a
 	  coupled, multi-step process}
 		  \begin{itemize}
-			  \item{Relies upon function that represents importance
+			  \item{Relies upon biasing function that represents importance
 				  of particles to final response of
 				  interest}
 		  \end{itemize}
-  \item{When applied to SDR analysis, MS-CADIS will optimize the neutron transport}
-    \begin{itemize}
-    \item{Use function that represents the   importance of the neutrons to
-	    the final shutdown dose rate}
-    \end{itemize}
-  \end{itemize}
-%\end{itemize}
+%	  \item{When applied to SDR analysis, MS-CADIS will optimize the neutron transport}
+%    \begin{itemize}
+%    \item{Use function that represents the   importance of the neutrons to
+%	    the final shutdown dose rate}
+%    \end{itemize}
+%  \end{itemize}
+\end{itemize}
 \end{block}
 % \centering
 %	\begin{equation}
@@ -371,6 +429,82 @@
 %		q_{\gamma}(\overrightarrow{r}, E_{\gamma})
 %		dr dE_{\gamma} 
 %	\end{equation}
+\end{frame}
+
+\begin{frame}{Generalized MS-CADIS}
+%Back up a bit and look at MS-CADIS in generic fashion
+\begin{itemize}
+  \item{System of coupled, multi-physics:}
+
+	\begin{center}
+          \begin{equation}
+          	Primary:	H\phi(u) = q(u)
+          \end{equation}
+		\vspace{-0.4cm}          
+          \begin{equation}
+          	Secondary:	L\psi(v) = b(v)
+          \end{equation}
+	\end{center}
+
+  \item{Adjoint identities:}
+	\begin{center}
+          \begin{equation}
+          	\langle \phi^{+}, q \rangle =
+          	\langle \phi, q^{+} \rangle 
+          \end{equation}
+		\vspace{-0.4cm}          
+          \begin{equation}
+          	\langle \psi^{+}, b \rangle =
+          	\langle \psi, b^{+} \rangle 
+          \end{equation}
+	\end{center}
+  \item{MS-CADIS requires a representation of the relationship between primary
+	  and secondary physics:}
+	\begin{center}
+          \begin{equation}\label{eq:coupling}
+            b(v) = \langle \sigma_b(u,v), \phi(u) \rangle
+          \end{equation}
+        \end{center}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Generalized MS-CADIS}
+\begin{itemize}
+\item{Response to secondary physics:}
+\begin{equation} \label{eq:response}
+  R_{final} = \langle \omega_R(v), \psi(v) \rangle
+\end{equation}
+\item{Set $\omega_R$ as adjoint source and invoke adjoint identity:}
+\begin{equation}
+  R_{final} = \langle \omega_R, \psi \rangle = \langle b, \psi_R^{+}\rangle
+\end{equation}
+\item{Substitute Eq. \ref{eq:coupling} :}
+\begin{equation}
+  R_{final} = \left \langle\  \langle \sigma_b(u,v) , \phi(u) \rangle,\
+	\psi_R^{+}(v) \ \right\rangle
+\end{equation}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Generalized MS-CADIS}
+\begin{itemize}
+	\item{Switch the order of integration}
+\begin{equation}\label{eq:pseudo-response}
+  R_{final} = \left \langle \ \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle,\
+	\phi(u) \ \right\rangle
+\end{equation}
+\item{Set response of primary physics equal to final response of the system and
+	invoke the adjoint identity to solve for $q^+$:}
+\begin{equation}
+  R_{final} = \left \langle \ \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle,\
+	\phi(u) \ \right\rangle = \langle q(u), \phi_R^{+}(u) \rangle
+\end{equation}
+\item{MS-CADIS adjoint primary source:}
+\begin{equation}
+  q^{+}(u) \equiv \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle
+\end{equation}
+\end{itemize}
 \end{frame}
 
 %\begin{frame}
@@ -639,81 +773,6 @@
 
 \end{frame}
 
-\begin{frame}{Generalized MS-CADIS}
-%Back up a bit and look at MS-CADIS in generic fashion
-\begin{itemize}
-  \item{System of coupled, multi-physics:}
-
-	\begin{center}
-          \begin{equation}
-          	Primary:	H\phi(u) = q(u)
-          \end{equation}
-		\vspace{-0.4cm}          
-          \begin{equation}
-          	Secondary:	L\psi(v) = b(v)
-          \end{equation}
-	\end{center}
-
-  \item{Adjoint identities:}
-	\begin{center}
-          \begin{equation}
-          	\langle \phi^{+}, q \rangle =
-          	\langle \phi, q^{+} \rangle 
-          \end{equation}
-		\vspace{-0.4cm}          
-          \begin{equation}
-          	\langle \psi^{+}, b \rangle =
-          	\langle \psi, b^{+} \rangle 
-          \end{equation}
-	\end{center}
-  \item{MS-CADIS requires a representation of the relationship between primary
-	  and secondary physics:}
-	\begin{center}
-          \begin{equation}\label{eq:coupling}
-            b(v) = \langle \sigma_b(u,v), \phi(u) \rangle
-          \end{equation}
-        \end{center}
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Generalized MS-CADIS}
-\begin{itemize}
-\item{Response to secondary physics:}
-\begin{equation} \label{eq:response}
-  R_{final} = \langle \omega_R(v), \psi(v) \rangle
-\end{equation}
-\item{Set $\omega_R$ as adjoint source and invoke adjoint identity:}
-\begin{equation}
-  R_{final} = \langle \omega_R, \psi \rangle = \langle b, \psi_R^{+}\rangle
-\end{equation}
-\item{Substitute Eq. \ref{eq:coupling} :}
-\begin{equation}
-  R_{final} = \left \langle\  \langle \sigma_b(u,v) , \phi(u) \rangle,\
-	\psi_R^{+}(v) \ \right\rangle
-\end{equation}
-
-\end{itemize}
-\end{frame}
-
-\begin{frame}{Generalized MS-CADIS}
-\begin{itemize}
-	\item{Switch the order of integration}
-\begin{equation}\label{eq:pseudo-response}
-  R_{final} = \left \langle \ \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle,\
-	\phi(u) \ \right\rangle
-\end{equation}
-\item{Set response of primary physics equal to final response of the system and
-	invoke the adjoint identity to solve for $q^+$:}
-\begin{equation}
-  R_{final} = \left \langle \ \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle,\
-	\phi(u) \ \right\rangle = \langle q(u), \phi_R^{+}(u) \rangle
-\end{equation}
-\item{MS-CADIS adjoint primary source:}
-\begin{equation}
-  q^{+}(u) \equiv \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle
-\end{equation}
-\end{itemize}
-\end{frame}
 
 \begin{frame}{Time-integrated Adjoint Primary Source}
 	\begin{itemize}
@@ -1539,12 +1598,14 @@
 \begin{frame}{TODO}
 	\begin{itemize}
 		\item{REFERENCES}
+		\item{Fig numbers}
 		\item{FW-CADIS}
 		\item{Pros/cons deterministic/MC}
 		\item{Intro DAGMC, MOAB}
 		\item{Too much detail in Gen. MS-CADIS?}
 		\item{labels on tet mesh time slices}
 		\item{Overall alignment/sizing/spacing}
+		\item{Error propagation}
 		\item{Add more on moving geom progress, movie}
 		\item{OBB tree optimization}
 	\end{itemize}
