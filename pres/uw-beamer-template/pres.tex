@@ -1,5 +1,6 @@
 \documentclass{beamer}
 \usepackage{tikz}
+\usepackage{multicol}
 \usetikzlibrary{shapes,arrows}
 \usetikzlibrary{shapes.multipart}
 \usetikzlibrary{automata,positioning}
@@ -19,9 +20,19 @@
 \addtolength{\highlightdepth}{\highlightmargin}
 \addtolength{\highlightheight}{\highlightdepth}
 \newcommand*{\Highlight}{\rlap{\textcolor{HighlightBackground}{\rule[-\highlightdepth]{\linewidth}{\highlightheight}}}}
-\newcommand{\outlineslide}{\begin{frame}\tableofcontents[currentsection]\end{frame}}
+%\newcommand{\outlineslide}{\begin{frame}\tableofcontents[currentsection]\end{frame}}
 
+\bibliographystyle{unsrt}
+\bibliography{thebibliography}
 
+\AtBeginSection[]{specialframe}
+\AtBeginSection[]{
+	\begin{frame}{Outline}
+		\begin{multicols}{2}
+		\tableofcontents[currentsection]
+		\end{multicols}
+	\end{frame}
+}
 \AtBeginSection[]{
   \begin{frame}
   \vfill
@@ -49,10 +60,9 @@
 
 \tableofcontents
 
-\section{Introduction}
+%\section{Introduction}
 %%Background
-\begin{frame}
-	\frametitle{Shutdown Dose Rate (SDR) Analysis}
+\begin{frame}{Shutdown Dose Rate (SDR) Analysis}
 \begin{columns}
 \column{0.5\textwidth}
 \begin{itemize}
@@ -120,19 +130,22 @@
 \begin{frame}{Goal}
 	\textbf{Optimize} the %\textbf{radiation transport} simulation used to
 	calculation of the \textbf{shutdown dose rate}
-	at a particular location as activated components are
+	at a particular location when activated components are
 	\textbf{moving} around the facility.
 \end{frame}
 
 %\begin{frame}{Computational Radiation Transport}
 %Deterministic vs. MC
 %\end{frame}
-
+\section{Literature Review}
+\subsection{SDR Analysis}
 \begin{frame}
 \frametitle{SDR Solution Methods}
 
-\begin{minipage}{0.47\textwidth}
-\begin{block}{Direct 1-Step Method (D1S)}
+%\begin{minipage}{0.47\textwidth}
+\begin{columns}
+		\column{0.45\textwidth}
+	\begin{block}{Direct 1-Step Method (D1S) \cite{d1s}}
 	\vspace{1cm}
 	\begin{figure}
         \centering
@@ -145,7 +158,7 @@
         \tikzstyle{line} = [draw, -latex]
         \tikzstyle{arrow} = [thick, ->, >=stealth]
         
-	\resizebox{5cm}{4cm}{
+	\resizebox{4.9cm}{3.6cm}{
         \begin{tikzpicture}[every text node part/.style={align=center}]
 		% Optimized neutron transport
 		\node [code] (mc) {Monte Carlo \\ neutron/photon transport};
@@ -158,14 +171,15 @@
 		}
         \end{figure}
 \end{block}
-\end{minipage}
-\hfill
-\begin{minipage}{0.47\textwidth}
-\begin{block}{Rigorous 2-Step Method (R2S)}
-	\vspace{1cm}
+%\end{minipage}
+%\hfill
+%\begin{minipage}{0.47\textwidth}
+		\column{0.49\textwidth}
+	\begin{block}{Rigorous 2-Step Method (R2S) \cite{r2s}}
+	\vspace{0.3cm}
+
 	\begin{figure}
         \centering
-
         \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
 		node distance=3.0cm]
         \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
@@ -174,7 +188,7 @@
         \tikzstyle{line} = [draw, -latex]
         \tikzstyle{arrow} = [thick, ->, >=stealth]
         
-	\resizebox{5cm}{4cm}{
+	\resizebox{5.9cm}{4.2cm}{
         \begin{tikzpicture}[every text node part/.style={align=center}]
 		% Optimized neutron transport
 		\node [code] (nmc) {Monte Carlo \\ neutron transport};
@@ -197,7 +211,8 @@
 %	\caption{R2S workflow \label{fig:r2s_flow}}
 \end{figure}
 \end{block}
-\end{minipage}
+%\end{minipage}
+\end{columns}
 %Add pros/cons of D1S, R2S
 \end{frame}
 
@@ -207,10 +222,13 @@
 \begin{columns}
 \column{0.7\textwidth}
 \begin{itemize}
-	\item{Monte Carlo (MC) analysis of FES is:}
+	\item{Monte Carlo (MC) solution method \cite{mcnp_manual}}%analysis of FES is:}
 	\begin{itemize}
+		\item{Simulates random particle walks through phase space}
+	        \item{Score quantities of interest 
+		in discrete regions of phase space}
 		\item{Accurate for large, complex models}
-		\item{Challenging due to the highly attenuating structural materials}
+		\item{Challenged in highly attenuated regions}
                   \begin{itemize}
                   \item{Results scored in regions that have low particle flux, have higher statistical uncertainty}
                   \end{itemize}
@@ -236,7 +254,12 @@
 		\begin{center}
 		{$\sigma_{\overline{x}} \propto \frac{1}{\sqrt{N}}$}%, N is number of histories} %\cite{mcnp_manual}.
 		\end{center}
-\item{To decrease statistical uncertainty:}
+\item{Efficiency in MC calculations:}
+\begin{equation} \label{eq:1.3}
+	FOM = \frac{1}{{{{\Re}^2}t_{proc}}}
+\end{equation}
+
+\item{To decrease uncertainty:}
   \begin{itemize}
   \item{Increase number of histories, N}
   \item{Use variance reduction (VR) techniques}
@@ -244,27 +267,26 @@
 \end{itemize}
 \end{frame}
 
-\begin{frame}
-\frametitle{MC Variance Reduction Techniques}
+\subsection{MC VR Techniques}
+\begin{frame}{MC Variance Reduction Techniques}
 \begin{itemize}
 \item{Techniques to modify particle behavior}
    \begin{itemize}
 	\item{\textbf{Goal:} preferentially sample events that will contribute to results of interest}
    \end{itemize}
-\item{Statistical weight of particles is adjusted to keep playing a fair game}
+\item{Adjust statistical weight of particles to keep playing a fair game}
 \item{Types}
 	\begin{itemize}
-		\item{\textbf{Modified Sampling:} source direction and energy biasing}
-		\item{\textbf{Population Control:} geometry and energy
-			splitting/rouletting}
+		\item{\textbf{Modified Sampling:} source biasing}
+		\item{\textbf{Population Control:} splitting/rouletting}
 	\end{itemize}
                 \begin{figure}
 		%\centering
 			\vspace{0.5cm}
 			\hspace{-1cm}
 		\includegraphics[scale=0.44]{vr_types.jpg}
-			\caption{a) Analog b) Source biasing c)
-			Splitting/rouletting}
+			\caption{a) analog b) source biasing c)
+			splitting/rouletting \cite{mcnp_primer}}
 		\end{figure}
 \end{itemize}
 \end{frame}
@@ -277,7 +299,7 @@
 \item{Use \textbf{deterministic} estimate of the adjoint flux, $\Psi^+$, to
 		generate \textbf{Monte Carlo} VR parameters} %in a \textbf{consistent} manner}
 \item{Adjoint flux can define the importance of regions of phase space to the detector response}
-\item{Define detector response function to be the adjoint source}
+\item{Define adjoint source to be detector response function}
 \end{itemize}
 \vspace{0.5cm}
 %Forward particle transport
@@ -300,8 +322,8 @@
 %Adjoint particle transport
 \textbf{Adjoint:}
 \begin{equation} \label{eq:3.2b}
-		\langle \Psi^{+} , q \rangle =
-		\langle \Psi, q^{+} \rangle
+		\langle \Psi^{+} , H\Psi \rangle =
+		\langle \Psi, H^+\Psi^{+} \rangle
 \end{equation}
        \begin{equation}
 	 %       H^+\Psi^+ = q^+
@@ -352,7 +374,7 @@
 %\end{frame}
 
 \begin{frame}
-\frametitle{Hybrid Deterministic/MC VR Methods: CADIS}
+	\frametitle{Hybrid Deterministic/MC VR Methods: CADIS \cite{cadis}}
 	\begin{block}{\textbf{C}onsistent \textbf{A}djoint \textbf{D}riven
 	\textbf{I}mportance \textbf{S}ampling (CADIS)}
   \begin{itemize}
@@ -405,7 +427,7 @@
 
 
 \begin{frame}{Variance Reduction for SDR Analysis: MS-CADIS}
-	\begin{block}{\textbf{M}ulti-\textbf{S}tep (MS)-CADIS}
+	\begin{block}{\textbf{M}ulti-\textbf{S}tep (MS)-CADIS \cite{mscadis}}
   \begin{itemize}
   \item {VR method to optimize the initial radiation transport step of a
 	  coupled, multi-step process}
@@ -459,7 +481,7 @@
 		\vspace{0.4cm}
 		$b(v) = f(\phi(u))$
 	\end{center}
-
+  \pause
   \item{Adjoint identities:}
 	\begin{center}
           \begin{equation}
@@ -488,22 +510,27 @@
 \begin{equation} \label{eq:response}
   R_{final} = \langle \omega_R(v), \psi(v) \rangle
 \end{equation}
+\pause
 \item{Define  $b^+ \equiv \omega_R$ and apply adjoint
 	identity:}
 \begin{equation}
-  R_{final} = \langle \omega_R, \psi \rangle = \langle b, \psi_R^{+}\rangle
+  R_{final} = \langle \omega_R, \psi \rangle 
+	= \langle b^+, \psi \rangle
+	= \langle b, \psi_R^{+}\rangle
 \end{equation}
 		\vspace{-0.4cm}          
 		\begin{itemize}
 		\item{$\psi_R^+$ represents importance function for $R_{final}$}
 		\end{itemize}
-		\vspace{0.4cm}          
+		\vspace{0.4cm}         
+\pause
 \item{Set primary response to final response and apply adjoint
 	identity:}
 	\begin{equation}
 		R_{final} = \langle q^+, \phi \rangle
 		          = \langle q, \phi_R^+ \rangle
 	\end{equation}
+\pause
 \item{Solving for $q^+$ requires this unique relationship:}
           \begin{equation}\label{eq:coupling}
             b(v) = \langle \sigma_b(u,v), \phi(u) \rangle
@@ -521,6 +548,7 @@
 	=\left \langle\  \langle \sigma_b(u,v) , \phi(u) \rangle,\
 	\psi_R^{+}(v) \ \right\rangle
 \end{equation}
+\pause
 	\item{Switch the order of integration}
 \begin{equation}\label{eq:pseudo-response}
 	R_{final} = \langle q^+(u), \phi(u) \rangle
@@ -528,13 +556,11 @@
 	\phi(u) \ \right\rangle
 \end{equation}
 		\vspace{0.2cm}
+\pause
 \item{MS-CADIS adjoint primary source:}
 \begin{equation}
   q^{+}(u) \equiv \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle
 \end{equation}
-		\vspace{0.2cm}
-\item{Prompt photon production: $\sigma_b(u,v) \equiv \sigma_{n,\gamma}(E_n,
-	E_{\gamma})$}
 \end{itemize}
 \end{frame}
 
@@ -548,7 +574,7 @@
 	\begin{itemize}
 		\item{$q^+(u) \equiv q_n^+(E_n)$}
 			\vspace{0.1cm}
-		\item{$\psi^+(v) \equiv \phi_{\gamma}^+$}
+		\item{$\psi^+(v) \equiv \phi_{\gamma}^+(E_{\gamma})$}
 			\vspace{0.1cm}
 	\item{Prompt photon production: $\sigma_b(u,v) \equiv \sigma_{n,\gamma}(E_n,
 	E_{\gamma})$}
@@ -590,9 +616,8 @@
 %
 %\end{frame}
 		
-\begin{frame}
-\frametitle{Variance Reduction for SDR Analysis: GT-CADIS}
-\begin{block}{\textbf{G}roupwise \textbf{T}ransmutation (GT)-CADIS}
+\begin{frame}{Variance Reduction for SDR Analysis: GT-CADIS}
+\begin{block}{\textbf{G}roupwise \textbf{T}ransmutation (GT)-CADIS \cite{gtcadis}}
   \begin{itemize}
   \item{Implementation of MS-CADIS specifically for SDR analysis}
   \item{Provides method to calculate optimal adjoint neutron source, $q_n^+$:}
@@ -613,27 +638,30 @@
 	\langle T(E_{n}, E_{\gamma}),
 	\phi_{n}(E_{n}) \rangle
 \end{equation}
-\item{Calculate by performing single-energy-group irradiations of each
-	material and recording the resultant photon emission densities}
-	\begin{equation}
-		T_{g,h} = \frac{q_{\gamma,h}(\phi_{n,g})}{\phi_{n,g}}
-	\end{equation}
 
   \end{itemize}
 \end{block}
-%	  \item{Calculate T: (move this to later slide)}
-%	  \begin{enumerate}
-%		  \item{Irradiate each material with neutrons from a single
-%			  energy group, g}
-%		  \item{Record resulting photon emission in each energy group,
-%			  h}
-%	  \end{enumerate}
-%  \end{itemize}
 %
 %\end{itemize}
 %\centering
 %
-		  
+\end{frame}
+
+\begin{frame}{Variance Reduction for SDR Analysis: GT-CADIS}
+\begin{block}{\textbf{G}roupwise \textbf{T}ransmutation (GT)-CADIS \cite{gtcadis}}
+  \begin{itemize}
+	  \item{Calculate T:}
+	  \begin{enumerate}
+		  \item{Irradiate each material with neutrons from a single
+			  energy group, g}
+		  \item{Record resulting photon emission in each energy group,
+			  h}
+	  \end{enumerate}
+  \end{itemize}
+	\begin{equation}
+		T_{g,h} = \frac{q_{\gamma,h}(\phi_{n,g})}{\phi_{n,g}}
+	\end{equation}
+\end{block}
 \end{frame}
 
 
@@ -654,7 +682,7 @@
 %\end{itemize}
 %\end{frame}
 
-\section{Demonstration}
+\subsection{GT-CADIS Demonstration}
 \begin{frame}{GT-CADIS Demonstration: Problem Description}
 	\begin{columns}
         \column{0.48\textwidth}
@@ -666,12 +694,14 @@
 			   \end{itemize}
 		   \item{Source}
 			   \begin{itemize}
-				   \item{Volume source in central cavity}
+				   \item{Uniform volume source in central cavity}
 				   \item{13.8-14.2 MeV neutrons}
 			   \end{itemize}
 		   \item{Detector}
+			   \begin{itemize}
 			   \item{Calculate SDR}
 			   \item{2m away from chamber}
+			   \end{itemize}
 	   \end{itemize}
         \column{0.48\textwidth}
 		\begin{figure}
@@ -682,12 +712,12 @@
 \end{frame}
 
 \begin{frame}{GT-CADIS Demonstration: Adjoint Photon Transport}
-GT-CADIS workflow
 	\begin{columns}
 		\column{0.4\textwidth}
 		\hspace{-1.5cm}
-\begin{figure}
 \centering
+GT-CADIS workflow
+\begin{figure}
 
         \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
 	node distance=1.3cm]
@@ -725,8 +755,7 @@ GT-CADIS workflow
 \begin{figure}
 	\includegraphics[scale=0.185]{gtcadis_adj_p_g41.png}
 	\caption [GT-CADIS adjoint photon flux] 
-	{Adjoint photon flux used to generate adjoint neutron source according
-	to the GT-CADIS method.\label{fig:ex.adj_p_flux}}
+	{Adjoint photon flux\label{fig:ex.adj_p_flux}}
 \end{figure}
 
 	\end{columns}
@@ -734,12 +763,12 @@ GT-CADIS workflow
 \end{frame}
 
 \begin{frame}{GT-CADIS Demonstration: Adjoint Neutron Transport}
-GT-CADIS workflow
 	\begin{columns}
 		\column{0.4\textwidth}
 		\hspace{-1.5cm}
-\begin{figure}
 \centering
+GT-CADIS workflow
+\begin{figure}
 
         \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
 	node distance=1.3cm]
@@ -786,7 +815,7 @@ GT-CADIS workflow
 
 \end{frame}
 
-\begin{frame}{GT-CADIS Demonstration: Variance Reduction Parameters}
+\begin{frame}{GT-CADIS Demonstration: VR Parameters}
 	\begin{columns}
 		\column{0.47\textwidth}
 \begin{figure} 
@@ -854,7 +883,8 @@ GT-CADIS workflow
 	\end{itemize}
 \begin{figure} 
 	\includegraphics[scale=0.35]{gt_fom.jpg}
-	\caption {FOM as function of neutron transport processor time}
+	\caption {FOM as function of neutron transport processor time.
+	\cite{eb_thesis}}
 \end{figure}
 
 \end{frame}
@@ -889,8 +919,10 @@ GT-CADIS workflow
 
 
 
+\subsection{Moving Geometries and Sources}
 \begin{frame}{Moving Geometries and Sources}
-	\begin{block}{MCNP6 Moving Objects}
+	\begin{block}{MCNP6 Moving Objects \cite{mcnp_moving_1},
+		\cite{mcnp_moving_2}}
 	\begin{itemize}
 		\item{Update in future version of MCNP6}
 		\item{Allows movement of objects, sources, delayed particles
@@ -902,7 +934,7 @@ GT-CADIS workflow
 \end{frame}
 
 \begin{frame}{Moving Geometries and Sources}
-		\begin{block}{Mesh Coupled R2S (MCR2S)}
+	\begin{block}{Mesh Coupled R2S (MCR2S)\cite{mcr2s}}
 	\begin{itemize}
 		\item{Capability that allows components to move before photon
 			transport step}
@@ -956,6 +988,7 @@ GT-CADIS workflow
 %		{\textbf{Need to derive new adjoint source}}
 %
 %\end{frame}
+\subsection{TGT-CADIS: VR for SDR Analysis of Moving Systems}
 \begin{frame}{VR for SDR Analysis of Moving Systems}
 	\begin{itemize}
 		\item{GT-CADIS optimizes neutron transport step in static
@@ -1158,33 +1191,40 @@ GT-CADIS workflow
 
 \section{Implementation Plan}
 
+\subsection{Software}
 \begin{frame}{Software}
 	\begin{itemize}
-		\item{\textbf{PAR}allel, \textbf{TI}me-Dependent \textbf{SN} (PARTISN)}
+		\item{\textbf{PAR}allel, \textbf{TI}me-Dependent \textbf{SN}
+			(PARTISN) \cite{partisn}}
 		   \begin{itemize}
 		   \item{Deterministic adjoint transport}
 		   \end{itemize}
 		\item{\textbf{D}irect \textbf{A}ccelerated \textbf{G}eometry 
-		      \textbf{M}onte \textbf{C}arlo MCNP (DAGMCNP)}
+			\textbf{M}onte \textbf{C}arlo MCNP (DAGMCNP)
+			\cite{dagmc}}
 		   \begin{itemize}
 		   \item{Forward MC transport on CAD geometry}
 		   \end{itemize}
 		\item{\textbf{A}nalytic and \textbf{L}aplacian \textbf{A}daptive 
-                      \textbf{R}adioactivity \textbf{A}nalysis (ALARA)}
+			\textbf{R}adioactivity \textbf{A}nalysis (ALARA)
+			\cite{alara}}
 		   \begin{itemize}
 		   \item{Activation analysis}
 		   \end{itemize}
-		\item{\textbf{Py}thon for \textbf{N}uclear \textbf{E}ngineering (PyNE)}
+		\item{\textbf{Py}thon for \textbf{N}uclear \textbf{E}ngineering
+			(PyNE) \cite{pyne}}
 		   \begin{itemize}
 		   \item{Tools to support transport}
 		   \end{itemize}
-		\item{\textbf{M}esh-\textbf{O}riented dat\textbf{AB}ase (MOAB)}
+		\item{\textbf{M}esh-\textbf{O}riented dat\textbf{AB}ase (MOAB)
+			\cite{moab}}
 		   \begin{itemize}
 		   \item{Moving geometries}
 		   \end{itemize}
 	\end{itemize}
 \end{frame}
 
+\subsection{TGT-CADIS Workflow}
 \begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
 \begin{figure}
 \centering
@@ -1280,7 +1320,7 @@ GT-CADIS workflow
 %%%%% 1. Prepare geometries
 \begin{frame}{TGT-CADIS: Generate Step-wise Geometries}
 \begin{columns}
-\column{0.4\textwidth}
+\column{0.45\textwidth}
 	\vspace{-6cm}
 	\begin{itemize}
 		\item{Generate geometry files at each time step of movement
@@ -1288,7 +1328,7 @@ GT-CADIS workflow
 	\multiinclude[<+->][format=jpg, graphics={ scale=0.25}]{gray_config}
 	\end{itemize}
 		
-\column{0.6\textwidth}
+\column{0.55\textwidth}
 \begin{figure}
 \centering
         \vspace{1.3cm}
@@ -1880,7 +1920,7 @@ GT-CADIS workflow
 \begin{columns}
 \column{0.48\textwidth}
 	\begin{itemize}
-		\item{Toy problem to assess utility of TGT-CADIS}
+		\item{Toy problem to assess TGT-CADIS}
 	\begin{itemize}
 		\item{Steel chamber with moving component}
 		\item{Incrementally add optimization}
@@ -2077,17 +2117,18 @@ GT-CADIS workflow
 			user-defined motion data}
 			\begin{enumerate}
 				\item{Production of step-wise geometry files}
-				\item{DAGMC update to facilitate on-the-fly
+				\item{DAGMC update to facilitate
 					geometry transformations} 
 			\end{enumerate}
-		\item{Motion data:}
-			\begin{itemize}
-				\item{Time-dependent translation or rotation
-					vector, total length of time, number or desired time steps}
-				\item{Relocation transform}
-			\end{itemize}
+		%\item{Motion data:}
+		%	\begin{itemize}
+		%		\item{Time-dependent translation or rotation
+		%			vector, total length of time, number or desired time steps}
+		%		\item{Relocation transform}
+		%	\end{itemize}
 		\item{Common functionality:}
 			\begin{itemize}
+				\item{Use MOAB to store and manipulate mesh}
 				\item{Read tag data that specifies type of
 					transformation}
 				\item{Identify starting position of each
@@ -2097,31 +2138,73 @@ GT-CADIS workflow
 			\end{itemize}
 	\end{itemize}
 \end{frame}
+\subsection{Stepwise geometry tool}
 
-\begin{frame}{MC Moving Geometry Simulations}
-%\begin{columns}
-%\column{0.45\textwidth}
-%	\transduration<0-8>{0}
-%	\multiinclude[<+->][format=png, graphics={ scale=0.15}]{snapshot}
-%\column{0.45\textwidth}
-	\transduration<0-6>{0}
-	\multiinclude[<+->][format=png, graphics={ scale=0.15}]{Photon_flux}
+\begin{frame}{MC Moving Geometry: Stepwise Geometry Tool}
+\begin{itemize}
+\item{Tool to generate new geometry file at each time step}
+\item{Motion data:}
+	\begin{itemize}
+		\item{Time-dependent:}
+			\begin{itemize}
+				\item{Translation or rotation vector}
+				\item{Duration of time}
+				\item{Number of time steps}
+			\end{itemize}
+		\item{Relocation:}
+			\begin{itemize}
+		        	\item{Translation or rotation distance}
+			\end{itemize}
+
+	\end{itemize}
+\end{itemize}
+	\centering
+	\transduration<0-7>{0}
+	\multiinclude[<+->][format=png, graphics={ scale=0.17}]{Photon_flux}
 
 %\end{columns}
 \end{frame}
-\begin{frame}{MC Moving Geometry Simulations}
-%\begin{columns}
-%\column{0.45\textwidth}
+
+\begin{frame}{MC Moving Geometry: Stepwise Geometry Tool}
+\begin{itemize}
+\item{Tool to generate new geometry file at each time step during movement}
+\item{Motion data:}
+	\begin{itemize}
+		\item{Time-dependent:}
+			\begin{itemize}
+				\item{Translation and/or rotation vector}
+				\item{Duration of time}
+				\item{Number of time steps}
+			\end{itemize}
+		\item{Relocation:}
+			\begin{itemize}
+		        	\item{Translation and/or rotation distance}
+			\end{itemize}
+
+	\end{itemize}
+\end{itemize}
+	\begin{center}
 	\transduration<0-8>{0}
 	\multiinclude[<+->][format=png, graphics={ scale=0.15}]{snapshot}
-%\column{0.45\textwidth}
-%	\transduration<0-6>{0}
-%	\multiinclude[<+->][format=png, graphics={ scale=0.15}]{Photon_flux}
-
-%\end{columns}
+	\end{center}
+\end{frame}
+\subsection{DAGMC update}
+\begin{frame}{DAGMC Update for Moving Geometries}
+	\begin{itemize}
+		\item{Functionality to apply MCNP TR(n) card data to DAGMC
+			geometry}
+		\item{Motion data:}
+			\begin{itemize}
+				\item{Translation distance}
+			\end{itemize}
+		\item{Separate input file containing transformations for each
+			time step of geometry movement}
+	\end{itemize}
 \end{frame}
 
-\section{Conclusions}
+
+\section{Final Thoughts}
+%\subsection{Assumptions}
 \begin{frame}{Assumptions}
 			\begin{itemize}
 				\item{Photon transport occurs much faster than
@@ -2135,6 +2218,7 @@ GT-CADIS workflow
 					calculations}
 			\end{itemize}
 	\end{frame}
+%\subsection{Challenges}
 \begin{frame}{Challenges}
 			\begin{itemize}
 				\item{Depending on complexity of model and
@@ -2145,7 +2229,7 @@ GT-CADIS workflow
 					to keep file storage at minimum}
 			\end{itemize}
 \end{frame}
-
+%\subsection{Summary}
 \begin{frame}{Summary}
 	\begin{itemize}
 		\item{Accurate quantification of the SDR during maintenance
@@ -2169,15 +2253,9 @@ GT-CADIS workflow
 
 \begin{frame}{TODO}
 	\begin{itemize}
-		\item{REFERENCES}
-		\item{Fig numbers}
-		\item{FW-CADIS}
-		\item{Pros/cons deterministic/MC}
-		\item{Intro DAGMC, MOAB}
-		\item{Too much detail in Gen. MS-CADIS?}
+		\item{add error plots}
 		\item{labels on tet mesh time slices}
 		\item{Overall alignment/sizing/spacing}
-		\item{Error propagation}
 		\item{Add more on moving geom progress, movie}
 		\item{OBB tree optimization}
 	\end{itemize}
