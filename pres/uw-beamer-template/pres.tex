@@ -19,6 +19,7 @@
 \addtolength{\highlightdepth}{\highlightmargin}
 \addtolength{\highlightheight}{\highlightdepth}
 \newcommand*{\Highlight}{\rlap{\textcolor{HighlightBackground}{\rule[-\highlightdepth]{\linewidth}{\highlightheight}}}}
+\newcommand{\outlineslide}{\begin{frame}\tableofcontents[currentsection]\end{frame}}
 
 
 \AtBeginSection[]{
@@ -46,11 +47,12 @@
 	\maketitle
 \end{frame}
 
+\tableofcontents
+
 \section{Introduction}
 %%Background
 \begin{frame}
 	\frametitle{Shutdown Dose Rate (SDR) Analysis}
-
 \begin{columns}
 \column{0.5\textwidth}
 \begin{itemize}
