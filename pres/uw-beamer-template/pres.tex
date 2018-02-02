@@ -580,7 +580,7 @@
 \begin{equation}
   q^{+}(u) \equiv \langle \sigma_b(u,v) , \psi_R^{+}(v) \rangle
 \end{equation}
-\item{Apply MS-CADIS to coupled neutron-photon physics:}
+\item{Apply to coupled neutron-photon physics:}
 	\begin{itemize}
 		\item{$q^+(u) \equiv q_n^+(E_n)$}
 			\vspace{0.1cm}
@@ -1963,17 +1963,17 @@ GT-CADIS workflow
 %\end{frame}
 
 \section{Experiment}
-\begin{frame}{Experiment}
+\begin{frame}{Experiment: Toy Problem}
 \begin{columns}
 \column{0.48\textwidth}
 	\begin{itemize}
-		\item{Toy problem to assess TGT-CADIS}
+		\item{Assess efficiency of TGT-CADIS}
 	\begin{itemize}
 		\item{Steel chamber with moving component}
 		\item{Incrementally add optimization}
 		\item{Calculate figure of merit (FOM) }
 	\end{itemize}
-\item{Full-scale FES demonstration}
+%\item{Full-scale FES demonstration}
 	\end{itemize}
 \column{0.48\textwidth}
 	\multiinclude[<+->][format=jpg, graphics={ scale=0.25}]{newconfig}
@@ -2154,6 +2154,14 @@ GT-CADIS workflow
 \end{columns}
 \end{frame}
 
+\begin{frame}{Full-scale Demonstration}
+\begin{figure}
+	\centering
+	\includegraphics[scale=0.3]{iter.jpg}
+	\caption{Cutaway view of ITER drawing.}
+\end{figure}
+
+\end{frame}
 
 %\begin{frame}{Error Calculation}
 %\end{frame}
@@ -2243,7 +2251,7 @@ GT-CADIS workflow
 			geometry}
 		\item{Motion data:}
 			\begin{itemize}
-				\item{Translation distance}
+				\item{Transformation distance}
 			\end{itemize}
 		\item{Separate input file containing transformations for each
 			time step of geometry movement}
@@ -2293,7 +2301,7 @@ GT-CADIS workflow
 		\item{Accurate quantification of the SDR during maintenance
 			procedures is crucial to the design and operation of
 			FES}
-		\item{GT-CADIS has proven to accurately quantify the SDR in
+		\item{GT-CADIS has proven to optimize SDR analysis in
 			static FES}
 \vspace{0.5cm}
 		\item{\textbf{TGT-CADIS} aims to provide the capabilities necessary to
