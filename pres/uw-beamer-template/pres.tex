@@ -54,9 +54,9 @@
 %% Title
 \title{Variance Reduction for Multi-physics Analysis \\ of Moving Systems}
 %\subtitle{Graduate Student Seminar}
-\date{ Feb. 2, 2018}
+\date{ Sept. 11, 2018}
 \author{Chelsea D'Angelo}
-\institute{Preliminary Exam}
+%\institute{Preliminary Exam}
 \begin{frame}
 %	\titlepage
 	\maketitle
@@ -929,31 +929,31 @@ GT-CADIS workflow
 
 
 
-\subsection{Moving Geometries and Sources}
-\begin{frame}{Moving Geometries and Sources}
-	\begin{block}{MCNP6 Moving Objects \cite{mcnp_moving_1},
-		\cite{mcnp_moving_2}}
-	\begin{itemize}
-		\item{Update in future version of MCNP6}
-		\item{Allows movement of objects, sources, delayed particles
-			during single simulation}
-		\item{Available for native MCNP geometry descriptions (not
-			mesh)}
-	\end{itemize}
-	\end{block}
-\end{frame}
-
-\begin{frame}{Moving Geometries and Sources}
-	\begin{block}{Mesh Coupled R2S (MCR2S)\cite{mcr2s}}
-	\begin{itemize}
-		\item{Capability that allows components to move before photon
-			transport step}
-		\item{Transformations are applied to copies of moving
-			components}
-		\item{Original component still in original location, set to void material}
-	\end{itemize}
-		\end{block}
-\end{frame}
+%\subsection{Moving Geometries and Sources}
+%\begin{frame}{Moving Geometries and Sources}
+%	\begin{block}{MCNP6 Moving Objects \cite{mcnp_moving_1},
+%		\cite{mcnp_moving_2}}
+%	\begin{itemize}
+%		\item{Update in future version of MCNP6}
+%		\item{Allows movement of objects, sources, delayed particles
+%			during single simulation}
+%		\item{Available for native MCNP geometry descriptions (not
+%			mesh)}
+%	\end{itemize}
+%	\end{block}
+%\end{frame}
+%
+%\begin{frame}{Moving Geometries and Sources}
+%	\begin{block}{Mesh Coupled R2S (MCR2S)\cite{mcr2s}}
+%	\begin{itemize}
+%		\item{Capability that allows components to move before photon
+%			transport step}
+%		\item{Transformations are applied to copies of moving
+%			components}
+%		\item{Original component still in original location, set to void material}
+%	\end{itemize}
+%		\end{block}
+%\end{frame}
 
 \begin{frame}{Review}
 	\begin{itemize}
@@ -967,8 +967,8 @@ GT-CADIS workflow
           		\end{itemize}
 		\item{GT-CADIS has proven to optimize the neutron transport
 			step of R2S}
-		\item{MCNP6 and MCR2S have developed some capabilities for
-			performing transport on moving geometries}
+%		\item{MCNP6 and MCR2S have developed some capabilities for
+%			performing transport on moving geometries}
 		\item{No automated VR for optimizing neutron transport
 			in systems that move after shutdown}
 	\end{itemize}
@@ -1375,7 +1375,13 @@ GT-CADIS workflow
 	\begin{itemize}
 		\item{Generate geometry files at each time step of movement
 			after shutdown}
-	\multiinclude[<+->][format=jpg, graphics={ scale=0.25}]{gray_config}
+%	\multiinclude[<+->][format=jpg, graphics={ scale=0.25}]{gray_config}
+        \begin{figure}
+	  \includegraphics[scale=0.23]{orig_pos.jpg}
+        \end{figure}
+        \begin{figure}
+	  \includegraphics[scale=0.23]{final_pos.jpg}
+        \end{figure}
 	\end{itemize}
 		
 \column{0.55\textwidth}
@@ -1459,7 +1465,10 @@ GT-CADIS workflow
 	\begin{itemize}
 		\item{Perform adjoint photon transport at each time step}
 	\end{itemize}
-	\multiinclude[<+->][format=jpg, graphics={ scale=0.25}]{newconfig}
+%	\multiinclude[<+->][format=jpg, graphics={ scale=0.25}]{newconfig}
+	        \includegraphics[scale=0.20]{adj_pflux_0.jpg}
+                \vspace{0.3cm}
+	        \includegraphics[scale=0.20]{adj_pflux_1.jpg}
 		
 \column{0.55\textwidth}
 	\vspace{-1cm}
@@ -1632,17 +1641,108 @@ GT-CADIS workflow
 	}%resize
 \end{figure}
 \end{frame}
-%%%% 3. Map voxel to tet mesh and sum
+%%%% 3. Map voxel to tet mesh 
 \begin{frame}{TGT-CADIS: Calculate Adjoint Neutron Source}
 \begin{columns}
 \column{0.45\textwidth}
 	\begin{itemize}
+		\item{Combine $\phi_{\gamma, t_{mov}}^+$ and $T_{t_{mov}}$} 
 		\item{Map the structured (voxel) mesh to a tetrahedral mesh}
-		\item{Combine $\phi_{\gamma, t_{mov}}^+$ and $T_{t_{mov}}$ 
-                      and average over time}
 	\end{itemize}
-\vspace{1cm}
-	\includegraphics[scale=0.29]{mesh_total.jpg}
+\vspace{0.2cm}
+%	\includegraphics[scale=0.29]{mesh_total.jpg}
+	\includegraphics[scale=0.14]{adj_pflux_0_tet.jpg}
+\vspace{0.1cm}
+	\includegraphics[scale=0.14]{adj_pflux_1_tet.jpg}
+		
+\column{0.55\textwidth}
+\begin{figure}
+	\vspace{-6cm}
+\centering
+
+	\resizebox{!}{11cm}{
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{line} = [draw, -latex']
+        
+        %\begin{tikzpicture}[node distance = 2 cm, auto]
+        \begin{tikzpicture}[every text node part/.style={align=center}]
+\phantom{        	%Generate adj gamma Partisn input
+                \node [file] (pgeom0) {DAGMC geom at $t_{mov}=0$};
+		\node [script, below = 0.4 of pgeom0] (dagtrans) {Transform tool};
+		\node [script, below = 0.4 of dagtrans] (partgen) {Prepare
+		PARTISN};
+                \node [file, left = 0.9 of partgen] (pgeomi) {DAGMC geom
+		at $t_{mov}$};
+		\node [file, right=0.9 of partgen] (f2d) {Flux-to-dose \\ 
+		conversion factors};
+                \node [file, below =0.4 of partgen] (ppartinp) {PARTISN input
+		file};
+                \path [line] (pgeom0) -- (dagtrans);
+		\path [line] (dagtrans) -- (pgeomi);
+		\path [line] (pgeomi) -- (partgen);
+                \path [line] (f2d) -- (partgen);
+		\path [line] (partgen) -- (ppartinp);
+        	% Partisn adj gamma transport
+                \node [code, below =0.4 of ppartinp] (partadjp) {PARTISN adjoint $\gamma$ transport};
+        	\node [file, below =0.4 of partadjp] (padjf)
+		{PARTISN$\phi_{\gamma, t_{mov}}^{+}$ file};
+        	\node [script, below =0.4 of padjf] (pf2mesh) {PyNE.R2S \\
+		convert PARTISN to voxel mesh};
+        	\path [line] (ppartinp) -- (partadjp);
+        	\path [line] (partadjp) -- (padjf);
+        	\path [line] (padjf) -- (pf2mesh);
+        	\path [line] (pf2mesh) -- (padjfvmesh);
+}%phantom		
+		\node [file, below =0.4 of pf2mesh, xshift=1.8cm] (tmat) {$T_{t_{mov}}$};
+		\node [file, below =0.4 of pf2mesh, xshift=-1cm] (padjfvmesh)
+		{$\phi_{\gamma,t_{mov}}^{+}$ voxel mesh};
+	\node [script, below =0.4 of padjfvmesh] (conv_v_t){Map voxel to tet};
+\phantom{        	\node [file, below =0.4 of
+		conv_v_t](padjftmesh){$\phi_{\gamma,t_{mov}}^{+}$ tet mesh};
+}
+		\node [script, below =0.4 of conv_v_t](sum){Avg.
+		%$\phi_{\gamma,t_{mov}}^{+}$ \\
+                over \\all time steps};
+\phantom{
+		\node [file, below =0.4 of sum](avgadjft){$\phi_{\gamma}^{+}$ tet mesh};
+}
+        	\node [script, below =0.4 of sum] (conv_t_v){Map tet to voxel};
+		\node [file, below =0.4 of conv_t_v](avgadjfv){${q{n}^{+}}$ voxel mesh};
+		\path [line] (padjfvmesh) -- (conv_v_t);
+		\path [line] (tmat) -- (conv_v_t);
+		\path [line] (conv_v_t) -- (sum);
+%		\path [line] (padjftmesh) -- (sum);
+		\path [line] (sum) -- (conv_t_v);
+%		\path [line] (avgadjft) -- (conv_t_v);
+		\path [line] (conv_t_v) -- (avgadjfv);
+\phantom{	    	% Generate adj n source
+        	\node [script, below =0.4 of avgadjfv] (gtcadis) {gtcadis.py}; 
+		\node [file, left =0.9 of gtcadis] (ngeom) {DAGMC geom at
+		$t_{mov}$};
+        	\node [file, right =0.9 of gtcadis] (matlib) {ALARA material library};
+        	\node [file, below =0.4 of gtcadis] (nadjs) {$q_{n}^{+}$ voxel mesh};
+        	\path [line] (ngeom) -- (gtcadis);
+        	\path [line] (avgadjfv) -- (gtcadis);
+        	\path [line] (matlib) -- (gtcadis);
+        	\path [line] (gtcadis) -- (nadjs);
+}%phantom
+        \end{tikzpicture}
+	}%resizebox
+	\end{figure}
+\end{columns}
+\end{frame}
+%%%% 3. Avg the adj photon flux 
+\begin{frame}{TGT-CADIS: Calculate Adjoint Neutron Source}
+\begin{columns}
+\column{0.45\textwidth}
+	\begin{itemize}
+		\item{Average over all time steps}
+		\item{Map tetrahedral mesh onto voxel mesh at original configuration}
+	\end{itemize}
+\vspace{0.2cm}
+	\includegraphics[scale=0.16]{avg_adj_pflux_vox.jpg}
 		
 \column{0.55\textwidth}
 \begin{figure}
@@ -1723,6 +1823,51 @@ GT-CADIS workflow
 \end{columns}
 \end{frame}
 
+%\begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
+%\begin{figure}
+%\centering
+%
+%        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
+%	node distance=1.3cm]
+%        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
+%	distance=1.3cm]
+%        \tikzstyle{file} = [rectangle, draw, text centered, node distance=1.3cm]
+%        \tikzstyle{line} = [draw, -latex]
+%        \tikzstyle{arrow} = [thick, ->, >=stealth]
+%        %gray
+%        \tikzstyle{gscript} = [ellipse, fill=gray!30, draw, text centered,
+%	node distance=1.3cm]
+%        \tikzstyle{gcode} = [ellipse, fill=gray!30, draw, text centered, node
+%	distance=1.3cm]
+%        \tikzstyle{gfile} = [rectangle, fill=gray!30, draw, text centered, node distance=1.3cm]
+%       
+%	\resizebox{!}{5.7cm}{
+%        \begin{tikzpicture}[every text node part/.style={align=center}]
+%		% Optimized neutron transport
+%		\node [gscript] (adjnsrc) { Calculate $q_n^+$};
+%		\node [gcode, above of = adjnsrc, xshift=-3cm, yshift=0.4cm]
+%		(adjp) {Adjoint photon transport \\ at each $t_{mov}$};
+%		%\node [file] (adjpflux) {Adjoint photon flux};
+%		\node [gscript, above of = adjnsrc, xshift=3cm, yshift=0.1cm] (tcalc)
+%		{Calculate $T$};
+%		\node [code, below of = adjnsrc, yshift=-0.5cm ] (adjn) {Adjoint neutron transport};
+%		%\node [file] (adjnflux) {Adjoint neutron flux};
+%		\node [script, below of = adjn] (vr) {Calculate MC VR};
+%		\node [file, below of = vr, xshift =-2cm] (ww) {Weight windows};
+%		\node [file, below of = vr, xshift=2cm] (bsrc) {Biased source};
+%
+%		\path [line] (adjp) -- (adjnsrc);
+%		\path [line] (tcalc) -- (adjnsrc);
+%		\path [line] (adjnsrc) -- (adjn);
+%		\path [line] (adjn) -- (vr);
+%		\path [line] (vr) -- (ww);
+%		\path [line] (vr) -- (bsrc);
+%
+%	\end{tikzpicture}
+%	}%resize
+%\end{figure}
+%\end{frame}
+
 \begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
 \begin{figure}
 \centering
@@ -1768,7 +1913,7 @@ GT-CADIS workflow
 \end{figure}
 \end{frame}
 
-%%%% 4. Adjoint Neutron Transport/Calc VR
+%%%% 4. Adjoint Neutron Transport
 \begin{frame}{TGT-CADIS: Generate VR Parameters}
 \begin{columns}
 \column{0.45\textwidth}
@@ -1776,8 +1921,9 @@ GT-CADIS workflow
 %		\item{Calculate T of each voxel}
 %		\item{Calculate adjoint neutron source}
 		\item{Perform adjoint neutron transport}
-		\item{Generate biased source and weight window mesh via CADIS methodology}
+		%\item{Generate biased source and weight window mesh via CADIS methodology}
 	\end{itemize}
+	\includegraphics[scale=0.22]{adj_n_flux.png}
 		
 \column{0.55\textwidth}
 \begin{figure}
@@ -1887,6 +2033,127 @@ GT-CADIS workflow
 \end{columns}
 \end{frame}
 
+%%%% 4.Gen VR params 
+\begin{frame}{TGT-CADIS: Generate VR Parameters}
+\begin{columns}
+\column{0.45\textwidth}
+	\begin{itemize}
+%		\item{Calculate T of each voxel}
+%		\item{Calculate adjoint neutron source}
+		%\item{Perform adjoint neutron transport}
+		\item{Generate biased source and weight window mesh via CADIS methodology}
+	\end{itemize}
+	\includegraphics[scale=0.22]{biased_src.png}
+        \vspace{0.3cm}
+	\includegraphics[scale=0.22]{ww_mesh.png}
+		
+\column{0.55\textwidth}
+\begin{figure}
+	\vspace{-12cm}
+\centering
+
+	\resizebox{!}{15cm}{
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+        \tikzstyle{line} = [draw, -latex']
+        
+        %\begin{tikzpicture}[node distance = 2 cm, auto]
+        \begin{tikzpicture}[every text node part/.style={align=center}]
+\phantom{        	%Generate adj gamma Partisn input
+                \node [file] (pgeom0) {DAGMC geom at $t_{mov}=0$};
+		\node [script, below = 0.4 of pgeom0] (dagtrans) {Transform tool};
+		\node [script, below = 0.4 of dagtrans] (partgen) {Prepare
+		PARTISN};
+                \node [file, left = 0.9 of partgen] (pgeomi) {DAGMC geom
+		at $t_{mov}$};
+		\node [file, right=0.9 of partgen] (f2d) {Flux-to-dose \\ 
+		conversion factors};
+                \node [file, below =0.4 of partgen] (ppartinp) {PARTISN input
+		file};
+                \path [line] (pgeom0) -- (dagtrans);
+		\path [line] (dagtrans) -- (pgeomi);
+		\path [line] (pgeomi) -- (partgen);
+                \path [line] (f2d) -- (partgen);
+		\path [line] (partgen) -- (ppartinp);
+        	% Partisn adj gamma transport
+                \node [code, below =0.4 of ppartinp] (partadjp) {PARTISN adjoint $\gamma$ transport};
+        	\node [file, below =0.4 of partadjp] (padjf)
+		{PARTISN$\phi_{\gamma, t_{mov}}^{+}$ file};
+        	\node [script, below =0.4 of padjf] (pf2mesh) {PyNE.R2S \\
+		convert PARTISN to voxel mesh};
+        	\path [line] (ppartinp) -- (partadjp);
+        	\path [line] (partadjp) -- (padjf);
+        	\path [line] (padjf) -- (pf2mesh);
+        	\path [line] (pf2mesh) -- (padjfvmesh);
+		\node [file, below =0.4 of pf2mesh] (padjfvmesh)
+		{$\phi_{\gamma,t_{mov}}^{+}$ voxel mesh};
+	\node [script, below =0.4 of padjfvmesh] (conv_v_t){Convert voxel to tet};
+        	\node [file, below =0.4 of
+		conv_v_t](padjftmesh){$\phi_{\gamma,t_{mov}}^{+}$ tet mesh};
+		\node [script, below =0.4 of padjftmesh](sum){Sum
+		$\phi_{\gamma,t_{mov}}^{+}$over all time steps};
+		\node [file, below =0.4 of sum](avgadjft){$\phi_{\gamma}^{+}$ tet mesh};
+        	\node [script, below =0.4 of avgadjft] (conv_t_v){Convert tet to voxel};
+		\path [line] (padjfvmesh) -- (conv_v_t);
+		\path [line] (conv_v_t) -- (padjftmesh);
+		\path [line] (padjftmesh) -- (sum);
+		\path [line] (sum) -- (avgadjft);
+		\path [line] (avgadjft) -- (conv_t_v);
+		\path [line] (conv_t_v) -- (avgadjfv);
+%}%phantom		
+%\phantom{
+        	\node [file, below =0.4 of conv_t_v](avgadjfv){${\phi_{\gamma}^{+}}$ voxel mesh};
+	    	% Generate adj n source
+        	\node [script, below =0.4 of avgadjfv] (gtcadis) {gtcadis.py}; 
+		\node [file, left =0.9 of gtcadis] (ngeom) {DAGMC geom \\ at
+		$t_{mov}$};
+        	%\node [file, right =0.9 of gtcadis] (matlib) {ALARA \\
+		%material library};
+        	\node [file, right =0.9 of gtcadis] (calcT) {T matrix};
+}
+        	\node [file, below =0.4 of gtcadis, xshift=-1cm] (nadjs) {$q_{n}^{+}$ voxel mesh};
+\phantom{      	\path [line] (ngeom) -- (gtcadis);
+        	\path [line] (avgadjfv) -- (gtcadis);
+        	\path [line] (calcT) -- (gtcadis);
+        	\path [line] (gtcadis) -- (nadjs);
+		% Generate VR parameters
+		\node [script, below =0.4 of nadjs] (partgen) {Prepare PARTISN};
+		\node [file, left =0.9 of partgen] (ngeom) {DAGMC geom \\at
+		$t_{mov}=0$};
+%                \node [file, right=0.9 of partgen] (nadjs) {$q_{n}^{+}$ voxel mesh};
+                \node [file, below =0.4 of partgen] (npartinp) {PARTISN input file};
+                \path [line] (ngeom) -- (partgen);
+                \path [line] (nadjs) -- (partgen);
+        	\path [line] (partgen) -- (npartinp);
+}
+        	% Partisn adj neutron transport
+                \node [code, below =0.4 of nadjs] (partadjn) {PARTISN \\adjoint neutron transport};
+\phantom{      	\node [file, below =0.4 of partadjn] (nadjf) {PARTISN $\phi_{n}^{+}$ file};
+        	\node [script, below =0.4 of nadjf] (pf2mesh) {PyNE.R2S \\
+		convert PARTISN to voxel mesh};
+}
+        	\node [file, below =0.4 of partadjn] (nadjfmesh) {$\phi_{n}^{+}$
+		voxel mesh};
+        	\path [line] (nadjs) -- (partadjn);
+        	\path [line] (partadjn) -- (nadjf);
+%        	\path [line] (nadjf) -- (pf2mesh);
+%        	\path [line] (pf2mesh) -- (nadjfmesh);
+		%Generate biased source and WW
+		\node [script, below =0.4 of nadjfmesh] (cadis) {CADIS};
+		\node [file, left =0.9 of cadis ] (unbiased) {Unbiased	$q_n$ mesh};
+		\node [file, below =0.4 of cadis, xshift=-0.6cm] (biased) {Biased $q_n$ mesh};
+		\node [file, right = 0.6 of biased] (wwinp) {Weight window\\
+		mesh};
+		\path [line] (unbiased) -- (cadis);
+		\path [line] (nadjfmesh) -- (cadis);
+		\path [line] (cadis) -- (biased);
+		\path [line] (cadis) -- (wwinp);
+        \end{tikzpicture}
+	}%resizebox
+	\end{figure}
+\end{columns}
+\end{frame}
 
 
 %\begin{frame}{TGT-CADIS: Generate VR Parameters}
