@@ -228,11 +228,11 @@
 \begin{itemize}
 	\item{Monte Carlo (MC) method \cite{mcnp_manual}:}%analysis of FES is:}
 	\begin{itemize}
-		\item{Stochastic method}
-		\item{Simulate random particle walks through phase space}
-	        \item{Score quantities of interest 
-		in discrete regions of phase space}
 		\item{Accurate for large, complex models}
+		%\item{Stochastic method}
+		%\item{Simulate random particle walks through phase space}
+	        %\item{Score quantities of interest 
+		%in discrete regions of phase space}
 		\item{Challenged in highly attenuated regions}
                   \begin{itemize}
                   \item{Results scored in regions that have low particle flux, have higher statistical uncertainty}
@@ -1238,7 +1238,7 @@ GT-CADIS workflow
 \end{frame}
 
 
-\section{Implementation Plan}
+\section{Implementation Progress}
 
 \subsection{Software}
 \begin{frame}{Software}
@@ -1457,6 +1457,98 @@ GT-CADIS workflow
 \end{columns}
 \end{frame}
 
+%
+%\section{Progress}
+%\begin{frame}{MC Moving Geometry Simulations}
+%	\begin{itemize}
+%		\item{Capabilities to update position of geometry based on
+%			user-defined motion data}
+%%			\begin{enumerate}
+%%				\item{Production of step-wise geometry files}
+%%				\item{DAGMCNP update}
+%%			\end{enumerate}
+%		%\item{Motion data:}
+%		%	\begin{itemize}
+%		%		\item{Time-dependent translation or rotation
+%		%			vector, total length of time, number or desired time steps}
+%		%		\item{Relocation transform}
+%		%	\end{itemize}
+%		\item{Basic functionality:}
+%			\begin{itemize}
+%				%\item{Use MOAB to manipulate mesh}
+%				\item{%Parse geometry tagged with transformation
+%					%data}
+%					Read tag data that specifies 
+%					type of transformation}
+%				\item{Identify starting position of each
+%					component}
+%				\item{Update position according to
+%					transformation}
+%			\end{itemize}
+%	\end{itemize}
+%\end{frame}
+\begin{frame}{Geometry transformation tool}
+\begin{itemize}
+\item{Tool to generate new geometry file at each time step}
+\item{CAD geometry tagged with type of transformation}
+%\item{Motion data:}
+%	\begin{itemize}
+		\item{Time-dependent motion data:}
+			\begin{itemize}
+				\item{Translation or rotation vector}
+				\item{Total duration of geometry movement}
+				\item{Number of time steps}
+			\end{itemize}
+%		\item{Relocation:}
+%			\begin{itemize}
+%		        	\item{Translation or rotation distance}
+%			\end{itemize}
+
+%	\end{itemize}
+\end{itemize}
+	\centering
+	\transduration<0-7>{0}
+	\multiinclude[<+->][format=png, graphics={ scale=0.17}]{Photon_flux}
+
+%\end{columns}
+\end{frame}
+
+%\begin{frame}{MC Moving Geometry: Stepwise Geometry Tool}
+%\begin{itemize}
+%\item{Tool to generate new geometry file at each time step during movement}
+%\item{Motion data:}
+%	\begin{itemize}
+%		\item{Time-dependent:}
+%			\begin{itemize}
+%				\item{Translation and/or rotation vector}
+%				\item{Duration of time}
+%				\item{Number of time steps}
+%			\end{itemize}
+%		\item{Relocation:}
+%			\begin{itemize}
+%		        	\item{Translation and/or rotation distance}
+%			\end{itemize}
+%
+%	\end{itemize}
+%\end{itemize}
+%	\begin{center}
+%	\transduration<0-8>{0}
+%	\multiinclude[<+->][format=png, graphics={ scale=0.15}]{snapshot}
+%	\end{center}
+%\end{frame}
+%\subsection{DAGMCNP update}
+%\begin{frame}{Moving Geometries: DAGMCNP Update}
+%	\begin{itemize}
+%		\item{Functionality to apply MCNP TR(n) card data to DAGMC
+%			geometry}
+%		\item{Motion data:}
+%			\begin{itemize}
+%				\item{Transformation distance}
+%			\end{itemize}
+%		\item{Separate input file containing transformations for each
+%			time step of geometry movement}
+%	\end{itemize}
+%\end{frame}
 %%%% 2. Adjoint Photon Transport
 \begin{frame}{TGT-CADIS: Generate VR Parameters}
 \begin{columns}
@@ -2432,98 +2524,6 @@ GT-CADIS workflow
 
 %\begin{frame}{Error Calculation}
 %\end{frame}
-\section{Progress}
-\begin{frame}{MC Moving Geometry Simulations}
-	\begin{itemize}
-		\item{Capabilities to update position of geometry based on
-			user-defined motion data}
-			\begin{enumerate}
-				\item{Production of step-wise geometry files}
-				\item{DAGMCNP update}
-			\end{enumerate}
-		%\item{Motion data:}
-		%	\begin{itemize}
-		%		\item{Time-dependent translation or rotation
-		%			vector, total length of time, number or desired time steps}
-		%		\item{Relocation transform}
-		%	\end{itemize}
-		\item{Common functionality:}
-			\begin{itemize}
-				%\item{Use MOAB to manipulate mesh}
-				\item{%Parse geometry tagged with transformation
-					%data}
-					Read tag data that specifies 
-					type of transformation}
-				\item{Identify starting position of each
-					component}
-				\item{Update position according to
-					transformation}
-			\end{itemize}
-	\end{itemize}
-\end{frame}
-\subsection{Stepwise geometry tool}
-
-\begin{frame}{MC Moving Geometry: Stepwise Geometry Tool}
-\begin{itemize}
-\item{Tool to generate new geometry file at each time step}
-\item{Motion data:}
-	\begin{itemize}
-		\item{Time-dependent:}
-			\begin{itemize}
-				\item{Translation or rotation vector}
-				\item{Duration of time}
-				\item{Number of time steps}
-			\end{itemize}
-		\item{Relocation:}
-			\begin{itemize}
-		        	\item{Translation or rotation distance}
-			\end{itemize}
-
-	\end{itemize}
-\end{itemize}
-	\centering
-	\transduration<0-7>{0}
-	\multiinclude[<+->][format=png, graphics={ scale=0.17}]{Photon_flux}
-
-%\end{columns}
-\end{frame}
-
-%\begin{frame}{MC Moving Geometry: Stepwise Geometry Tool}
-%\begin{itemize}
-%\item{Tool to generate new geometry file at each time step during movement}
-%\item{Motion data:}
-%	\begin{itemize}
-%		\item{Time-dependent:}
-%			\begin{itemize}
-%				\item{Translation and/or rotation vector}
-%				\item{Duration of time}
-%				\item{Number of time steps}
-%			\end{itemize}
-%		\item{Relocation:}
-%			\begin{itemize}
-%		        	\item{Translation and/or rotation distance}
-%			\end{itemize}
-%
-%	\end{itemize}
-%\end{itemize}
-%	\begin{center}
-%	\transduration<0-8>{0}
-%	\multiinclude[<+->][format=png, graphics={ scale=0.15}]{snapshot}
-%	\end{center}
-%\end{frame}
-\subsection{DAGMCNP update}
-\begin{frame}{Moving Geometries: DAGMCNP Update}
-	\begin{itemize}
-		\item{Functionality to apply MCNP TR(n) card data to DAGMC
-			geometry}
-		\item{Motion data:}
-			\begin{itemize}
-				\item{Transformation distance}
-			\end{itemize}
-		\item{Separate input file containing transformations for each
-			time step of geometry movement}
-	\end{itemize}
-\end{frame}
 
 
 \section{Final Thoughts}
