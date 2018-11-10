@@ -197,7 +197,7 @@
         \tikzstyle{line} = [draw, -latex]
         \tikzstyle{arrow} = [thick, ->, >=stealth]
         
-	\resizebox{5.9cm}{4.2cm}{
+	\resizebox{7.8cm}{5.3cm}{
         \begin{tikzpicture}[every text node part/.style={align=center}]
 		% Optimized neutron transport
 		\node [code] (nmc) {Monte Carlo \\ neutron transport};
@@ -241,6 +241,9 @@
 		\item{Challenged in highly attenuated regions}
                   \begin{itemize}
                   \item{Results scored in regions that have low particle flux, have higher statistical uncertainty}
+                     %\begin{itemize}
+                     %  \item{\textbf{Need variance reduction}}
+                     %\end{itemize}
                   \end{itemize}
 	\end{itemize}
 \end{itemize}
@@ -255,41 +258,41 @@
 \end{columns}
 \end{frame}
 
-\begin{frame}{Error in MC Calculations}
-\begin{itemize}
-\item{Uncertainty in MC calculations:}
-\begin{equation} \label{eq:1.2}
-		\Re = \frac{\sigma_{\overline{x}}}{{\overline{x}}}
-\end{equation}
-		\begin{center}
-		{$\sigma_{\overline{x}} \propto \frac{1}{\sqrt{N}}$}%, N is number of histories} %\cite{mcnp_manual}.
-		\end{center}
-\item{Efficiency in MC calculations:}
-\begin{equation} \label{eq:1.3}
-	FOM = \frac{1}{{{{\Re}^2}t_{proc}}}
-\end{equation}
-
-\item{To decrease uncertainty:}
-  \begin{itemize}
-  \item{Increase number of histories, N}
-  \item{Use variance reduction (VR) techniques}
-  \end{itemize}
-\end{itemize}
-\end{frame}
+%\begin{frame}{Error in MC Calculations}
+%\begin{itemize}
+%\item{Uncertainty in MC calculations:}
+%\begin{equation} \label{eq:1.2}
+%		\Re = \frac{\sigma_{\overline{x}}}{{\overline{x}}}
+%\end{equation}
+%		\begin{center}
+%		{$\sigma_{\overline{x}} \propto \frac{1}{\sqrt{N}}$}%, N is number of histories} %\cite{mcnp_manual}.
+%		\end{center}
+%\item{Efficiency in MC calculations:}
+%\begin{equation} \label{eq:1.3}
+%	FOM = \frac{1}{{{{\Re}^2}t_{proc}}}
+%\end{equation}
+%
+%\item{To decrease uncertainty:}
+%  \begin{itemize}
+%  \item{Increase number of histories, N}
+%  \item{Use variance reduction (VR) techniques}
+%  \end{itemize}
+%\end{itemize}
+%\end{frame}
 
 \subsection{Variance Reduction}
-%\begin{frame}{MC Variance Reduction Techniques}
-%\begin{itemize}
-%\item{Techniques to modify particle behavior}
-%   \begin{itemize}
-%	\item{\textbf{Goal:} preferentially sample events that will contribute to results of interest}
-%   \end{itemize}
-%\item{Adjust statistical weight of particles to keep playing a fair game}
-%\item{Types}
-%	\begin{itemize}
-%		\item{\textbf{Modified Sampling:} source biasing}
-%		\item{\textbf{Population Control:} splitting/rouletting}
-%	\end{itemize}
+\begin{frame}{MC Variance Reduction Techniques}
+\begin{itemize}
+\item{Techniques to modify particle behavior}
+   \begin{itemize}
+	\item{\textbf{Goal:} preferentially sample events that will contribute to results of interest}
+   \end{itemize}
+\item{Adjust statistical weight of particles to keep playing a fair game}
+\item{Types}
+	\begin{itemize}
+		\item{\textbf{Modified Sampling:} source biasing}
+		\item{\textbf{Population Control:} splitting/rouletting}
+	\end{itemize}
 %                \begin{figure}
 %		%\centering
 %			\vspace{0.5cm}
@@ -298,8 +301,8 @@
 %			\caption{a) analog b) source biasing c)
 %			splitting/rouletting \cite{mcnp_primer}}
 %		\end{figure}
-%\end{itemize}
-%\end{frame}
+\end{itemize}
+\end{frame}
 
 %\begin{frame}{Hybrid Deterministic/MC VR Methods: CADIS}
 \begin{frame}{Hybrid Deterministic/MC VR Methods}
@@ -388,8 +391,7 @@
 	\begin{block}{\textbf{C}onsistent \textbf{A}djoint \textbf{D}riven
 	\textbf{I}mportance \textbf{S}ampling (CADIS)}
   \begin{itemize}
-  \item{Use the adjoint flux, $\Psi^+$, to generate MC source and transport biasing
-	  parameters}
+  \item{Use the adjoint flux, $\Psi^+$, to generate MC VR parameters}
 %    \item{Particles are born within weight windows}
   \item{Biased source:}
 \begin{equation} \label{eq:3.8}
@@ -447,7 +449,7 @@
 		 %       	  interest}
 		 % \end{itemize}
 	  
-	  \item{When applied to SDR analysis, MS-CADIS will optimize the
+	  \item{When applied to SDR analysis, MS-CADIS optimizes the
 		  neutron transport step of R2S}
 %    \begin{itemize}
 %    \item{Use function that represents the   importance of the neutrons to
@@ -644,8 +646,8 @@
 		  \begin{itemize}
 			  \item{Approximation of the transmutation
 				  process}
-			  \item{Solution exits when SNILB criteria
-				  are met}
+			  %\item{Solution exits when SNILB criteria
+				%  are met}
 			  \item{Defined by this relationship:}
 		  \end{itemize}
 \begin{equation} \label{eq:Tdef}
@@ -662,22 +664,22 @@
 %
 \end{frame}
 
-\begin{frame}{Variance Reduction for SDR Analysis: GT-CADIS}
-\begin{block}{\textbf{G}roupwise \textbf{T}ransmutation (GT)-CADIS \cite{gtcadis}}
-  \begin{itemize}
-	  \item{Calculate T:}
-	  \begin{enumerate}
-		  \item{Irradiate each material with neutrons from a single
-			  energy group, g}
-		  \item{Record resulting photon emission in each energy group,
-			  h}
-	  \end{enumerate}
-  \end{itemize}
-	\begin{equation}
-		T_{g,h} = \frac{q_{\gamma,h}(\phi_{n,g})}{\phi_{n,g}}
-	\end{equation}
-\end{block}
-\end{frame}
+%\begin{frame}{Variance Reduction for SDR Analysis: GT-CADIS}
+%\begin{block}{\textbf{G}roupwise \textbf{T}ransmutation (GT)-CADIS \cite{gtcadis}}
+%  \begin{itemize}
+%	  \item{Calculate T:}
+%	  \begin{enumerate}
+%		  \item{Irradiate each material with neutrons from a single
+%			  energy group, g}
+%		  \item{Record resulting photon emission in each energy group,
+%			  h}
+%	  \end{enumerate}
+%  \end{itemize}
+%	\begin{equation}
+%		T_{g,h} = \frac{q_{\gamma,h}(\phi_{n,g})}{\phi_{n,g}}
+%	\end{equation}
+%\end{block}
+%\end{frame}
 
 
 %\begin{frame}
@@ -830,25 +832,25 @@ GT-CADIS workflow
 
 \end{frame}
 
-\begin{frame}{GT-CADIS Demonstration: VR Parameters}
-	\begin{columns}
-		\column{0.47\textwidth}
-\begin{figure} 
-	\includegraphics[scale=0.17]{biased_n_src.png}
-	\caption [GT-CADIS biased neutron source] 
-	{Biased neutron source generated with GT-CADIS method.\label{fig:ex.biased_src}}
-\end{figure}
-
-
-		\column{0.47\textwidth}
-\begin{figure} 
-	\includegraphics[scale=0.15]{gtcadis_wwn.png}
-	\caption [GT-CADIS weight window mesh]
-	{Weight window mesh generated with GT-CADIS method.\label{fig:ex.wwinp}}
-\end{figure}
-
-	\end{columns}
-\end{frame}
+%\begin{frame}{GT-CADIS Demonstration: VR Parameters}
+%	\begin{columns}
+%		\column{0.47\textwidth}
+%\begin{figure} 
+%	\includegraphics[scale=0.17]{biased_n_src.png}
+%	\caption [GT-CADIS biased neutron source] 
+%	{Biased neutron source generated with GT-CADIS method.\label{fig:ex.biased_src}}
+%\end{figure}
+%
+%
+%		\column{0.47\textwidth}
+%\begin{figure} 
+%	\includegraphics[scale=0.15]{gtcadis_wwn.png}
+%	\caption [GT-CADIS weight window mesh]
+%	{Weight window mesh generated with GT-CADIS method.\label{fig:ex.wwinp}}
+%\end{figure}
+%
+%	\end{columns}
+%\end{frame}
 
 %\begin{frame}{GT-CADIS Demonstration: Forward Neutron Flux}
 %	\begin{columns}
@@ -1004,7 +1006,7 @@ GT-CADIS workflow
 %		{\textbf{Need to derive new adjoint source}}
 %
 %\end{frame}
-\subsection{VR for SDR Analysis of Moving Systems}
+\subsection{Analysis of Moving Systems}
 \begin{frame}{VR for SDR Analysis of Moving Systems}
 	\begin{itemize}
 		\item{GT-CADIS optimizes neutron transport step in static
@@ -1083,93 +1085,93 @@ GT-CADIS workflow
 \end{frame}
 
 
-\begin{frame}{TGT-CADIS: Adjoint Neutron Source}
+%\begin{frame}{TGT-CADIS: Adjoint Neutron Source}
+%%	\begin{itemize}
+%%		\item{Average the adjoint photon flux calculated at each time step}
+%%	\end{itemize}
+%%\begin{equation}\label{eq:sum}
+%%	\phi_{\gamma,v, h}^{+} =
+%%	\frac{\sum_{t_{mov}}{\phi_{\gamma,v,h,t_{mov}}^{+}}\Delta{t_{mov}}}
+%%	{t_{tot}}
+%%\end{equation}
 %	\begin{itemize}
-%		\item{Average the adjoint photon flux calculated at each time step}
+%         % \item{Calculate coupling term, T, for each volume element}
+%
+%	 %   \begin{equation}\label{eq:T}
+%	 % 	T_{v,g,h} = \dfrac{q_{\gamma,v,h}(\phi_{n,v,g})}{\phi_{n,v,g}}
+%	 %   \end{equation}
+%
+%	  %\item{Combine with adjoint photon flux in each volume element}
+%	  \item{Discrete form:}
+%		  \begin{itemize}
+%			  \item{$t_{mov}$ is the time step}
+%			  \item{$\Delta t_{mov}$ is the duration of the time step}
+%			  \item{$t_{tot}$ is the total number of time
+%				  steps}
+%		  \end{itemize}
+%
+%	    \begin{equation}\label{eq:tgt_n_src}
+%	    	q_{n,v,g}^{+} = \frac
+%	    	{\sum_{t_{mov}}\big(\sum_{h} T_{v,g,h} \
+%	    	\phi_{\gamma,v,h,t_{mov}}^{+}\big) \Delta t_{mov}}
+%	    	{t_{tot}}
+%	    \end{equation}
 %	\end{itemize}
-%\begin{equation}\label{eq:sum}
-%	\phi_{\gamma,v, h}^{+} =
-%	\frac{\sum_{t_{mov}}{\phi_{\gamma,v,h,t_{mov}}^{+}}\Delta{t_{mov}}}
-%	{t_{tot}}
-%\end{equation}
-	\begin{itemize}
-         % \item{Calculate coupling term, T, for each volume element}
-
-	 %   \begin{equation}\label{eq:T}
-	 % 	T_{v,g,h} = \dfrac{q_{\gamma,v,h}(\phi_{n,v,g})}{\phi_{n,v,g}}
-	 %   \end{equation}
-
-	  %\item{Combine with adjoint photon flux in each volume element}
-	  \item{Discrete form:}
-		  \begin{itemize}
-			  \item{$t_{mov}$ is the time step}
-			  \item{$\Delta t_{mov}$ is the duration of the time step}
-			  \item{$t_{tot}$ is the total number of time
-				  steps}
-		  \end{itemize}
-
-	    \begin{equation}\label{eq:tgt_n_src}
-	    	q_{n,v,g}^{+} = \frac
-	    	{\sum_{t_{mov}}\big(\sum_{h} T_{v,g,h} \
-	    	\phi_{\gamma,v,h,t_{mov}}^{+}\big) \Delta t_{mov}}
-	    	{t_{tot}}
-	    \end{equation}
-	\end{itemize}
+%%        \begin{figure}
+%%		\vspace{0.3cm}
+%%	\includegraphics[scale=0.280]{mesh_total.jpg}
+%%	\end{figure}
+%
+%	\begin{columns}
+%		\begin{column}{0.3\textwidth}
 %        \begin{figure}
-%		\vspace{0.3cm}
-%	\includegraphics[scale=0.280]{mesh_total.jpg}
+%	\centering
+%		\vspace{-0.4cm}
+%	\includegraphics[scale=0.20]{mesh-0.jpg}
 %	\end{figure}
-
-	\begin{columns}
-		\begin{column}{0.3\textwidth}
-        \begin{figure}
-	\centering
-		\vspace{-0.4cm}
-	\includegraphics[scale=0.20]{mesh-0.jpg}
-	\end{figure}
-\end{column}
-\vrule{}
-		\begin{column}{0.3\textwidth}
-		\vspace{0.6cm}
-        \begin{figure}
-	\centering
-	\includegraphics[scale=0.20]{mesh-3.jpg}
-	\end{figure}
-\end{column}
-\vrule{}
-		\begin{column}{0.3\textwidth}
-		\vspace{-0.4cm}
-        \begin{figure}
-	\centering
-	\includegraphics[scale=0.20]{mesh-5.jpg}
-	\end{figure}
-\end{column}
-	\end{columns}
-
-\end{frame}
+%\end{column}
+%\vrule{}
+%		\begin{column}{0.3\textwidth}
+%		\vspace{0.6cm}
+%        \begin{figure}
+%	\centering
+%	\includegraphics[scale=0.20]{mesh-3.jpg}
+%	\end{figure}
+%\end{column}
+%\vrule{}
+%		\begin{column}{0.3\textwidth}
+%		\vspace{-0.4cm}
+%        \begin{figure}
+%	\centering
+%	\includegraphics[scale=0.20]{mesh-5.jpg}
+%	\end{figure}
+%\end{column}
+%	\end{columns}
+%
+%\end{frame}
 
 %\begin{frame}{Time-integrated Adjoint Neutron Source}
 %\end{frame}
 
-\begin{frame}{Time-integrated (T)GT-CADIS}
-	\begin{itemize}
-		\item{Perform deterministic adjoint neutron transport using the
-			time-integrated source}
-		\item{Resultant adjoint neutron flux should look something like
-			this:}
-	\end{itemize}
-        \begin{figure}
-	\centering
-	\includegraphics[scale=0.20]{tgt_adj_n.jpg}
-%		\caption{GT-CADIS adjoint neutron flux. Functions as importance
-%		map.}
-	\end{figure}
+%\begin{frame}{Time-integrated (T)GT-CADIS}
 %	\begin{itemize}
-%		\item{Use this adjoint neutron flux to generate biasing
-%			parameters that will optimize the MC neutron transport
-%			step of R2S}
+%		\item{Perform deterministic adjoint neutron transport using the
+%			time-integrated source}
+%		\item{Resultant adjoint neutron flux should look something like
+%			this:}
 %	\end{itemize}
-\end{frame}
+%        \begin{figure}
+%	\centering
+%	\includegraphics[scale=0.20]{tgt_adj_n.jpg}
+%%		\caption{GT-CADIS adjoint neutron flux. Functions as importance
+%%		map.}
+%	\end{figure}
+%%	\begin{itemize}
+%%		\item{Use this adjoint neutron flux to generate biasing
+%%			parameters that will optimize the MC neutron transport
+%%			step of R2S}
+%%	\end{itemize}
+%\end{frame}
 
 %\begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
 %%	\begin{itemize}
@@ -1246,43 +1248,43 @@ GT-CADIS workflow
 
 %\section{Implementation Progress}
 
-\subsection{Software}
-\begin{frame}{Software}
-	\begin{itemize}
-		\item{\textbf{PARTISN}: \textbf{PAR}allel, \textbf{TI}me-Dependent \textbf{SN}
-			 \cite{partisn}}
-		   \begin{itemize}
-		   \item{Deterministic adjoint transport}
-		   \end{itemize}
-	   \item{\textbf{DAGMC}: \textbf{D}irect \textbf{A}ccelerated
-		   \textbf{G}eometry \cite{dagmc},
-		   \textbf{M}onte \textbf{C}arlo, \textbf{MCNP}: \textbf{M}onte
-			\textbf{C}arlo \textbf{N} \textbf{P}article
-			\cite{mcnp_manual}}
-		   \begin{itemize}
-		   \item{Forward MC transport on CAD geometry}
-		   \end{itemize}
-	   \item{\textbf{ALARA}: \textbf{A}nalytic and \textbf{L}aplacian
-		   \textbf{A}daptive \textbf{R}adioactivity \textbf{A}nalysis
-			\cite{alara}}
-			\vspace{-0.4cm}
-		   \begin{itemize}
-		   \item{Activation analysis}
-		   \end{itemize}
-	   \item{\textbf{PyNE}: \textbf{Py}thon for \textbf{N}uclear \textbf{E}ngineering
-			 \cite{pyne}}
-		   \begin{itemize}
-		   \item{Tools to support transport}
-		   \end{itemize}
-	   \item{\textbf{MOAB}: \textbf{M}esh-\textbf{O}riented 
-		   dat\textbf{AB}ase \cite{moab}}
-		   \begin{itemize}
-		   \item{Moving geometries}
-		   \end{itemize}
-	\end{itemize}
-\end{frame}
-
-\subsection{Workflow}
+%\subsection{Software}
+%\begin{frame}{Software}
+%	\begin{itemize}
+%		\item{\textbf{PARTISN}: \textbf{PAR}allel, \textbf{TI}me-Dependent \textbf{SN}
+%			 \cite{partisn}}
+%		   \begin{itemize}
+%		   \item{Deterministic adjoint transport}
+%		   \end{itemize}
+%	   \item{\textbf{DAGMC}: \textbf{D}irect \textbf{A}ccelerated
+%		   \textbf{G}eometry \cite{dagmc},
+%		   \textbf{M}onte \textbf{C}arlo, \textbf{MCNP}: \textbf{M}onte
+%			\textbf{C}arlo \textbf{N} \textbf{P}article
+%			\cite{mcnp_manual}}
+%		   \begin{itemize}
+%		   \item{Forward MC transport on CAD geometry}
+%		   \end{itemize}
+%	   \item{\textbf{ALARA}: \textbf{A}nalytic and \textbf{L}aplacian
+%		   \textbf{A}daptive \textbf{R}adioactivity \textbf{A}nalysis
+%			\cite{alara}}
+%			\vspace{-0.4cm}
+%		   \begin{itemize}
+%		   \item{Activation analysis}
+%		   \end{itemize}
+%	   \item{\textbf{PyNE}: \textbf{Py}thon for \textbf{N}uclear \textbf{E}ngineering
+%			 \cite{pyne}}
+%		   \begin{itemize}
+%		   \item{Tools to support transport}
+%		   \end{itemize}
+%	   \item{\textbf{MOAB}: \textbf{M}esh-\textbf{O}riented 
+%		   dat\textbf{AB}ase \cite{moab}}
+%		   \begin{itemize}
+%		   \item{Moving geometries}
+%		   \end{itemize}
+%	\end{itemize}
+%\end{frame}
+%
+%\subsection{Workflow}
 %\begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
 %\begin{figure}
 %\centering
@@ -1375,7 +1377,7 @@ GT-CADIS workflow
 \end{figure}
 \end{frame}
 
-%%%%% 1. Prepare geometries
+%%%%%% 1. Prepare geometries
 \begin{frame}{TGT-CADIS: Generate Stepwise Geometries}
 \begin{columns}
 \column{0.45\textwidth}
@@ -1680,7 +1682,7 @@ GT-CADIS workflow
 	\resizebox{!}{5.7cm}{
         \begin{tikzpicture}[every text node part/.style={align=center}]
 		% Optimized neutron transport
-		\node [gscript] (adjnsrc) { Calculate $q_n^+$};
+		\node [gscript] (adjnsrc) {Calculate $q_n^+$};
 		\node [gcode, above of = adjnsrc, xshift=-3cm, yshift=0.4cm]
 		(adjp) {Adjoint photon transport \\ at each $t_{mov}$};
 		%\node [file] (adjpflux) {Adjoint photon flux};
@@ -1703,6 +1705,7 @@ GT-CADIS workflow
 	}%resize
 \end{figure}
 \end{frame}
+
 \begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
 \begin{figure}
 \centering
@@ -1724,7 +1727,7 @@ GT-CADIS workflow
 	\resizebox{!}{5.7cm}{
         \begin{tikzpicture}[every text node part/.style={align=center}]
 		% Optimized neutron transport
-		\node [script] (adjnsrc) { Calculate $q_n^+$};
+		\node [script] (adjnsrc) { Calculate time-integrated $q_n^+$};
 		\node [gcode, above of = adjnsrc, xshift=-3cm, yshift=0.4cm]
 		(adjp) {Adjoint photon transport \\ at each $t_{mov}$};
 		%\node [file] (adjpflux) {Adjoint photon flux};
@@ -1747,6 +1750,7 @@ GT-CADIS workflow
 	}%resize
 \end{figure}
 \end{frame}
+
 %%%% 3. Map voxel to tet mesh 
 \begin{frame}{TGT-CADIS: Calculate Adjoint Neutron Source}
 \begin{columns}
@@ -1839,6 +1843,136 @@ GT-CADIS workflow
 	\end{figure}
 \end{columns}
 \end{frame}
+
+%%%%% 3. Avg the adj photon flux 
+%\begin{frame}{TGT-CADIS: Calculate Adjoint Neutron Source}
+%\begin{columns}
+%\column{0.45\textwidth}
+%	\begin{itemize}
+%		\item{Average over all time steps}
+%	%	\item{Map tetrahedral mesh onto voxel mesh at original configuration}
+%	
+%\vspace{0.2cm}
+%	\includegraphics[scale=0.16]{avg_adj_pflux_vox.jpg}
+%		
+%\column{0.55\textwidth}
+%\begin{figure}
+%	\vspace{-6cm}
+%\centering
+%
+%	\resizebox{!}{11cm}{
+%        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
+%        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
+%        \tikzstyle{file} = [rectangle, draw, text centered, node distance=3cm]
+%        \tikzstyle{line} = [draw, -latex']
+%        
+%        %\begin{tikzpicture}[node distance = 2 cm, auto]
+%        \begin{tikzpicture}[every text node part/.style={align=center}]
+%\phantom{        	%Generate adj gamma Partisn input
+%                \node [file] (pgeom0) {DAGMC geom at $t_{mov}=0$};
+%		\node [script, below = 0.4 of pgeom0] (dagtrans) {Transform tool};
+%		\node [script, below = 0.4 of dagtrans] (partgen) {Prepare PARTISN};
+%                \node [file, left = 0.9 of partgen] (pgeomi) {DAGMC geom at $t_{mov}$};
+%		\node [file, right=0.9 of partgen] (f2d) {Flux-to-dose \\ conversion factors};
+%                \node [file, below =0.4 of partgen] (ppartinp) {PARTISN input file};
+%                \path [line] (pgeom0) -- (dagtrans);
+%		\path [line] (dagtrans) -- (pgeomi);
+%		\path [line] (pgeomi) -- (partgen);
+%                \path [line] (f2d) -- (partgen);
+%		\path [line] (partgen) -- (ppartinp);
+%        	% Partisn adj gamma transport
+%                \node [code, below =0.4 of ppartinp] (partadjp) {PARTISN adjoint $\gamma$ transport};
+%        	\node [file, below =0.4 of partadjp] (padjf)
+%		{PARTISN$\phi_{\gamma, t_{mov}}^{+}$ file};
+%        	\node [script, below =0.4 of padjf] (pf2mesh) {PyNE.R2S \\convert PARTISN to voxel mesh};
+%        	\path [line] (ppartinp) -- (partadjp);
+%        	\path [line] (partadjp) -- (padjf);
+%        	\path [line] (padjf) -- (pf2mesh);
+%        	\path [line] (pf2mesh) -- (padjfvmesh);
+%}%phantom		
+%		\node [file, below =0.4 of pf2mesh, xshift=1.8cm] (tmat) {$T_{t_{mov}}$};
+%		\node [file, below =0.4 of pf2mesh, xshift=-1cm] (padjfvmesh)
+%		{$\phi_{\gamma,t_{mov}}^{+}$ voxel mesh};
+%	\node [script, below =0.4 of padjfvmesh] (conv_v_t){Map voxel to tet};
+%\phantom{        	\node [file, below =0.4 of
+%		conv_v_t](padjftmesh){$\phi_{\gamma,t_{mov}}^{+}$ tet mesh};
+%}
+%		\node [script, below =0.4 of conv_v_t](sum){Avg.
+%		%$\phi_{\gamma,t_{mov}}^{+}$ \\
+%                over \\all time steps};
+%\phantom{
+%		\node [file, below =0.4 of sum](avgadjft){$\phi_{\gamma}^{+}$ tet mesh};
+%}
+%        	\node [script, below =0.4 of sum] (conv_t_v){Map tet to voxel};
+%		\node [file, below =0.4 of conv_t_v](avgadjfv){${q{n}^{+}}$ voxel mesh};
+%		\path [line] (padjfvmesh) -- (conv_v_t);
+%		\path [line] (tmat) -- (conv_v_t);
+%		\path [line] (conv_v_t) -- (sum);
+%%		\path [line] (padjftmesh) -- (sum);
+%		\path [line] (sum) -- (conv_t_v);
+%%		\path [line] (avgadjft) -- (conv_t_v);
+%		\path [line] (conv_t_v) -- (avgadjfv);
+%\phantom{	    	% Generate adj n source
+%        	\node [script, below =0.4 of avgadjfv] (gtcadis) {gtcadis.py}; 
+%		\node [file, left =0.9 of gtcadis] (ngeom) {DAGMC geom at
+%		$t_{mov}$};
+%        	\node [file, right =0.9 of gtcadis] (matlib) {ALARA material library};
+%        	\node [file, below =0.4 of gtcadis] (nadjs) {$q_{n}^{+}$ voxel mesh};
+%        	\path [line] (ngeom) -- (gtcadis);
+%        	\path [line] (avgadjfv) -- (gtcadis);
+%        	\path [line] (matlib) -- (gtcadis);
+%        	\path [line] (gtcadis) -- (nadjs);
+%}%phantom
+%        \end{tikzpicture}
+%	}%resizebox
+%	\end{figure}
+%\end{columns}
+%\end{frame}
+
+%\begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
+%\begin{figure}
+%\centering
+%
+%        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
+%	node distance=1.3cm]
+%        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
+%	distance=1.3cm]
+%        \tikzstyle{file} = [rectangle, draw, text centered, node distance=1.3cm]
+%        \tikzstyle{line} = [draw, -latex]
+%        \tikzstyle{arrow} = [thick, ->, >=stealth]
+%        %gray
+%        \tikzstyle{gscript} = [ellipse, fill=gray!30, draw, text centered,
+%	node distance=1.3cm]
+%        \tikzstyle{gcode} = [ellipse, fill=gray!30, draw, text centered, node
+%	distance=1.3cm]
+%        \tikzstyle{gfile} = [rectangle, fill=gray!30, draw, text centered, node distance=1.3cm]
+%       
+%	\resizebox{!}{5.7cm}{
+%        \begin{tikzpicture}[every text node part/.style={align=center}]
+%		% Optimized neutron transport
+%		\node [gscript] (adjnsrc) { Calculate $q_n^+$};
+%		\node [gcode, above of = adjnsrc, xshift=-3cm, yshift=0.4cm]
+%		(adjp) {Adjoint photon transport \\ at each $t_{mov}$};
+%		%\node [file] (adjpflux) {Adjoint photon flux};
+%		\node [gscript, above of = adjnsrc, xshift=3cm, yshift=0.1cm] (tcalc)
+%		{Calculate $T$};
+%		\node [code, below of = adjnsrc, yshift=-0.5cm ] (adjn) {Adjoint neutron transport};
+%		%\node [file] (adjnflux) {Adjoint neutron flux};
+%		\node [script, below of = adjn] (vr) {Calculate MC VR};
+%		\node [file, below of = vr, xshift =-2cm] (ww) {Weight windows};
+%		\node [file, below of = vr, xshift=2cm] (bsrc) {Biased source};
+%
+%		\path [line] (adjp) -- (adjnsrc);
+%		\path [line] (tcalc) -- (adjnsrc);
+%		\path [line] (adjnsrc) -- (adjn);
+%		\path [line] (adjn) -- (vr);
+%		\path [line] (vr) -- (ww);
+%		\path [line] (vr) -- (bsrc);
+%
+%	\end{tikzpicture}
+%	}%resize
+%\end{figure}
+%\end{frame}
 %%%% 3. Avg the adj photon flux 
 \begin{frame}{TGT-CADIS: Calculate Adjoint Neutron Source}
 \begin{columns}
@@ -1928,51 +2062,6 @@ GT-CADIS workflow
 	\end{figure}
 \end{columns}
 \end{frame}
-
-%\begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
-%\begin{figure}
-%\centering
-%
-%        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
-%	node distance=1.3cm]
-%        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
-%	distance=1.3cm]
-%        \tikzstyle{file} = [rectangle, draw, text centered, node distance=1.3cm]
-%        \tikzstyle{line} = [draw, -latex]
-%        \tikzstyle{arrow} = [thick, ->, >=stealth]
-%        %gray
-%        \tikzstyle{gscript} = [ellipse, fill=gray!30, draw, text centered,
-%	node distance=1.3cm]
-%        \tikzstyle{gcode} = [ellipse, fill=gray!30, draw, text centered, node
-%	distance=1.3cm]
-%        \tikzstyle{gfile} = [rectangle, fill=gray!30, draw, text centered, node distance=1.3cm]
-%       
-%	\resizebox{!}{5.7cm}{
-%        \begin{tikzpicture}[every text node part/.style={align=center}]
-%		% Optimized neutron transport
-%		\node [gscript] (adjnsrc) { Calculate $q_n^+$};
-%		\node [gcode, above of = adjnsrc, xshift=-3cm, yshift=0.4cm]
-%		(adjp) {Adjoint photon transport \\ at each $t_{mov}$};
-%		%\node [file] (adjpflux) {Adjoint photon flux};
-%		\node [gscript, above of = adjnsrc, xshift=3cm, yshift=0.1cm] (tcalc)
-%		{Calculate $T$};
-%		\node [code, below of = adjnsrc, yshift=-0.5cm ] (adjn) {Adjoint neutron transport};
-%		%\node [file] (adjnflux) {Adjoint neutron flux};
-%		\node [script, below of = adjn] (vr) {Calculate MC VR};
-%		\node [file, below of = vr, xshift =-2cm] (ww) {Weight windows};
-%		\node [file, below of = vr, xshift=2cm] (bsrc) {Biased source};
-%
-%		\path [line] (adjp) -- (adjnsrc);
-%		\path [line] (tcalc) -- (adjnsrc);
-%		\path [line] (adjnsrc) -- (adjn);
-%		\path [line] (adjn) -- (vr);
-%		\path [line] (vr) -- (ww);
-%		\path [line] (vr) -- (bsrc);
-%
-%	\end{tikzpicture}
-%	}%resize
-%\end{figure}
-%\end{frame}
 
 \begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
 \begin{figure}
@@ -2582,14 +2671,15 @@ GT-CADIS workflow
 		\item{Accurate quantification of the SDR during maintenance
 			procedures is crucial to the design and operation of
 			FES}
-		\item{GT-CADIS has proven to optimize SDR analysis in
-			static FES}
-\vspace{0.5cm}
+%		\item{GT-CADIS has proven to optimize SDR analysis in
+%			static FES}
+%\vspace{0.5cm}
 		\item{\textbf{TGT-CADIS} aims to provide the capabilities necessary to
 			\textbf{optimize} the calculation of the \textbf{SDR}
 			%at various time points 
 			during operations that involve activated components
 			\textbf{moving} around the facility}
+                 \item{Next step: Compare efficiency of TGT-CADIS with analog and other VR methods}
 	\end{itemize}
 \end{frame}
 
