@@ -1,4 +1,5 @@
 \documentclass{beamer}
+\usefonttheme[onlymath]{serif}
 \usepackage{tikz}
 \usepackage{multicol}
 \usetikzlibrary{shapes,arrows}
@@ -20,6 +21,14 @@
 \addtolength{\highlightdepth}{\highlightmargin}
 \addtolength{\highlightheight}{\highlightdepth}
 \newcommand*{\Highlight}{\rlap{\textcolor{HighlightBackground}{\rule[-\highlightdepth]{\linewidth}{\highlightheight}}}}
+\setbeamertemplate{bibliography entry title}{}
+\setbeamertemplate{bibliography entry location}{}
+\setbeamertemplate{bibliography entry note}{}
+\setbeamertemplate{bibliography item}[text]
+\setbeamercolor{section in toc}{fg=black}
+\setbeamercolor{bibliography entry author}{fg=black}
+\setbeamercolor{bibliography item}{fg=black}
+\setbeamercolor*{bibliography entry title}{fg=black}
 %\newcommand{\outlineslide}{\begin{frame}\tableofcontents[currentsection]\end{frame}}
 %\newcommand{\outlineslide}{
 %\begin{frame}<beamer>
@@ -197,7 +206,7 @@
         \tikzstyle{line} = [draw, -latex]
         \tikzstyle{arrow} = [thick, ->, >=stealth]
         
-	\resizebox{7.8cm}{5.3cm}{
+	\resizebox{8.2cm}{5.3cm}{
         \begin{tikzpicture}[every text node part/.style={align=center}]
 		% Optimized neutron transport
 		\node [code] (nmc) {Monte Carlo \\ neutron transport};
@@ -229,7 +238,7 @@
 \begin{frame}
 \frametitle{Monte Carlo Radiation Transport}
 \begin{columns}
-\column{0.7\textwidth}
+\column{0.55\textwidth}
 \begin{itemize}
 	\item{Monte Carlo (MC) method \cite{mcnp_manual}:}%analysis of FES is:}
 	\begin{itemize}
@@ -248,10 +257,11 @@
 	\end{itemize}
 \end{itemize}
 
-\column{0.3\textwidth}
+\column{0.45\textwidth}
 \begin{figure}
 	\centering
-	\includegraphics[scale=0.5]{iter_pflux.jpg}
+        %\vspace{-1cm}
+	\includegraphics[scale=0.4]{iter_nflux_2.png}
 	\caption{Photon source in ITER tokamak building.}
 \end{figure}
 
@@ -387,9 +397,10 @@
 %\end{frame}
 
 \begin{frame}
-	\frametitle{Hybrid Deterministic/MC VR Methods: CADIS \cite{cadis}}
-	\begin{block}{\textbf{C}onsistent \textbf{A}djoint \textbf{D}riven
-	\textbf{I}mportance \textbf{S}ampling (CADIS)}
+	\frametitle{Hybrid Deterministic/MC VR Methods}
+%	\begin{block}
+  {\textbf{C}onsistent \textbf{A}djoint \textbf{D}riven
+	\textbf{I}mportance \textbf{S}ampling (CADIS) \cite{cadis}}
   \begin{itemize}
   \item{Use the adjoint flux, $\Psi^+$, to generate MC VR parameters}
 %    \item{Particles are born within weight windows}
@@ -407,7 +418,7 @@
 	(\frac{\alpha + 1}{2})}
 \end{equation}
   \end{itemize}
-\end{block}
+%\end{block}
 \end{frame}
 
 \begin{frame}
@@ -438,8 +449,9 @@
 \end{frame}
 
 
-\begin{frame}{Variance Reduction for SDR Analysis: MS-CADIS}
-	\begin{block}{\textbf{M}ulti-\textbf{S}tep (MS)-CADIS \cite{mscadis}}
+\begin{frame}{Variance Reduction for SDR Analysis}
+%	\begin{block}
+  \textbf{M}ulti-\textbf{S}tep (MS)-CADIS \cite{mscadis}
   \begin{itemize}
   \item {VR method to optimize the initial radiation transport step of a
 	  coupled, multi-step process}
@@ -457,7 +469,7 @@
 %    \end{itemize}
 %  \end{itemize}
 \end{itemize}
-\end{block}
+%\end{block}
 % \centering
 %	\begin{equation}
 %	\int_{\overrightarrow{r}} \int_{E_n} \phi_n(\overrightarrow{r}, E_n)
@@ -633,8 +645,8 @@
 %
 %\end{frame}
 		
-\begin{frame}{Variance Reduction for SDR Analysis: GT-CADIS}
-\begin{block}{\textbf{G}roupwise \textbf{T}ransmutation (GT)-CADIS \cite{gtcadis}}
+\begin{frame}{Variance Reduction for SDR Analysis}
+  \textbf{G}roupwise \textbf{T}ransmutation (GT)-CADIS \cite{gtcadis}
   \begin{itemize}
   \item{Implementation of MS-CADIS specifically for SDR analysis}
   \item{Provides method to calculate optimal adjoint neutron source, $q_n^+$:}
@@ -657,7 +669,6 @@
 \end{equation}
 
   \end{itemize}
-\end{block}
 %
 %\end{itemize}
 %\centering
@@ -1379,25 +1390,26 @@ GT-CADIS workflow
 
 %%%%%% 1. Prepare geometries
 \begin{frame}{TGT-CADIS: Generate Stepwise Geometries}
-\begin{columns}
-\column{0.45\textwidth}
-	\vspace{-6cm}
 	\begin{itemize}
 		\item{Generate geometry files at each time step of movement
 			after shutdown}
+	\end{itemize}
+\begin{columns}
+\column{0.50\textwidth}
+        \hspace{5cm}
+	\vspace{-9cm}
 %	\multiinclude[<+->][format=jpg, graphics={ scale=0.25}]{gray_config}
         \begin{figure}
-	  \includegraphics[scale=0.23]{orig_pos.jpg}
+	  \includegraphics[scale=0.30]{orig_pos.jpg}
         \end{figure}
+        \vspace{-0.5cm}
         \begin{figure}
-	  \includegraphics[scale=0.23]{final_pos.jpg}
+	  \includegraphics[scale=0.30]{final_pos.jpg}
         \end{figure}
-	\end{itemize}
-		
 \column{0.55\textwidth}
 \begin{figure}
-\centering
-        \vspace{1.3cm}
+%\centering
+        \vspace{1cm}
 	\resizebox{!}{13.5cm}{
         \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered, node distance=3cm]
         \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node distance=3cm]
@@ -1682,7 +1694,7 @@ GT-CADIS workflow
 	\resizebox{!}{5.7cm}{
         \begin{tikzpicture}[every text node part/.style={align=center}]
 		% Optimized neutron transport
-		\node [gscript] (adjnsrc) {Calculate $q_n^+$};
+		\node [gscript] (adjnsrc) {Calculate time-integrated $q_n^+$};
 		\node [gcode, above of = adjnsrc, xshift=-3cm, yshift=0.4cm]
 		(adjp) {Adjoint photon transport \\ at each $t_{mov}$};
 		%\node [file] (adjpflux) {Adjoint photon flux};
@@ -1757,11 +1769,12 @@ GT-CADIS workflow
 \column{0.45\textwidth}
 	\begin{itemize}
 		\item{Combine $\phi_{\gamma, t_{mov}}^+$ and $T_{t_{mov}}$} 
-		\item{Map the structured (voxel) mesh to a tetrahedral mesh}
+		%\item{Map the structured (voxel) mesh to a tetrahedral mesh}
+                \item{Map results onto mesh of geometry at each time step}
 	\end{itemize}
 \vspace{0.2cm}
 %	\includegraphics[scale=0.29]{mesh_total.jpg}
-	\includegraphics[scale=0.14]{adj_pflux_0_tet.jpg}
+	\includegraphics[scale=0.19]{adj_pflux_0_tet_box.jpg}
 \vspace{0.1cm}
 	\includegraphics[scale=0.14]{adj_pflux_1_tet.jpg}
 		
@@ -1979,7 +1992,7 @@ GT-CADIS workflow
 \column{0.45\textwidth}
 	\begin{itemize}
 		\item{Average over all time steps}
-		\item{Map tetrahedral mesh onto voxel mesh at original configuration}
+		\item{Map results onto mesh at original configuration}
 	\end{itemize}
 \vspace{0.2cm}
 	\includegraphics[scale=0.16]{avg_adj_pflux_vox.jpg}
@@ -2084,7 +2097,7 @@ GT-CADIS workflow
 	\resizebox{!}{5.7cm}{
         \begin{tikzpicture}[every text node part/.style={align=center}]
 		% Optimized neutron transport
-		\node [gscript] (adjnsrc) { Calculate $q_n^+$};
+		\node [gscript] (adjnsrc) { Calculate time-integrated $q_n^+$};
 		\node [gcode, above of = adjnsrc, xshift=-3cm, yshift=0.4cm]
 		(adjp) {Adjoint photon transport \\ at each $t_{mov}$};
 		%\node [file] (adjpflux) {Adjoint photon flux};
@@ -2673,22 +2686,35 @@ GT-CADIS workflow
 			FES}
 %		\item{GT-CADIS has proven to optimize SDR analysis in
 %			static FES}
-%\vspace{0.5cm}
+\vspace{0.5cm}
 		\item{\textbf{TGT-CADIS} aims to provide the capabilities necessary to
 			\textbf{optimize} the calculation of the \textbf{SDR}
 			%at various time points 
 			during operations that involve activated components
 			\textbf{moving} around the facility}
+\vspace{0.5cm}
                  \item{Next step: Compare efficiency of TGT-CADIS with analog and other VR methods}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[c]
-	\frametitle{\tiny{.}}
-	\begin{center}
-	{\Huge Questions?}
-	\end{center}
+\begin{frame}
+\frametitle{Acknowledgements}
+\begin{figure}
+        \includegraphics[width=.75\textwidth]{doe.jpg}
+%	\caption{U.S. DOE Office of Fusion Energy Sciences (DE-FG02-99ER54513 and DE-SC0017122)}
+\end{figure}
+\begin{figure}
+        \includegraphics[width=0.8\textwidth]{CHTC-logo.png}
+%        \caption{UW-Madison Center for High Throughput Computing}
+\end{figure}
 \end{frame}
+
+%\begin{frame}[c]
+%	\frametitle{\tiny{.}}
+%	\begin{center}
+%	{\Huge Questions?}
+%	\end{center}
+%\end{frame}
 
 %\begin{frame}{TODO}
 %	\begin{itemize}
@@ -2699,7 +2725,15 @@ GT-CADIS workflow
 %		\item{OBB tree optimization}
 %	\end{itemize}
 %\end{frame}
-\bibliographystyle{unsrt}
-\bibliography{thebibliography}
+%\bibliographystyle{unsrt}
+%\bibliography{thebibliography}
+\begin{frame}{References}
+\bibliographystyle{ans}
+        \tiny
+        \frametitle{References}
+        \bibliographystyle{ans}
+        \color{black}
+        \bibliography{bibliography}
+\end{frame}
 \end{document}
 
