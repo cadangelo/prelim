@@ -142,6 +142,7 @@
 \end{frame}
 
 \begin{frame}{Goal}
+        \centering
 	\textbf{Optimize} the %\textbf{radiation transport} simulation used to
 	calculation of the \textbf{shutdown dose rate}
 	%at a particular location 
@@ -262,7 +263,7 @@
 	\centering
         %\vspace{-1cm}
 	\includegraphics[scale=0.4]{iter_nflux_2.png}
-	\caption{Photon source in ITER tokamak building.}
+	\caption{Neutron flux in ITER tokamak building.}
 \end{figure}
 
 \end{columns}
@@ -424,7 +425,7 @@
 \begin{frame}
 \frametitle{Variance Reduction for SDR Analysis}
 %\begin{itemize}
-		\begin{block}{VR for \textbf{photon} transport}
+		\begin{block}{\textbf{Photon} transport}
   \begin{itemize}
   \item{\textbf{Straightforward}}
   \item{Can use CADIS method to direct photons towards detector}
@@ -433,7 +434,7 @@
     \end{itemize}
   \end{itemize}
 	\end{block}
-		\begin{block}{VR for \textbf{neutron} transport}
+		\begin{block}{\textbf{Neutron} transport}
     \begin{itemize}
     \item{More \textbf{complicated}}
     \item{Biasing function needs to capture}
@@ -744,7 +745,7 @@
 		\column{0.4\textwidth}
 		\hspace{-1.5cm}
 \centering
-GT-CADIS workflow
+\textbf{GT-CADIS workflow}
 \begin{figure}
 
         \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
@@ -795,7 +796,7 @@ GT-CADIS workflow
 		\column{0.4\textwidth}
 		\hspace{-1.5cm}
 \centering
-GT-CADIS workflow
+\textbf{GT-CADIS workflow}
 \begin{figure}
 
         \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
@@ -1718,50 +1719,6 @@ GT-CADIS workflow
 \end{figure}
 \end{frame}
 
-\begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
-\begin{figure}
-\centering
-
-        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
-	node distance=1.3cm]
-        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
-	distance=1.3cm]
-        \tikzstyle{file} = [rectangle, draw, text centered, node distance=1.3cm]
-        \tikzstyle{line} = [draw, -latex]
-        \tikzstyle{arrow} = [thick, ->, >=stealth]
-        %gray
-        \tikzstyle{gscript} = [ellipse, fill=gray!30, draw, text centered,
-	node distance=1.3cm]
-        \tikzstyle{gcode} = [ellipse, fill=gray!30, draw, text centered, node
-	distance=1.3cm]
-        \tikzstyle{gfile} = [rectangle, fill=gray!30, draw, text centered, node distance=1.3cm]
-       
-	\resizebox{!}{5.7cm}{
-        \begin{tikzpicture}[every text node part/.style={align=center}]
-		% Optimized neutron transport
-		\node [script] (adjnsrc) { Calculate time-integrated $q_n^+$};
-		\node [gcode, above of = adjnsrc, xshift=-3cm, yshift=0.4cm]
-		(adjp) {Adjoint photon transport \\ at each $t_{mov}$};
-		%\node [file] (adjpflux) {Adjoint photon flux};
-		\node [gscript, above of = adjnsrc, xshift=3cm, yshift=0.1cm] (tcalc)
-		{Calculate $T$};
-		\node [gcode, below of = adjnsrc, yshift=-0.5cm ] (adjn) {Adjoint neutron transport};
-		%\node [file] (adjnflux) {Adjoint neutron flux};
-		\node [gscript, below of = adjn] (vr) {Calculate MC VR};
-		\node [gfile, below of = vr, xshift =-2cm] (ww) {Weight windows};
-		\node [gfile, below of = vr, xshift=2cm] (bsrc) {Biased source};
-
-		\path [line] (adjp) -- (adjnsrc);
-		\path [line] (tcalc) -- (adjnsrc);
-		\path [line] (adjnsrc) -- (adjn);
-		\path [line] (adjn) -- (vr);
-		\path [line] (vr) -- (ww);
-		\path [line] (vr) -- (bsrc);
-
-	\end{tikzpicture}
-	}%resize
-\end{figure}
-\end{frame}
 
 %%%% 3. Map voxel to tet mesh 
 \begin{frame}{TGT-CADIS: Calculate Adjoint Neutron Source}
@@ -1855,6 +1812,51 @@ GT-CADIS workflow
 	}%resizebox
 	\end{figure}
 \end{columns}
+\end{frame}
+
+\begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
+\begin{figure}
+\centering
+
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
+	node distance=1.3cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
+	distance=1.3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=1.3cm]
+        \tikzstyle{line} = [draw, -latex]
+        \tikzstyle{arrow} = [thick, ->, >=stealth]
+        %gray
+        \tikzstyle{gscript} = [ellipse, fill=gray!30, draw, text centered,
+	node distance=1.3cm]
+        \tikzstyle{gcode} = [ellipse, fill=gray!30, draw, text centered, node
+	distance=1.3cm]
+        \tikzstyle{gfile} = [rectangle, fill=gray!30, draw, text centered, node distance=1.3cm]
+       
+	\resizebox{!}{5.7cm}{
+        \begin{tikzpicture}[every text node part/.style={align=center}]
+		% Optimized neutron transport
+		\node [script] (adjnsrc) { Calculate time-integrated $q_n^+$};
+		\node [gcode, above of = adjnsrc, xshift=-3cm, yshift=0.4cm]
+		(adjp) {Adjoint photon transport \\ at each $t_{mov}$};
+		%\node [file] (adjpflux) {Adjoint photon flux};
+		\node [gscript, above of = adjnsrc, xshift=3cm, yshift=0.1cm] (tcalc)
+		{Calculate $T$};
+		\node [gcode, below of = adjnsrc, yshift=-0.5cm ] (adjn) {Adjoint neutron transport};
+		%\node [file] (adjnflux) {Adjoint neutron flux};
+		\node [gscript, below of = adjn] (vr) {Calculate MC VR};
+		\node [gfile, below of = vr, xshift =-2cm] (ww) {Weight windows};
+		\node [gfile, below of = vr, xshift=2cm] (bsrc) {Biased source};
+
+		\path [line] (adjp) -- (adjnsrc);
+		\path [line] (tcalc) -- (adjnsrc);
+		\path [line] (adjnsrc) -- (adjn);
+		\path [line] (adjn) -- (vr);
+		\path [line] (vr) -- (ww);
+		\path [line] (vr) -- (bsrc);
+
+	\end{tikzpicture}
+	}%resize
+\end{figure}
 \end{frame}
 
 %%%%% 3. Avg the adj photon flux 
@@ -1992,7 +1994,7 @@ GT-CADIS workflow
 \column{0.45\textwidth}
 	\begin{itemize}
 		\item{Average over all time steps}
-		\item{Map results onto mesh at original configuration}
+		\item{Map resulting $q_n^{+}$ onto mesh at original configuration}
 	\end{itemize}
 \vspace{0.2cm}
 	\includegraphics[scale=0.16]{avg_adj_pflux_vox.jpg}
@@ -2105,9 +2107,9 @@ GT-CADIS workflow
 		{Calculate $T$};
 		\node [code, below of = adjnsrc, yshift=-0.5cm ] (adjn) {Adjoint neutron transport};
 		%\node [file] (adjnflux) {Adjoint neutron flux};
-		\node [script, below of = adjn] (vr) {Calculate MC VR};
-		\node [file, below of = vr, xshift =-2cm] (ww) {Weight windows};
-		\node [file, below of = vr, xshift=2cm] (bsrc) {Biased source};
+		\node [gscript, below of = adjn] (vr) {Calculate MC VR};
+		\node [gfile, below of = vr, xshift =-2cm] (ww) {Weight windows};
+		\node [gfile, below of = vr, xshift=2cm] (bsrc) {Biased source};
 
 		\path [line] (adjp) -- (adjnsrc);
 		\path [line] (tcalc) -- (adjnsrc);
@@ -2241,6 +2243,50 @@ GT-CADIS workflow
 \end{columns}
 \end{frame}
 
+\begin{frame}{Time-integrated (T)GT-CADIS: Workflow}
+\begin{figure}
+\centering
+
+        \tikzstyle{script} = [ellipse, fill=UWGold!30, draw, text centered,
+	node distance=1.3cm]
+        \tikzstyle{code} = [ellipse, fill=UWRed!30, draw, text centered, node
+	distance=1.3cm]
+        \tikzstyle{file} = [rectangle, draw, text centered, node distance=1.3cm]
+        \tikzstyle{line} = [draw, -latex]
+        \tikzstyle{arrow} = [thick, ->, >=stealth]
+        %gray
+        \tikzstyle{gscript} = [ellipse, fill=gray!30, draw, text centered,
+	node distance=1.3cm]
+        \tikzstyle{gcode} = [ellipse, fill=gray!30, draw, text centered, node
+	distance=1.3cm]
+        \tikzstyle{gfile} = [rectangle, fill=gray!30, draw, text centered, node distance=1.3cm]
+       
+	\resizebox{!}{5.7cm}{
+        \begin{tikzpicture}[every text node part/.style={align=center}]
+		% Optimized neutron transport
+		\node [gscript] (adjnsrc) { Calculate time-integrated $q_n^+$};
+		\node [gcode, above of = adjnsrc, xshift=-3cm, yshift=0.4cm]
+		(adjp) {Adjoint photon transport \\ at each $t_{mov}$};
+		%\node [file] (adjpflux) {Adjoint photon flux};
+		\node [gscript, above of = adjnsrc, xshift=3cm, yshift=0.1cm] (tcalc)
+		{Calculate $T$};
+		\node [gcode, below of = adjnsrc, yshift=-0.5cm ] (adjn) {Adjoint neutron transport};
+		%\node [file] (adjnflux) {Adjoint neutron flux};
+		\node [script, below of = adjn] (vr) {Calculate MC VR};
+		\node [file, below of = vr, xshift =-2cm] (ww) {Weight windows};
+		\node [file, below of = vr, xshift=2cm] (bsrc) {Biased source};
+
+		\path [line] (adjp) -- (adjnsrc);
+		\path [line] (tcalc) -- (adjnsrc);
+		\path [line] (adjnsrc) -- (adjn);
+		\path [line] (adjn) -- (vr);
+		\path [line] (vr) -- (ww);
+		\path [line] (vr) -- (bsrc);
+
+	\end{tikzpicture}
+	}%resize
+\end{figure}
+\end{frame}
 %%%% 4.Gen VR params 
 \begin{frame}{TGT-CADIS: Generate VR Parameters}
 \begin{columns}
@@ -2699,22 +2745,45 @@ GT-CADIS workflow
 
 \begin{frame}
 \frametitle{Acknowledgements}
-\begin{figure}
-        \includegraphics[width=.75\textwidth]{doe.jpg}
-%	\caption{U.S. DOE Office of Fusion Energy Sciences (DE-FG02-99ER54513 and DE-SC0017122)}
-\end{figure}
+        \centering
+        \includegraphics[width=.4\textwidth]{doe.jpg}
+
+	{Office of Fusion Energy Sciences\\}
+        { (DE-FG02-99ER54513 and DE-SC0017122)}
+\begin{minipage}{\textwidth}
+\vspace{1cm}
+\begin{columns}
+\begin{column}{0.5\textwidth}
 \begin{figure}
         \includegraphics[width=0.8\textwidth]{CHTC-logo.png}
 %        \caption{UW-Madison Center for High Throughput Computing}
 \end{figure}
+\end{column}
+\begin{column}{0.5\textwidth}
+        \includegraphics[width=0.8\textwidth]{cnerg-logo.png}
+\end{column}
+\end{columns}
+\end{minipage}
 \end{frame}
 
-%\begin{frame}[c]
-%	\frametitle{\tiny{.}}
-%	\begin{center}
-%	{\Huge Questions?}
-%	\end{center}
-%\end{frame}
+\begin{frame}{References}
+\bibliographystyle{ans}
+        \tiny
+        \frametitle{References}
+        \bibliographystyle{ans}
+        \color{black}
+        \bibliography{bibliography}
+\end{frame}
+
+\begin{frame}[c]
+	\frametitle{\tiny{.}}
+        \centering
+        \Huge{Questions?}
+	\begin{center}
+        \vspace{1cm}
+	\includegraphics[scale=0.32]{ww_mesh.png}
+	\end{center}
+\end{frame}
 
 %\begin{frame}{TODO}
 %	\begin{itemize}
@@ -2727,13 +2796,5 @@ GT-CADIS workflow
 %\end{frame}
 %\bibliographystyle{unsrt}
 %\bibliography{thebibliography}
-\begin{frame}{References}
-\bibliographystyle{ans}
-        \tiny
-        \frametitle{References}
-        \bibliographystyle{ans}
-        \color{black}
-        \bibliography{bibliography}
-\end{frame}
 \end{document}
 
